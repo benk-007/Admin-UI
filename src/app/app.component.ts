@@ -6,7 +6,8 @@ import { delay, filter, map, tap } from 'rxjs/operators';
 
 import { ColorModeService } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from './icons/icon-subset';
+import { iconSubset } from './core/icons/icon-subset';
+import {TranslationService} from './core/services/translation.service';
 
 @Component({
     selector: 'app-root',
@@ -24,12 +25,21 @@ export class AppComponent implements OnInit {
   readonly #colorModeService = inject(ColorModeService);
   readonly #iconSetService = inject(IconSetService);
 
-  constructor() {
+  constructor(private readonly translationService: TranslationService) {
     this.#titleService.setTitle(this.title);
     // iconSet singleton
     this.#iconSetService.icons = { ...iconSubset };
     this.#colorModeService.localStorageItemName.set('coreui-free-angular-admin-template-theme-default');
     this.#colorModeService.eventName.set('ColorSchemeChange');
+
+    let lang = localStorage.getItem(TranslationService.LANG);
+    if (!lang) {
+      console.info('No lang defined');
+      const browserLang: any = this.translationService.getBrowserLang();
+      translationService.setLanguage(browserLang);
+    } else {
+      translationService.setLanguage(lang);
+    }
   }
 
   ngOnInit(): void {

@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { CardModule, GridModule, PaginationModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { PaginationsComponent } from './paginations.component';
 
 describe('PaginationsComponent', () => {

@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 
 import { ButtonModule, CardModule, CollapseModule, GridModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { CollapsesComponent } from './collapses.component';
 
 describe('CollapsesComponent', () => {

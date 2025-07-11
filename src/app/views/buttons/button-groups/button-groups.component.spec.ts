@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 
 import { ButtonGroupModule, ButtonModule, CardModule, DropdownModule, FormModule, GridModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { ButtonGroupsComponent } from './button-groups.component';
 
 describe('ButtonGroupsComponent', () => {

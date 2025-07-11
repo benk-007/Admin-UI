@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { CardModule, DropdownModule, GridModule, NavModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { NavsComponent } from './navs.component';
 
 describe('NavsComponent', () => {

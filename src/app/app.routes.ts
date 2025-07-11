@@ -8,7 +8,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadComponent: () => import('./layout').then(m => m.DefaultLayoutComponent),
+    loadComponent: () => import('./core/layout').then(m => m.DefaultLayoutComponent),
     data: {
       title: 'Home'
     },
@@ -71,9 +71,30 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./views/pages/login/login.component').then(m => m.LoginComponent),
+    loadComponent: () => import('./features/authentication/pages/login/login.component').then(m => m.LoginComponent),
     data: {
       title: 'Login Page'
+    }
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () => import('./features/authentication/pages/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent),
+    data: {
+      title: 'Forgot password Page'
+    }
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () => import('./features/authentication/pages/reset-password/reset-password.component').then(m => m.ResetPasswordComponent),
+    data: {
+      title: 'Reset password Page'
+    }
+  },
+  {
+    path: 'account-validation',
+    loadComponent: () => import('./features/authentication/pages/account-validation/account-validation.component').then(m => m.AccountValidationComponent),
+    data: {
+      title: 'Account validation Page'
     }
   },
   {

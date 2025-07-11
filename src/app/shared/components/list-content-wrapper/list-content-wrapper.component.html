@@ -1,0 +1,37 @@
+<c-row class="mb-3">
+  <c-col [md]="2">
+    <c-input-group sizing="sm" class="search-input">
+        <span cInputGroupText>
+          <svg [cIcon]="icons.cilSearch"></svg>
+        </span>
+      <input
+        cFormControl
+        id="searchBar" [placeholder]="'commons.form.search-input.placeholder'|translate"/>
+    </c-input-group>
+  </c-col>
+</c-row>
+
+<app-table-control></app-table-control>
+
+@if(!firstCallDone){
+  Loading
+}@else{
+
+  @if(!isListEmpty){
+
+    <div class="table-responsive ">
+      <!-- 🔽 TABLE GOES HERE -->
+      <ng-content></ng-content>
+    </div>
+
+  }@else{
+
+    @if(!isSearchActive){
+      No data
+    }@else{
+      No result
+    }
+
+  }
+
+}

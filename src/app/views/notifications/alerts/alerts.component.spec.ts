@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 
 import { AlertModule, ButtonModule, CardModule, GridModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { AlertsComponent } from './alerts.component';
 
 describe('AlertsComponent', () => {

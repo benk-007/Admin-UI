@@ -1,0 +1,5 @@
+@if (alert) {
+  <alert (onClosed)="clearAlert()"  [dismissible]="true" type='{{alert.type}}'><span
+    [innerHTML]="alert.text"></span></alert>
+}
+

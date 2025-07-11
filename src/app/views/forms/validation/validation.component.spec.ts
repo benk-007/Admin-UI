@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 
 import { ButtonModule, CardModule, FormModule, GridModule, ListGroupModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { ValidationComponent } from './validation.component';
 
 describe('ValidationComponent', () => {

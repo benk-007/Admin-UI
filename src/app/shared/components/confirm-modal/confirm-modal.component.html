@@ -1,0 +1,30 @@
+<!--Modal title-->
+<div class="modal-header justify-content-center align-items-center">
+    <h4 class="modal-title">
+        {{ title |translate }}
+    </h4>
+</div>
+
+<!--Modal body-->
+<div class="modal-body">
+    <c-row>
+        <c-col>
+            <div class="icon-warning">
+                <div class="icon-warning-content">!</div>
+            </div>
+            <p [innerHTML]="message |translate">
+            </p>
+        </c-col>
+    </c-row>
+</div>
+
+<!--Modal footer-->
+<div class="modal-footer">
+    <button (click)="cancelAction()" cButton class="ms-1" color="dark" variant="ghost">
+        {{ 'commons.form.buttons.cancel'|translate }}
+    </button>
+
+    <button (click)="confirmAction()" cButton class="ms-1" color="success" type="submit" variant="outline">
+        {{ 'commons.form.buttons.confirm'|translate }}
+    </button>
+</div>

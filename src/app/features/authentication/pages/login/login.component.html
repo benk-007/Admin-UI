@@ -1,0 +1,66 @@
+<section class="container-fluid">
+  <c-row class="no-gutter">
+    <c-col [md]="5" [lg]="7" class="d-none d-md-flex justify-content-center align-items-center cover">
+      <img src="../../../../assets/images/img.png" class="img-fluid" alt="">
+    </c-col>
+
+    <c-col [md]="7" [lg]="5" class="login d-flex align-items-center py-5">
+
+      <c-row class="container">
+
+        <c-col [md]="9" [lg]="8" class="mx-auto">
+
+          <div class="login-title text-center mb-5">
+            <h1 class="text-primary">Āstay</h1>
+            <h6 class="text-info">{{ 'authentication.login.sub-title.text-1'|translate }} <span
+              class="xstay-char">x</span> {{ 'authentication.login.sub-title.text-2'|translate }}</h6>
+          </div>
+
+          <app-alert></app-alert>
+
+          <form cForm (ngSubmit)="submit()" [formGroup]="loginForm">
+            <!--Email input-->
+            <div [cFormFloating]="true" class="mb-3">
+              <input cFormControl id="floatingInput" placeholder="jhondoe@domain.com" type="email"
+                     formControlName="username"/>
+              <label cLabel for="floatingInput">{{ 'authentication.login.form.email-input.label'|translate }}</label>
+              @if (((loginForm.get('username')?.touched || loginForm.get('username')?.dirty))) {
+                @if (loginForm.get('username')?.hasError('required')) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required'|translate }}</c-form-feedback>
+                }
+                @if (loginForm.get('username')?.hasError('invalidEmail')) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.email'|translate }}</c-form-feedback>
+                }
+              }
+            </div>
+
+            <!--Password input-->
+            <div cFormFloating>
+              <input cFormControl id="floatingPassword" placeholder="Password" type="password" autocomplete="off"
+                     formControlName="password"/>
+              <label cLabel
+                     for="floatingPassword">{{ 'authentication.login.form.password-input.label'|translate }}</label>
+              @if (((loginForm.get('password')?.touched || loginForm.get('password')?.dirty))) {
+                @if (loginForm.get('password')?.hasError('required')) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required'|translate }}</c-form-feedback>
+                }
+              }
+            </div>
+
+            <!--Forgot password link-->
+            <a class="small mt-1 text-decoration-none text-secondary d-flex justify-content-end"
+               routerLink="/forgot-password">{{ 'authentication.login.forgot-password-link'|translate }}</a>
+            <!--Submit button-->
+            <div class="d-grid gap-2 ms-5 me-5 mt-4">
+              <button cButton color="primary" type="submit"
+                      [disabled]="!loginForm.valid">{{ 'authentication.login.form.submit-btn'|translate }}
+              </button>
+            </div>
+          </form>
+        </c-col>
+      </c-row>
+    </c-col>
+
+  </c-row>
+
+</section>

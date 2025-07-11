@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { CardModule, GridModule, ProgressModule, WidgetModule } from '@coreui/angular';
 import { ChartjsModule } from '@coreui/angular-chartjs';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { WidgetsBrandComponent } from '../widgets-brand/widgets-brand.component';
 import { WidgetsDropdownComponent } from '../widgets-dropdown/widgets-dropdown.component';
 import { WidgetsEComponent } from '../widgets-e/widgets-e.component';

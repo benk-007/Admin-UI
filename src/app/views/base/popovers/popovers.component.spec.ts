@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { ButtonModule, CardModule, GridModule, PopoverModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { PopoversComponent } from './popovers.component';
 
 describe('PopoversComponent', () => {

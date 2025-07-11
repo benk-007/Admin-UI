@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 
 import { ButtonModule, CardModule, GridModule, ModalModule, PopoverModule, TooltipModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { ModalsComponent } from './modals.component';
 
 describe('ModalsComponent', () => {

@@ -1,0 +1,1766 @@
+{
+  "commons": {
+    "boolean": {
+      "true": "yes",
+      "false": "no"
+    },
+    "errors": {
+      "required": "This field is required",
+      "email": "Enter a valid email address",
+      "no-numbers": "Numbers are not allowed",
+      "strictly-positive": "The value must be strictly positive.",
+      "min-max-stay": "Maximum stay must be greater than or equal to minimum stay.",
+      "invalidDateRange": "The 'From Date' must be earlier than the 'Until Date'.",
+      "session-expired": "Your session has expired. Please sign in again to continue!"
+    },
+    "form": {
+      "description-input": {
+        "label": "Description"
+      },
+      "buttons": {
+        "update": "Update",
+        "create": "Create",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "previous-btn": "Previous",
+        "next-btn": "Next"
+      },
+      "search-input": {
+        "placeholder": "Search ..."
+      },
+      "floor-size-input": {
+        "label": "Floor size",
+        "values": {
+          "SQM": "SQM",
+          "SQFT": "SQFT"
+        }
+      },
+      "save-btn": "Save",
+      "update-btn": "Update",
+      "cancel-btn": "Cancel"
+    },
+    "snippets": {
+      "audit": {
+        "created-by": "Created by",
+        "by": "By"
+      },
+      "no-result": "No results match your search. Please try adjusting your keywords or filters.",
+      "loading": "Loading"
+    },
+    "countries": {
+      "AD": "Andorra",
+      "AE": "United Arab Emirates",
+      "AF": "Afghanistan",
+      "AG": "Antigua and Barbuda",
+      "AL": "Albania",
+      "AM": "Armenia",
+      "AO": "Angola",
+      "AR": "Argentina",
+      "AT": "Austria",
+      "AU": "Australia",
+      "AZ": "Azerbaijan",
+      "BA": "Bosnia and Herzegovina",
+      "BB": "Barbados",
+      "BD": "Bangladesh",
+      "BE": "Belgium",
+      "BF": "Burkina Faso",
+      "BG": "Bulgaria",
+      "BH": "Bahrain",
+      "BI": "Burundi",
+      "BJ": "Benin",
+      "BN": "Brunei Darussalam",
+      "BO": "Bolivia",
+      "BR": "Brazil",
+      "BS": "Bahamas",
+      "BT": "Bhutan",
+      "BW": "Botswana",
+      "BY": "Belarus",
+      "BZ": "Belize",
+      "CA": "Canada",
+      "CD": "Congo, The Democratic Republic of the",
+      "CF": "Central African Republic",
+      "CG": "Congo",
+      "CH": "Switzerland",
+      "CI": "Cote D'Ivoire",
+      "CL": "Chile",
+      "CM": "Cameroon",
+      "CN": "China",
+      "CO": "Colombia",
+      "CR": "Costa Rica",
+      "CU": "Cuba",
+      "CV": "Cape Verde",
+      "CY": "Cyprus",
+      "CZ": "Czech Republic",
+      "DE": "Germany",
+      "DJ": "Djibouti",
+      "DK": "Denmark",
+      "DM": "Dominica",
+      "DO": "Dominican Republic",
+      "DZ": "Algeria",
+      "EC": "Ecuador",
+      "EE": "Estonia",
+      "EG": "Egypt",
+      "ER": "Eritrea",
+      "ES": "Spain",
+      "ET": "Ethiopia",
+      "FI": "Finland",
+      "FJ": "Fiji",
+      "FM": "Micronesia, Federated States of",
+      "FR": "France",
+      "GA": "Gabon",
+      "GB": "United Kingdom",
+      "GD": "Grenada",
+      "GE": "Georgia",
+      "GH": "Ghana",
+      "GM": "Gambia",
+      "GN": "Guinea",
+      "GQ": "Equatorial Guinea",
+      "GR": "Greece",
+      "GT": "Guatemala",
+      "GW": "Guinea-Bissau",
+      "GY": "Guyana",
+      "HK": "Hong Kong",
+      "HN": "Honduras",
+      "HR": "Croatia",
+      "HT": "Haiti",
+      "HU": "Hungary",
+      "ID": "Indonesia",
+      "IE": "Ireland",
+      "IL": "Israel",
+      "IN": "India",
+      "IQ": "Iraq",
+      "IR": "Iran, Islamic Republic Of",
+      "IS": "Iceland",
+      "IT": "Italy",
+      "JM": "Jamaica",
+      "JO": "Jordan",
+      "JP": "Japan",
+      "KE": "Kenya",
+      "KG": "Kyrgyzstan",
+      "KH": "Cambodia",
+      "KI": "Kiribati",
+      "KM": "Comoros",
+      "KN": "Saint Kitts and Nevis",
+      "KP": "Korea, Democratic People's Republic of",
+      "KR": "Korea, Republic of",
+      "KW": "Kuwait",
+      "KZ": "Kazakhstan",
+      "LA": "Lao People's Democratic Republic",
+      "LB": "Lebanon",
+      "LC": "Saint Lucia",
+      "LI": "Liechtenstein",
+      "LK": "Sri Lanka",
+      "LR": "Liberia",
+      "LS": "Lesotho",
+      "LT": "Lithuania",
+      "LU": "Luxembourg",
+      "LV": "Latvia",
+      "LY": "Libyan Arab Jamahiriya",
+      "MA": "Morocco",
+      "MC": "Monaco",
+      "MD": "Moldova, Republic of",
+      "ME": "Montenegro",
+      "MG": "Madagascar",
+      "MH": "Marshall Islands",
+      "MK": "Macedonia, The Former Yugoslav Republic of",
+      "ML": "Mali",
+      "MM": "Myanmar",
+      "MN": "Mongolia",
+      "MR": "Mauritania",
+      "MT": "Malta",
+      "MU": "Mauritius",
+      "MV": "Maldives",
+      "MW": "Malawi",
+      "MX": "Mexico",
+      "MY": "Malaysia",
+      "MZ": "Mozambique",
+      "NA": "Namibia",
+      "NE": "Niger",
+      "NG": "Nigeria",
+      "NI": "Nicaragua",
+      "NL": "Netherlands",
+      "NO": "Norway",
+      "NP": "Nepal",
+      "NR": "Nauru",
+      "NU": "Niue",
+      "NZ": "New Zealand",
+      "OM": "Oman",
+      "PA": "Panama",
+      "PE": "Peru",
+      "PG": "Papua New Guinea",
+      "PH": "Philippines",
+      "PK": "Pakistan",
+      "PL": "Poland",
+      "PS": "Palestine",
+      "PT": "Portugal",
+      "PW": "Palau",
+      "PY": "Paraguay",
+      "QA": "Qatar",
+      "RO": "Romania",
+      "RS": "Serbia",
+      "RU": "Russian Federation",
+      "RW": "RWANDA",
+      "SA": "Saudi Arabia",
+      "SB": "Solomon Islands",
+      "SC": "Seychelles",
+      "SD": "Sudan",
+      "SE": "Sweden",
+      "SG": "Singapore",
+      "SI": "Slovenia",
+      "SK": "Slovakia",
+      "SL": "Sierra Leone",
+      "SM": "San Marino",
+      "SN": "Senegal",
+      "SO": "Somalia",
+      "SR": "Suriname",
+      "SS": "South Sudan",
+      "ST": "Sao Tome and Principe",
+      "SV": "El Salvador",
+      "SY": "Syrian Arab Republic",
+      "SZ": "Eswatini",
+      "TD": "Chad",
+      "TG": "Togo",
+      "TH": "Thailand",
+      "TJ": "Tajikistan",
+      "TL": "Timor-Leste",
+      "TM": "Turkmenistan",
+      "TN": "Tunisia",
+      "TO": "Tonga",
+      "TR": "Turkey",
+      "TT": "Trinidad and Tobago",
+      "TV": "Tuvalu",
+      "TW": "Taiwan",
+      "TZ": "Tanzania, United Republic of",
+      "UA": "Ukraine",
+      "UG": "Uganda",
+      "US": "United States",
+      "UY": "Uruguay",
+      "UZ": "Uzbekistan",
+      "VA": "Holy See (Vatican City State)",
+      "VC": "Saint Vincent and the Grenadines",
+      "VE": "Venezuela",
+      "VN": "Vietnam",
+      "WS": "Samoa",
+      "YE": "Yemen",
+      "ZA": "South Africa",
+      "ZM": "Zambia",
+      "ZW": "Zimbabwe"
+    },
+    "amenities": {
+      "ALL_DAY_CHECKIN": "24 Hour Check-in",
+      "AIR_CONDITIONING": "Air Conditioning",
+      "BATHTUB": "Bathtub",
+      "BEACH_VIEW": "Beach View",
+      "BUSINESS_SERVICES": "Business Services",
+      "COFFEE_MAKER": "Coffee Maker",
+      "DESK": "Desk",
+      "DRY_CLEANING": "Dry Cleaning",
+      "FITNESS_CENTER": "Fitness Center",
+      "FREE_INTERNET": "Free Internet",
+      "FREEZER": "Freezer",
+      "GARDEN": "Garden",
+      "HAIR_DRYER": "Hair Dryer",
+      "HOT_TUB": "Hot Tub",
+      "INDOOR_POOL": "Indoor Pool",
+      "LAKE_FRONT": "Lake front",
+      "LIFT": "Lift",
+      "MEALS_INCLUDED": "Meals Included",
+      "MOUNTAIN_VIEW": "Mountain view",
+      "OCEAN_VIEW": "Ocean view",
+      "PAID_PARKING": "Paid Parking",
+      "PRIVATE_BEACH_AREA": "Private beach area",
+      "ROOM_WITH_A_VIEW": "Room With A View",
+      "SHARED_WASHERS": "Shared Washers",
+      "SKI_IN_SKI_OUT": "Ski-in/Ski-out",
+      "SMOKE_ALARMS": "Smoke Alarms",
+      "SWIMMING_POOL": "Swimming Pool",
+      "TOWN": "Town",
+      "WASHING_MACHINE": "Washing Machine",
+      "WHEELCHAIR_ACCESS": "Wheelchair Access",
+      "ACTIVITIES_OLDER_CHILDREN": "Activities Older Children",
+      "ALL_INCLUSIVE": "All Inclusive",
+      "BBQ_PICNIC_AREA": "BBQ/Picnic area",
+      "BED_AND_BREAKFAST": "Bed And Breakfast",
+      "CABLE_TELEVISION": "Cable Television",
+      "CONCIERGE": "Concierge",
+      "DISHWASHER": "Dishwasher",
+      "DRYER": "Dryer",
+      "FREE_BREAKFAST": "Free Breakfast",
+      "FREE_LOCAL_CALLS": "Free Local Calls",
+      "FRIDGE": "Fridge",
+      "GOLF_COURSE_FRONT": "Golf course front",
+      "HANGERS": "Hangers",
+      "HOUSEKEEPING": "Housekeeping",
+      "IRONING_BOARD": "Ironing Board",
+      "LAKE_VIEW": "Lake view",
+      "LOCKERS_STORAGE": "Lockers Storage",
+      "MEETING_ROOM": "Meeting Room",
+      "NEAR_OCEAN": "Near ocean",
+      "OUTDOOR_DINING_AREA": "Outdoor Dining Area",
+      "PAID_PARKING_ON_PREMISES": "Paid Parking On Premises",
+      "RESORT": "Resort",
+      "RURAL": "Rural",
+      "SHOWER": "Shower",
+      "SKI_OUT": "Ski-out",
+      "SOFA_BED": "Sofa Bed",
+      "TELEVISION": "Television",
+      "VALET_PARKING": "Valet Parking",
+      "WATER_FRONT": "Water front",
+      "ACTIVITIES_YOUNG_CHILDREN": "Activities Young Children",
+      "BABY_COAT": "Baby Cot",
+      "BEACH": "Beach",
+      "BICYCLE": "Bicycle",
+      "CAR_RENTAL": "Car Rental",
+      "CREDIT_CARDS_ACCEPTED": "Credit Cards Accepted",
+      "DOORMAN": "Doorman",
+      "EARLY_ARRIVAL": "Early Arrival",
+      "FREE_CANCELATION": "Free Cancelation",
+      "FREE_PARKING": "Free Parking",
+      "GAME_ROOM": "Game Room",
+      "GOLF_COURSE_VIEW": "Golf course view",
+      "HEATING": "Heating",
+      "IN_PERSON_CHECK_IN": "In-Person check-in",
+      "KIDS_ACTIVITIES": "Kids Activities",
+      "LATE_ARRIVAL": "Late Arrival",
+      "LOYALTY_REWARDS_AVAILABLE": "Loyalty Rewards Available",
+      "MICROWAVE": "Microwave",
+      "NON_SMOKING": "Non Smoking",
+      "OUTDOOR_FURNITURE": "Outdoor furniture",
+      "PARKING_AVAILABLE": "Parking Available",
+      "RIVER": "River",
+      "SHAMPOO": "Shampoo",
+      "SHUTTLE": "Shuttle",
+      "SMART_TV": "Smart TV",
+      "STAIRS_ELEVATOR": "Stairs Elevator",
+      "TENNIS_COURT": "Tennis Court",
+      "VILLAGE": "Village",
+      "WATER_SPORTS": "Water Sports",
+      "ADJOINING_ROOMS": "Adjoining Rooms",
+      "BATH": "Bath",
+      "BEACH_FRONT": "Beach Front",
+      "BREAKFAST": "Breakfast",
+      "CLOTHES_IRON": "Clothes Iron",
+      "DEDICATED_WORKSPACE": "Dedicated Workspace",
+      "DOWNTOWN": "Downtown",
+      "ELDER_ACCESS": "Elder Access",
+      "FREE_HOUSEKEEPING": "Free Housekeeping",
+      "FREE_WIFI": "Free Wifi",
+      "GAMES": "Games",
+      "GYM": "Gym",
+      "HIGH_CHAIR": "High Chair",
+      "INDOOR_FIREPLACE": "Indoor Fireplace",
+      "LAKE": "Lake",
+      "LATE_CHECK_OUT": "Late Check Out",
+      "MASSAGE": "Massage",
+      "MOUNTAIN": "Mountain",
+      "OCEAN_FRONT": "Ocean Front",
+      "OVEN": "Oven",
+      "PETS_ALLOWED": "Pets Allowed",
+      "ROOM_SERVICE": "Room Service",
+      "SHARED_DRYER": "Shared Dryer",
+      "SKI_IN": "Ski-in",
+      "SMART_LOCK": "Smart Lock",
+      "STROLLER_PARKING": "Stroller Parking",
+      "TERRACE": "Terrace",
+      "WASHER": "Washer",
+      "WATER_VIEW": "Water view"
+    }
+  },
+  "authentication": {
+    "login": {
+      "sub-title": {
+        "text-1": "wherever you roam,",
+        "text-2": "marks your home"
+      },
+      "form": {
+        "email-input": {
+          "label": "Email address"
+        },
+        "password-input": {
+          "label": "Password"
+        },
+        "submit-btn": "Sign in",
+        "errors": {
+          "UAA_AUTH_UNAU_ERR_1": "Invalid credentials. Please try again.",
+          "UAA_AUTH_FORB_ERR_4": "Your account is not yet validated. Please follow email instructions.",
+          "UAA_AUTH_FORB_ERR_6": "You account is disabled. Please contact the support team.",
+          "undefined": "Something went wrong at our end, and we are working to fix the problem! "
+        }
+      },
+      "forgot-password-link": "Forgot your password?"
+    },
+    "forgot-password": {
+      "title": "Forgot your password?",
+      "sub-title": "Enter your email below and we will send you a reset link",
+      "form": {
+        "email-input": {
+          "label": "Email address"
+        },
+        "submit-btn": "Send",
+        "errors": {
+          "undefined": "Something went wrong at our end, and we are working to fix the problem! "
+        },
+        "success": "If an account with this email exists, you will receive a password reset link shortly. Please check your inbox (and spam folder)."
+      },
+      "login-link": "Go back to login page"
+    },
+    "reset-password": {
+      "title": "Reset your password",
+      "sub-title": "Set a new password for your account by entering and confirming it below.",
+      "form": {
+        "password-input": {
+          "placeholder": "Password",
+          "errors": {
+            "strong": "Password should be at least 8 characters long lower and upper case, with a number and a special character"
+          }
+        },
+        "confirm-password-input": {
+          "placeholder": "Confirm your password",
+          "errors": {
+            "mismatch": "Passwords do not match"
+          }
+        },
+        "submit-btn": "Submit",
+        "errors": {
+          "undefined": "Something went wrong at our end, and we are working to fix the problem! ",
+          "UAA_RNF_ERR_3": "We couldn’t verify your reset request. The key might be incorrect.",
+          "UAA_AUTH_FORB_ERR_5": "The reset key has expired. A new password reset email has been sent to your registered email address."
+        },
+        "success": "Your password has been updated! You can now sign in with your new credentials."
+      },
+      "login-link": "Go back to login page",
+      "errors": {
+        "no-token": "The reset password link is invalid or missing the required token."
+      }
+    },
+    "account-validation": {
+      "title": "Validate your account",
+      "sub-title": "Set a password for your account by entering and confirming it below.",
+      "form": {
+        "password-input": {
+          "placeholder": "Password",
+          "errors": {
+            "strong": "Password should be at least 8 characters long lower and upper case, with a number and a special character"
+          }
+        },
+        "confirm-password-input": {
+          "placeholder": "Confirm your password",
+          "errors": {
+            "mismatch": "Passwords do not match"
+          }
+        },
+        "submit-btn": "Submit",
+        "errors": {
+          "undefined": "Something went wrong at our end, and we are working to fix the problem! ",
+          "UAA_RNF_ERR_3": "We couldn’t verify your account validation request. The key might be incorrect.",
+          "UAA_AUTH_FORB_ERR_5": "The account validation key has expired. A new account validation email has been sent to your registered email address."
+        },
+        "success": "Your account has been validated! You can now sign in with your credentials."
+      },
+      "login-link": "Go back to login page",
+      "errors": {
+        "no-token": "The account validation link is invalid or missing the required token."
+      }
+    }
+  },
+  "units": {
+    "create-multi-unit": {
+      "title": "Add Multi-unit",
+      "steps": {
+        "details": {
+          "title": "Multi-Unit Details"
+        },
+        "rental": {
+          "title": "Rental Details"
+        }
+      },
+      "info": {
+        "title": "Manage multiple units under one main listing with ease.",
+        "description": "Multi-Units allow you to manage several subunits within a single rental. Each subunit can have its own pricing, availability, and details.",
+        "example": {
+          "label": "For example:",
+          "text": "An apartment building with 5 identical rooms can be listed as a Multi-Unit rental."
+        }
+      },
+      "form": {
+        "main-unit-name": {
+          "label": "Main Unit Name",
+          "placeholder": "Main Unit Name"
+        },
+        "subunit-name": {
+          "label": "Subunit Name",
+          "placeholder": "Enter subunit name"
+        },
+        "priority": {
+          "label": "Priority"
+        },
+        "status": {
+          "label": "Status"
+        },
+        "add-subunit": {
+          "label": "Add New Subunit"
+        },
+        "existing-units": {
+          "label": "Add Existing Rental as Subunit"
+        },
+        "preview": {
+          "title": "Preview:",
+          "empty": "Enter details to see preview",
+          "no-units": "No subunits added",
+          "new-units": "new subunit(s)",
+          "existing-units": "existing unit(s)"
+        },
+        "rental-info": {
+          "title": "RENTAL INFORMATION"
+        },
+        "mobile": {
+          "label": "Phone"
+        },
+        "email": {
+          "label": "AdvanceCM Email",
+          "placeholder": "example"
+        },
+        "location": {
+          "title": "RENTAL LOCATION"
+        },
+        "address": {
+          "label": "Address",
+          "placeholder": "Address"
+        },
+        "city": {
+          "label": "City",
+          "placeholder": "City"
+        },
+        "postal-code": {
+          "label": "Postal Code",
+          "placeholder": "Postal Code"
+        },
+        "country": {
+          "label": "Country"
+        },
+        "notifications": {
+          "success": {
+            "title": "Multi-unit created",
+            "message": "Multi-unit :unit has been successfully created"
+          },
+          "error": {
+            "title": "Multi-unit creation failed",
+            "message": "An error occurred while creating the multi-unit. Please try again or contact the support team."
+          }
+        }
+      }
+    },
+    "unit-list": {
+      "title": "Unit list",
+      "cta": {
+        "add-btn": "+ Add unit",
+        "add-multi-btn": "+ Add multi-unit"
+      },
+      "table": {
+        "header": {
+          "name": "Name",
+          "description": "Description",
+          "contact": "Contact",
+          "city": "City",
+          "country": "Country",
+          "ready": "Ready",
+          "actions": "Actions"
+        },
+        "body": {
+          "ready": "Ready",
+          "not-ready": "Not ready",
+          "beds": "Bed(s)",
+          "bathrooms": "Bathroom(s)"
+        }
+      },
+      "empty-data": "Jump start your <span class=\"text-primary xstay\">xStay</span> account by adding your first rental. Click the 'Add unit' button above to begin."
+    },
+    "create-unit": {
+      "title": "Add unit",
+      "form": {
+        "name-input": {
+          "label": "Name",
+          "placeholder": "Add a name to identify this property"
+        },
+        "subtitle-input": {
+          "label": "Subtitle",
+          "placeholder": "e.g., “Cozy Studio in the Heart of the City”"
+        },
+        "color-input": {
+          "label": "Calendar color"
+        },
+        "address": {
+          "title": "Address",
+          "street1-input": {
+            "label": "Street1",
+            "placeholder": ""
+          },
+          "street2-input": {
+            "label": "Street2",
+            "placeholder": ""
+          },
+          "postcode-input": {
+            "label": "Postal code",
+            "placeholder": ""
+          },
+          "city-input": {
+            "label": "City",
+            "placeholder": ""
+          },
+          "country-input": {
+            "label": "Country",
+            "placeholder": ""
+          }
+        },
+        "contact": {
+          "title": "Contact",
+          "mobile-input": {
+            "label": "Mobile",
+            "placeholder": ""
+          },
+          "email-input": {
+            "label": "Email",
+            "placeholder": ""
+          }
+        },
+        "notifications": {
+          "success": {
+            "title": "Unit created",
+            "message": "Unit :unit has been successfully created"
+          },
+          "error": {
+            "title": "Unit creation failed",
+            "message": "An error occurred while creating the unit. Please try again or contact the support team."
+          }
+        }
+      }
+    },
+    "edit-unit": {
+      "title": {
+        "unit": "Unit: ",
+        "multi-unit": "Multi-unit: ",
+        "sub-unit": "Sub-unit: "
+      },
+      "tabs": {
+        "general-information": {
+          "title": "General information",
+          "hint": "Set name, address, images and other basic information of the rental",
+          "sections": {
+            "other": {
+              "title": "Other",
+              "form": {
+                "calendar-color-input": {
+                  "label": "Calendar color"
+                }
+              }
+            }
+          },
+          "form": {
+            "lat-lng-input": {
+              "label": "Lat/Lng"
+            },
+            "latitude-input": {
+              "placeholder": "Latitude"
+            },
+            "longitude-input": {
+              "placeholder": "Longitude"
+            }
+          },
+          "notifications": {
+            "success": {
+              "title": "Rental updated",
+              "message": "Rental \":rentalName\" information were successfully updated."
+            },
+            "error": {
+              "title": "Rental update error",
+              "message": "An error occurred when updating rental \":rentalName\" general information."
+            }
+          },
+          "gallery": {
+            "upload-section": "Upload your image",
+            "upload-btn": "Upload another image",
+            "delete-modal": {
+              "title": "Confirm unit image removal",
+              "message": "Do you want to delete this image? Please be aware that this action can't be rolled back."
+            },
+            "notifications": {
+              "upload": {
+                "success": {
+                  "title": "Image uploaded",
+                  "message": "Your rental image was uploaded successfully"
+                },
+                "error": {
+                  "title": "Image upload error",
+                  "message": "An error occurred when uploading the image. Please try again or contact our support"
+                }
+              },
+              "cover": {
+                "success": {
+                  "title": "Image cover updated",
+                  "message": "Your new rental cover image is set successfully"
+                },
+                "error": {
+                  "title": "Image cover error",
+                  "message": "An error occurred when setting your cover image. Please try again or contact our support"
+                }
+              },
+              "delete": {
+                "success": {
+                  "title": "Image removed",
+                  "message": "Your rental image was removed successfully"
+                },
+                "error": {
+                  "title": "Image removal error",
+                  "message": "An error occurred when removing your rental image. Please try again or contact our support"
+                }
+              }
+            }
+          }
+        },
+        "detail-information": {
+          "title": "Detail information",
+          "hint": "Specify rooms, bedding, occupancy, amenities and other rental values",
+          "sections": {
+            "general": {
+              "form": {
+                "type-input": {
+                  "label": "Type",
+                  "values": {
+                    "ROOM": "Room",
+                    "APARTMENT": "Apartment",
+                    "HOUSE": "House",
+                    "VILLA": "Villa",
+                    "CABIN": "Cabin",
+                    "CARAVAN": "Caravan",
+                    "FARMHOUSE": "Farmhouse",
+                    "MOBILE_HOME": "Mobile Home",
+                    "RIAD": "Riad",
+                    "STUDIO": "Studio"
+                  }
+                },
+                "floor-size-input": {
+                  "label": "Floor size"
+                }
+              }
+            },
+            "occupancy": {
+              "title": "Occupancy",
+              "form": {
+                "min-occupancy": {
+                  "label": "Min occupancy"
+                },
+                "max-occupancy": {
+                  "label": "Max occupancy"
+                },
+                "adults-input": {
+                  "label": "Adults",
+                  "placeholder": "Adults"
+                },
+                "children-input": {
+                  "label": "Children",
+                  "placeholder": "Children"
+                },
+                "infants-input": {
+                  "label": "Infants",
+                  "placeholder": "Infants"
+                }
+              }
+            },
+            "additional-information": {
+              "title": "Additional information",
+              "form": {
+                "children-allowed-input": {
+                  "label": "Children allowed"
+                },
+                "events-allowed-input": {
+                  "label": "Events allowed"
+                },
+                "traveller-age-input": {
+                  "label": "Traveller age",
+                  "hint": "Specify the minimum age for a guest staying at the property"
+                },
+                "smoking-allowed-input": {
+                  "label": "Smoking allowed"
+                },
+                "pets-allowed-input": {
+                  "label": "Pets allowed"
+                }
+              }
+            },
+            "rooms-bedding": {
+              "title": "Rooms & bedding",
+              "add-room": "Add room",
+              "room": {
+                "title": "Room",
+                "form": {
+                  "type-input": {
+                    "label": "Type",
+                    "values": {
+                      "BEDROOM": "Bedroom",
+                      "GUEST_BEDROOM": "Guest Bedroom",
+                      "KID_BEDROOM": "Kids Bedroom",
+                      "MASTER_BEDROOM": "Master Bedroom",
+                      "LIVING_ROOM": "Living Room",
+                      "KITCHEN": "Kitchen",
+                      "FULL_BATHROOM": "Full Bathroom",
+                      "HALF_BATHROOM": "Half Bathroom"
+                    }
+                  },
+                  "size-input": {
+                    "label": "Floor size"
+                  },
+                  "bathroom-input": {
+                    "label": "Bathroom"
+                  },
+                  "bed-input": {
+                    "label": "Bedding",
+                    "values": {
+                      "SINGLE": "Single",
+                      "QUEEN": "Queen",
+                      "KING": "King",
+                      "BUNK": "Bunk",
+                      "SOFA": "Sofa",
+                      "TRUNDLE": "Trundle",
+                      "CRIB": "Crib"
+                    }
+                  },
+                  "add-btn": {
+                    "label": "Add bed"
+                  }
+                }
+              }
+            },
+            "amenities": {
+              "title": "Amenities"
+            }
+          },
+          "notifications": {
+            "success": {
+              "title": "Rental details updated",
+              "message": "Rental \":rentalName\" details were successfully updated."
+            },
+            "error": {
+              "title": "Rental details update error",
+              "message": "An error occurred when updating rental \":rentalName\" details."
+            }
+          }
+        },
+        "rental-instructions": {
+          "title": "Rental instructions",
+          "hint": "Configure check-in/out procedures, house rules, and payment instructions",
+          "sections": {
+            "check-times": {
+              "title": "CHECK-IN / CHECK-OUT TIMES"
+            },
+            "codes-passwords": {
+              "title": "CODES & PASSWORDS"
+            },
+            "check-in-instructions": {
+              "title": "CHECK-IN INSTRUCTIONS"
+            },
+            "check-out-instructions": {
+              "title": "CHECK-OUT INSTRUCTIONS"
+            },
+            "directions": {
+              "title": "DIRECTIONS"
+            },
+            "house-rules": {
+              "title": "HOUSE RULES"
+            },
+            "special-instructions": {
+              "title": "SPECIAL INSTRUCTIONS"
+            },
+            "payment-terms": {
+              "title": "PAYMENT TERMS"
+            },
+            "payment-instructions": {
+              "title": "PAYMENT INSTRUCTIONS"
+            }
+          },
+          "form": {
+            "check-in-time": {
+              "label": "Check-in Time"
+            },
+            "check-out-time": {
+              "label": "Check-out Time"
+            },
+            "time-zone": {
+              "label": "Time Zone",
+              "placeholder": "Select time zone"
+            },
+            "wifi-name": {
+              "label": "WiFi Name",
+              "placeholder": "WiFi Name"
+            },
+            "wifi-password": {
+              "label": "WiFi Password",
+              "placeholder": "WiFi Password"
+            },
+            "security-code": {
+              "label": "Security Code",
+              "placeholder": "Security Code"
+            },
+            "key-pickup": {
+              "label": "Key Pickup",
+              "placeholder": "Key Pickup"
+            }
+          },
+          "notifications": {
+            "success": {
+              "title": "Instructions updated",
+              "message": "Rental instructions have been successfully updated."
+            },
+            "error": {
+              "title": "Instructions update error",
+              "message": "An error occurred when updating rental instructions."
+            },
+            "load-error": {
+              "title": "Loading error",
+              "message": "An error occurred when loading rental instructions."
+            }
+          }
+        },
+        "rooms-bedding": {
+          "title": "Rooms & bedding",
+          "hint": "Define rooms available in the unit and configure bedding options for each one. This helps guests understand the sleeping arrangements and capacity.",
+          "sections": {
+            "room": {
+              "title": "Room",
+              "form": {
+                "name-input": {
+                  "label": "Name"
+                },
+                "type-input": {
+                  "label": "Type",
+                  "values": {
+                    "BEDROOM": "Bedroom",
+                    "BATHROOM": "Bathroom",
+                    "KITCHEN": "Kitchen",
+                    "LIVING": "Living",
+                    "GENERAL": "General"
+                  }
+                },
+                "sub-type-input": {
+                  "label": "Sub Type",
+                  "values": {
+                    "LIVING_ROOM": "Living Room",
+                    "BED_IN_LIVING_ROOM": "Bed in Living Room",
+                    "MASTER": "Master",
+                    "CHILDREN": "Children",
+                    "GUEST": "Guest",
+                    "FULL": "Full",
+                    "HALF": "Half",
+                    "QUARTER": "Quarter",
+                    "KITCHENETTE": "Kitchenette",
+                    "THREE_QUARTER": "Three Quarter"
+                  }
+                },
+                "bathroom-input": {
+                  "label": "Attached Bathroom",
+                  "placeholder": "Select a bathroom"
+                },
+                "description-input": {
+                  "label": "Description",
+                  "placeholder": "Room description"
+                },
+                "add-btn": "Add room"
+              }
+            },
+            "bed": {
+              "form": {
+                "type-input": {
+                  "label": "Type",
+                  "values": {
+                    "SINGLE": "Single",
+                    "QUEEN": "Queen",
+                    "KING": "King",
+                    "BUNK": "Bunk",
+                    "SOFA": "Sofa",
+                    "TRUNDLE": "Trundle",
+                    "CRIB": "Crib"
+                  }
+                },
+                "quantity-input": {
+                  "label": "Quantity"
+                },
+                "add-btn": "Add bed option"
+              },
+              "messages": {
+                "general-room": "This is a flexible space for various uses such as guest area, study or home office.",
+                "kitchen-room": "Where coffee brews and breakfasts begin — your cozy kitchen corner awaits.",
+                "living-room": "The heart of your home — where movies roll, stories unfold, and comfort reigns.",
+                "bathroom": "Where hygiene meets comfort — the place for clean starts, fresh finishes, and daily showers."
+              }
+            }
+          },
+          "notifications": {
+            "creation": {
+              "success": {
+                "title": "Room created",
+                "message": "Room :room has been successfully created"
+              },
+              "error": {
+                "title": "Room creation failed",
+                "message": "An error occurred while creating the room: :room. Please try again or contact the support team."
+              }
+            },
+            "edition": {
+              "success": {
+                "title": "Room updated",
+                "message": "Room :room has been successfully updated"
+              },
+              "error": {
+                "title": "Room edition failed",
+                "message": "An error occurred while updating the room: :room. Please try again or contact the support team."
+              }
+            }
+          }
+        },
+        "rates": {
+          "title": "Rates",
+          "hint": "Configure the pricing periods and rules for this unit to control its availability and rates.",
+          "settings": {
+            "title": "Settings",
+            "BaseRate": "Rental Base Rate Details",
+            "GuestFee": "Additional Guest Fee",
+            "nightly": "Nightly",
+            "weekendNight": "Weekend Night",
+            "weekly": "Weekly",
+            "monthly": "Monthly",
+            "minStay": "Minimum Stay (nights)",
+            "maxStay": "Maximum Stay (nights)",
+            "feePPPN": "Additional Guest Fee (per person per night)",
+            "guestCount": "Guest Count",
+            "notifications": {
+              "success": {
+                "title": "Rates updated",
+                "message": "Rates updated successfully."
+              },
+              "error": {
+                "title": "Rates update error",
+                "message": "Failed to update rates. Please try again."
+              },
+              "load-error": {
+                "title": "Loading error",
+                "message": "An error occurred when loading base rates."
+              }
+            },
+            "errors": {
+              "weeklyLowerThanNightly": "Weekly price must be higher than nightly price.",
+              "monthlyLowerThanNightly": "Monthly price must be higher than nightly price.",
+              "monthlyLowerThanWeekly": "Monthly price must be higher than weekly price."
+            }
+          },
+          "ratesTable": {
+            "title": "Rates table"
+          }
+        },
+        "sub-units": {
+          "title": "Sub-units",
+          "hint": "Manage the subunits of this multi-unit rental",
+          "add-btn": "+ Add sub-units",
+          "table": {
+            "header": {
+              "priority": "Priority",
+              "status": "Status"
+            }
+          },
+          "empty-data": "No SubUnits found. Click 'Add SubUnit' to get started.",
+          "modals": {
+            "create": {
+              "title": "Add SubUnits",
+              "sections": {
+                "subunits": "SubUnits",
+                "existing-units": "Existing Units"
+              },
+              "add-new-subunit": "Add new SubUnit"
+            },
+            "edit": {
+              "title": "Edit SubUnit"
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "user-settings": {
+      "list-users": {
+        "title": "Account users",
+        "cta": {
+          "add-btn": "+ Add user"
+        },
+        "table": {
+          "header": {
+            "fullname": "Full name",
+            "role": "Role",
+            "email": "Email",
+            "mobile": "Mobile",
+            "last-activity": "Created on",
+            "actions": "Actions"
+          },
+          "body": {
+            "disabled-user": "This account is disabled",
+            "not-activated-user": "This account is not yet activated",
+            "activated-user": "This account health is good"
+          }
+        }
+      },
+      "create-user": {
+        "title": "Add user",
+        "form": {
+          "fullname-input": {
+            "label": "Full name"
+          },
+          "email-input": {
+            "label": "Email"
+          },
+          "mobile-input": {
+            "label": "Mobile"
+          },
+          "role-input": {
+            "label": "Role"
+          },
+          "notifications": {
+            "success": {
+              "title": "User created",
+              "message": "User :name has been successfully created"
+            },
+            "error": {
+              "title": "User creation failed",
+              "message": "An error occurred while creating the user. Please try again or contact the support team."
+            }
+          }
+        }
+      },
+      "edit-user": {
+        "title": "Edit user",
+        "form": {
+          "enabled-input": {
+            "label": "Enabled"
+          },
+          "notifications": {
+            "success": {
+              "title": "User updated",
+              "message": "User :name has been successfully updated"
+            },
+            "error": {
+              "title": "User update failed",
+              "message": "An error occurred while updating the user. Please try again or contact the support team."
+            }
+          }
+        }
+      }
+    }
+  },
+  "guests": {
+    "list": {
+      "title": "Guests",
+      "cta": {
+        "add-btn": "+ Add guest"
+      },
+      "delete-modal": {
+        "title": "Delete Guest",
+        "message": "Are you sure you want to delete {{name}}?"
+      },
+      "notifications": {
+        "delete": {
+          "success": {
+            "title": "Guest deleted",
+            "message": "{{name}} has been successfully deleted."
+          },
+          "error": {
+            "title": "Deletion failed",
+            "message": "An error occurred while deleting the guest."
+          }
+        }
+      },
+      "table": {
+        "header": {
+          "fullname": "Full name",
+          "email": "Email",
+          "identity-document": "Identity Document",
+          "telephone": "Telephone",
+          "country": "Country",
+          "created-on": "Created on",
+          "actions": "Actions"
+        },
+        "body": {
+          "provided": "ID Document provided",
+          "not-provided": "ID Document missing"
+        }
+      },
+      "empty-data": "Time to bring some life to your <span class=\"text-primary xstay\">xStay</span> account. Add your first guest now!"
+    },
+    "create": {
+      "title": "Add guest",
+      "form": {
+        "fullname-input": {
+          "label": "Full Name",
+          "placeholder": {
+            "firstname": "Firstname",
+            "lastname": "Lastname"
+          }
+        },
+        "firstName-input": {
+          "label": "First name"
+        },
+        "lastName-input": {
+          "label": "Last name"
+        },
+        "birthDate-input": {
+          "label": "Birth date"
+        },
+        "email-input": {
+          "label": "Email"
+        },
+        "mobile-input": {
+          "label": "Mobile"
+        },
+        "country-input": {
+          "label": "Country"
+        },
+        "city-input": {
+          "label": "City"
+        },
+        "postCode-input": {
+          "label": "postal Code"
+        },
+        "street1-input": {
+          "label": "street1"
+        },
+        "street2-input": {
+          "label": "street2"
+        },
+        "contact": {
+          "label": "Contact"
+        },
+        "document": {
+          "label": "Document"
+        },
+        "address": {
+          "label": "Address"
+        },
+        "type-input": {
+          "label": "Document type",
+          "placeholder": "Select document type",
+          "error": {
+            "required": "Type is required"
+          }
+        },
+        "documentNumber-input": {
+          "label": "Document number",
+          "error": {
+            "required": "Document number is required"
+          }
+        },
+        "expirationDate-input": {
+          "label": "Expiration date",
+          "error": {
+            "required": "Expiration date is required"
+          }
+        },
+        "documentImage-input": {
+          "label": "Document File"
+        },
+        "idDocuments": {
+          "add-button": "+ Add Document",
+          "remove-button-aria": "Remove document :index"
+        },
+        "add-document-button": {
+          "label": "+ Add more documents"
+        },
+        "remove-document-button": {
+          "label": "Remove document"
+        },
+        "enums": {
+          "documentType": {
+            "IDENTITY_CARD": "Identity Card",
+            "PASSPORT": "Passport",
+            "DRIVER_LICENCE": "Driver Licence"
+          }
+        },
+        "notifications": {
+          "success": {
+            "title": "Guest created",
+            "message": "Guest has been successfully created"
+          },
+          "error": {
+            "title": "Guest creation failed",
+            "message": "An error occurred while creating the guest. Please try again or contact the support team."
+          }
+        }
+      }
+    },
+    "edit-guest": {
+      "title": "Edit Guest:",
+      "default-title": "Edit Guest",
+      "form": {
+        "general": {
+          "title": "General Information"
+        },
+        "firstName": {
+          "label": "First Name",
+          "placeholder": "Enter first name"
+        },
+        "lastName": {
+          "label": "Last Name",
+          "placeholder": "Enter last name"
+        },
+        "birthDate": {
+          "label": "Birth Date",
+          "placeholder": "Select birth date"
+        },
+        "address": {
+          "title": "Address",
+          "street1": {
+            "label": "Street 1",
+            "placeholder": "Enter street 1"
+          },
+          "street2": {
+            "label": "Street 2",
+            "placeholder": "Enter street 2"
+          },
+          "postCode": {
+            "label": "Post Code",
+            "placeholder": "Enter post code"
+          },
+          "city": {
+            "label": "City",
+            "placeholder": "Enter city"
+          },
+          "country": {
+            "label": "Country"
+          }
+        },
+        "contact": {
+          "title": "Contact",
+          "mobile": {
+            "label": "Mobile"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Enter email"
+          }
+        }
+      },
+      "tabs": {
+        "reservations": {
+          "title": "Reservations",
+          "hint": "Manage reservations for this guest"
+        },
+        "documents": {
+          "title": "Documents",
+          "hint": "Manage identification documents"
+        }
+      },
+      "notifications": {
+        "info": {
+          "title": "Guest updated",
+          "message": "Guest has been successfully updated"
+        },
+        "error": {
+          "title": "Guest update failed",
+          "message": "An error occurred while updating the guest. Please try again or contact the support team."
+        }
+      }
+    }
+  },
+  "documents": {
+    "commons": {
+      "form": {
+        "document-input": {
+          "label": "Document"
+        },
+        "type-input": {
+          "label": "Type",
+          "values": {
+            "PASSPORT": "Passport",
+            "IDENTITY_CARD": "ID Card",
+            "DRIVER_LICENCE": "Driver Licence",
+            "OTHER": "Other"
+          }
+        },
+        "expiration-input": {
+          "label": "Expiration date"
+        },
+        "file-input": {
+          "label": "Document File",
+          "placeholder": "Kindly upload the guest’s ID document to complete their profile"
+        }
+      }
+    },
+    "list": {
+      "empty-data": "No identity documents available. Please kindly ask the guest to provide one to complete their profile.",
+      "cta": {
+        "add-btn": "+ Add document"
+      },
+      "delete-modal": {
+        "title": "Delete Document",
+        "message": "Are you sure you want to delete this identity document?"
+      },
+      "notifications": {
+        "delete": {
+          "success": {
+            "title": "Document deleted",
+            "message": "Identity document deleted successfully."
+          },
+          "error": {
+            "title": "Delete failed",
+            "message": "An error occurred while deleting the document."
+          }
+        }
+      },
+      "table": {
+        "header": {
+          "type": "Type",
+          "documentNumber": "Document Number",
+          "expirationDate": "Expiration Date",
+          "hasImage": "File provided",
+          "created-on": "Created On",
+          "actions": "Actions"
+        }
+      }
+    },
+    "cu-modal": {
+      "title": {
+        "create": "New Identity Document",
+        "edit": "Edit Identity Document"
+      },
+      "notifications": {
+        "success": {
+          "title": {
+            "create": "Identity Document Created",
+            "edit": "Identity Document Updated"
+          },
+          "message": {
+            "create": "The guest's ID document has been successfully created.",
+            "edit": "The guest's ID document has been successfully updated."
+          }
+        },
+        "error": {
+          "title": {
+            "create": "Identity Document Creation Failed",
+            "edit": "Identity Document Update failed"
+          },
+          "message": {
+            "create": "An error occurred when creating the guest's ID document.",
+            "edit": "An error occurred when updating the guest's ID document."
+          }
+        }
+      }
+    },
+    "create": {
+      "title": "Create Document",
+      "section": {
+        "document": "Document Information"
+      },
+      "form": {
+        "type-input": {
+          "label": "Document Type"
+        },
+        "documentNumber-input": {
+          "label": "Document Number"
+        },
+        "expirationDate-input": {
+          "label": "Expiration Date"
+        },
+        "documentImage-input": {
+          "label": "Document Image"
+        }
+      },
+      "notifications": {
+        "success": {
+          "title": "Document Created",
+          "message": "The document has been successfully created."
+        },
+        "error": {
+          "title": "Creation Failed",
+          "message": "An error occurred while creating the document."
+        }
+      }
+    },
+    "edit": {
+      "title": "Edit Document",
+      "section": {
+        "document": "Document Information",
+        "image": "Document Image"
+      },
+      "form": {
+        "type-input": {
+          "label": "Document Type"
+        },
+        "documentNumber-input": {
+          "label": "Document Number"
+        },
+        "expirationDate-input": {
+          "label": "Expiration Date"
+        }
+      },
+      "gallery": {
+        "upload-btn": "Upload Document Image",
+        "replace-btn": "Replace Image"
+      },
+      "notifications": {
+        "info": {
+          "title": "Document Updated",
+          "message": "The document has been successfully updated."
+        },
+        "error": {
+          "title": "Update Failed",
+          "message": "An error occurred while updating the document."
+        },
+        "image-upload": {
+          "success": {
+            "title": "Image Uploaded",
+            "message": "The image has been uploaded successfully."
+          },
+          "error": {
+            "title": "Upload Failed",
+            "message": "An error occurred while uploading the image."
+          }
+        },
+        "image-delete": {
+          "title": "Delete Image",
+          "message": "Are you sure you want to delete the document image?",
+          "success": {
+            "title": "Image Deleted",
+            "message": "The image has been deleted successfully."
+          },
+          "error": {
+            "title": "Delete Failed",
+            "message": "An error occurred while deleting the image."
+          }
+        }
+      },
+      "load-error": "An error occurred while loading document data."
+    }
+  },
+  "tables": {
+    "cu-modal": {
+      "title": {
+        "create": "Add Standard Rate",
+        "edit": "Update Standard Rate"
+      },
+      "form": {
+        "details": {
+          "section-title": "Rental Rate Details",
+          "rateName": {
+            "label": "Rate Name"
+          },
+          "fromDate": {
+            "label": "From Date"
+          },
+          "untilDate": {
+            "label": "Until Date"
+          }
+        },
+        "rates": {
+          "section-title": "Enter Fees Below",
+          "nightly": {
+            "label": "Nightly"
+          },
+          "weekendNight": {
+            "label": "Weekend Night"
+          },
+          "weekly": {
+            "label": "Weekly"
+          },
+          "monthly": {
+            "label": "Monthly"
+          },
+          "minStay": {
+            "label": "Minimum Stay (nights)"
+          },
+          "maxStay": {
+            "label": "Maximum Stay (nights)"
+          }
+        },
+        "additionalGuestFee": {
+          "section-title": "Additional Guest Fee",
+          "fee": {
+            "label": "Fee (PP/PN)"
+          },
+          "guestCount": {
+            "label": "Guest Count"
+          }
+        },
+        "daySpecific": {
+          "section-title": "Day Specific Pricing",
+          "placeholder": "Set rates for specific days. They will override above rates.",
+          "ApplyToDays": {
+            "label": "Apply To Days"
+          },
+          "days": {
+            "MONDAY": "Monday",
+            "TUESDAY": "Tuesday",
+            "WEDNESDAY": "Wednesday",
+            "THURSDAY": "Thursday",
+            "FRIDAY": "Friday",
+            "SATURDAY": "Saturday",
+            "SUNDAY": "Sunday"
+          }
+        }
+      },
+      "notifications": {
+        "create": {
+          "success": {
+            "title": "Rates Table Created",
+            "message": "Rates Table has been successfully created"
+          },
+          "error": {
+            "title": "Rates Table Creation Failed",
+            "message": "An error occurred while creating the rates table"
+          }
+        },
+        "edit": {
+          "success": {
+            "title": "Rates Table Updated",
+            "message": "Rates Table has been successfully updated"
+          },
+          "error": {
+            "title": "Rates Table Update Failed",
+            "message": "An error occurred while updating the rates table"
+          }
+        }
+      }
+    },
+    "create": {
+      "title": "Add Standard Rate",
+      "form": {
+        "details": {
+          "section-title": "Rental Rate Details",
+          "rateName": {
+            "label": "Rate Name"
+          },
+          "fromDate": {
+            "label": "From Date"
+          },
+          "untilDate": {
+            "label": "Until Date"
+          }
+        },
+        "rates": {
+          "section-title": "Enter Fees Below",
+          "nightly": {
+            "label": "Nightly"
+          },
+          "weekendNight": {
+            "label": "Weekend Night"
+          },
+          "weekly": {
+            "label": "Weekly"
+          },
+          "monthly": {
+            "label": "Monthly"
+          },
+          "minStay": {
+            "label": "Minimum Stay (nights)"
+          },
+          "maxStay": {
+            "label": "Maximum Stay (nights)"
+          }
+        },
+        "additionalGuestFee": {
+          "section-title": "Additional Guest Fee",
+          "fee": {
+            "label": "Fee (PP/PN)"
+          },
+          "guestCount": {
+            "label": "Guest Count"
+          }
+        },
+        "daySpecific": {
+          "section-title": "Day Specific Pricing",
+          "placeholder": "Set rates for specific days. They will override above rates.",
+          "ApplyToDays": {
+            "label": "Apply To Days"
+          },
+          "days": {
+            "MONDAY": "Monday",
+            "TUESDAY": "Tuesday",
+            "WEDNESDAY": "Wednesday",
+            "THURSDAY": "Thursday",
+            "FRIDAY": "Friday",
+            "SATURDAY": "Saturday",
+            "SUNDAY": "Sunday"
+          }
+        },
+        "notifications": {
+          "success": {
+            "title": "Standard Rate Created",
+            "message": "The standard rate has been successfully created."
+          },
+          "error": {
+            "title": "Creation Failed",
+            "message": "An error occurred while creating the standard rate."
+          }
+        }
+      }
+    },
+    "list": {
+      "title": "Standard Rates",
+      "table": {
+        "header": {
+          "name": "Name",
+          "period": "Rate Period",
+          "nightly": "Nightly",
+          "weekly": "Weekly",
+          "monthly": "Monthly",
+          "minStay": "Minimum Stay",
+          "actions": "Actions"
+        }
+      },
+      "cta": {
+        "add-btn": "+ Add Standard Rate"
+      },
+      "empty-data": "No standard rates found.",
+      "delete": {
+        "title": "Delete Rate",
+        "message": "Are you sure you want to delete the rate?"
+      },
+      "notifications": {
+        "delete": {
+          "success": {
+            "title": "Rate Deleted",
+            "message": "The rate has been successfully deleted."
+          },
+          "error": {
+            "title": "Deletion Failed",
+            "message": "An error occurred while deleting the rate."
+          }
+        }
+      }
+    },
+    "edit": {
+      "form": {
+        "notifications": {
+          "success": {
+            "title": "Standard Rate Updated",
+            "message": "The standard rate has been successfully updated."
+          },
+          "error": {
+            "title": "Update Failed",
+            "message": "An error occurred while updating the standard rate."
+          }
+        }
+      }
+    },
+    "delete-modal": {
+      "title": "Confirm Rates Table Removal",
+      "message": "Do you want to delete this rates table? Please be aware that this action can't be rolled back.",
+      "notifications": {
+        "success": {
+          "title": "Rates Table removed",
+          "message": "Rates table: :ratesTableName was removed successfully!"
+        },
+        "error": {
+          "title": "Rates Table removal failed",
+          "message": "An error occurred while removing the rates table. Please try again or contact the support team."
+        }
+      }
+    }
+  }
+}
+

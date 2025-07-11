@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 
 import { ButtonGroupModule, ButtonModule, CardModule, CollapseModule, DropdownModule, GridModule, NavbarModule, NavModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { DropdownsComponent } from './dropdowns.component';
 
 describe('DropdownsComponent', () => {

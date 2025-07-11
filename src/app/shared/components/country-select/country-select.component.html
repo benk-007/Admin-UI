@@ -1,0 +1,11 @@
+<ng-select [clearable]="false" class="w-100"
+           [placeholder]="'commons.form.search-input.placeholder'|translate"
+           [virtualScroll]="true"
+           [(ngModel)]="selectedCountries"
+           [items]="countries"
+           [disabled]="disabled"
+           (change)="valueChanged($event)">
+  <ng-template let-item="item" ng-label-tmp ng-option-tmp>
+    {{ 'commons.countries.' + item |translate }}
+  </ng-template>
+</ng-select>

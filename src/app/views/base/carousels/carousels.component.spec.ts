@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 
 import { CardModule, CarouselModule, GridModule } from '@coreui/angular';
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { iconSubset } from '../../../icons/icon-subset';
+import { iconSubset } from '../../../core/icons/icon-subset';
 import { CarouselsComponent } from './carousels.component';
 
 describe('CarouselsComponent', () => {
