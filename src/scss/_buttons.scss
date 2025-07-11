@@ -1,0 +1,17 @@
+@use './variables' as *;
+
+button.btn {
+
+  &.btn-secondary-light {
+    background-color: $secondary-10 ;
+    border-color: $secondary-10;
+    color: $secondary ;
+    &:hover{
+      background-color: $secondary ;
+      border-color: $secondary;
+      color: white;
+    }
+
+  }
+
+}

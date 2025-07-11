@@ -30,14 +30,17 @@ import {
   cilBookmark,
   cilCalculator,
   cilCalendar,
+  cilCash,
   cilChart,
   cilChartPie,
+  cilChatBubble,
   cilCheck,
   cilChevronLeft,
   cilChevronRight,
   cilCloudDownload,
   cilCode,
   cilCommentSquare,
+  cilContact,
   cilContrast,
   cilCreditCard,
   cilCursor,
@@ -49,6 +52,7 @@ import {
   cilExternalLink,
   cilFile,
   cilGrid,
+  cilGroup,
   cilHome,
   cilInbox,
   cilIndentDecrease,
@@ -60,6 +64,7 @@ import {
   cilLifeRing,
   cilList,
   cilListNumbered,
+  cilListRich,
   cilLocationPin,
   cilLockLocked,
   cilMagnifyingGlass,
@@ -95,7 +100,8 @@ import {
   cilUser,
   cilUserFemale,
   cilUserFollow,
-  cilUserUnfollow
+  cilUserUnfollow,
+  cilWc
 } from '@coreui/icons';
 
 import {signet} from './signet';
@@ -200,7 +206,13 @@ export const iconSubset = {
   cilUserUnfollow,
   logo,
   signet,
-  cilLifeRing
+  cilLifeRing,
+  cilListRich,
+  cilWc,
+  cilChatBubble,
+  cilContact,
+  cilCash,
+  cilGroup
 };
 
 export enum IconSubset {
@@ -302,6 +314,12 @@ export enum IconSubset {
   cilUserUnfollow = 'cilUserUnfollow',
   logo = 'logo',
   signet = 'signet',
-  cilLifeRing = 'cilLifeRing'
+  cilLifeRing = 'cilLifeRing',
+  cilListRich = 'cilListRich',
+  cilWc = 'cilWc',
+  cilChatBubble = 'cilChatBubble',
+  cilContact = 'cilContact',
+  cilCash = 'cilCash',
+  cilGroup = 'cilGroup'
 }
 

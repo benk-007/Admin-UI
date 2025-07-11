@@ -1,0 +1,60 @@
+@use './variables' as *;
+
+table.table {
+  thead {
+    font-family: 'Poppins', serif !important;
+
+    tr {
+      th {
+        font-weight: 500 !important;
+        line-height: 1.462;
+        color: $table-header-color;
+        background-color: $table-header-bg;
+        border: none;
+
+        &:first-child {
+          border-top-left-radius: 12px !important;
+        }
+
+        &:last-child {
+          border-top-right-radius: 12px !important;
+        }
+
+        svg {
+          color: $table-header-color;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+
+      &:last-child {
+        border: none !important;
+
+        td {
+          border: none !important;
+        }
+      }
+
+      &:hover {
+        cursor: pointer !important;
+        background-color: $table-body-hover-color !important;
+
+        td {
+          background-color: $table-body-hover-color !important;
+        }
+      }
+
+      td {
+        background-color: white;
+        vertical-align: middle;
+        font-weight: 400 !important;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        color: $table-body-color;
+      }
+    }
+  }
+}

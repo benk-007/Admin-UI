@@ -4,7 +4,7 @@
     <span class="size-label me-3 text-muted small">Size</span>
     <c-dropdown class="text-muted small size" variant="nav-item">
       <button cButton cDropdownToggle color="link">
-        {{size}}
+        {{ size }}
       </button>
       <ul cDropdownMenu>
         @for (el of sizeArray; track el) {
@@ -16,7 +16,6 @@
     </c-dropdown>
   </c-col>
 
-  <!--Pagination buttons-->
   <c-col class="d-flex justify-content-end gap-2 align-items-center">
     @if (page !== undefined) {
       <c-row>
@@ -27,14 +26,5 @@
       </span>
       </c-row>
     }
-    <!--    &lt;!&ndash;Previous button&ndash;&gt;
-        <button  cButton class="pagination-btn" color="secondary"
-                size="sm">
-          <svg [cIcon]="icons.cilChevronLeft" size="sm"></svg>
-        </button>
-        &lt;!&ndash;Next button&ndash;&gt;
-        <button cButton class="pagination-btn" color="secondary" size="sm">
-          <svg [cIcon]="icons.cilChevronRight" size="sm"></svg>
-        </button>-->
   </c-col>
 </c-row>

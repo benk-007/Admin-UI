@@ -22,8 +22,69 @@ export const navItems: INavData[] = [
   },
   {
     title: true,
+    name: 'Bookings'
+  },
+  {
+    name: 'Reservations',
+    url: '/theme/colors',
+    iconComponent: {name: 'cil-list-rich'}
+  },
+  {
+    name: 'Calendar',
+    url: '/calendars/multi',
+    iconComponent: {name: 'cil-calendar'}
+  },
+  {
+    title: true,
     name: 'Guests'
   },
+  {
+    name: 'Guests',
+    url: '/guests',
+    iconComponent: {name: 'cil-wc'}
+  },
+  {
+    name: 'Guest Communication',
+    url: '/theme/colors',
+    iconComponent: {name: 'cil-chat-bubble'}
+  },
+  {
+    title: true,
+    name: 'Operations'
+  },
+  {
+    name: 'Tasks',
+    url: '/theme/colors',
+    iconComponent: {name: 'cil-task'}
+  },
+  {
+    name: 'Staff Management',
+    url: '/theme/colors',
+    iconComponent: {name: 'cil-contact'}
+  },
+  {
+    title: true,
+    name: 'Financials'
+  },
+  {
+    name: 'Payments & Invoices',
+    url: '/theme/colors',
+    iconComponent: {name: 'cil-cash'}
+  },
+  {
+    name: 'Reports',
+    url: '/theme/colors',
+    iconComponent: {name: 'cil-chart'}
+  },
+  {
+    title: true,
+    name: 'Settings'
+  },
+  {
+    name: 'User settings',
+    url: '/settings/user-settings',
+    iconComponent: {name: 'cil-group'}
+  }
   /*{
     name: 'Typography',
     url: '/theme/typography',

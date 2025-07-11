@@ -1,0 +1,40 @@
+@use './variables' as *;
+
+.avatar {
+
+  &.bg-primary {
+    color: $primary !important;
+    background-color: $primary-10 !important;
+  }
+
+  &.bg-secondary {
+    color: $secondary !important;
+    background-color: $secondary-10 !important;
+  }
+
+  &.bg-info {
+    color: $info !important;
+    background-color: $info-10 !important;
+  }
+
+  &.bg-success {
+    color: $success !important;
+    background-color: $success-10 !important;
+  }
+
+  &.bg-warning {
+    color: $warning !important;
+    background-color: $warning-10 !important;
+  }
+
+  &.bg-danger {
+    color: $danger !important;
+    background-color: $danger-10 !important;
+  }
+
+  &.bg-dark {
+    color: $dark !important;
+    background-color: $dark-10 !important;
+  }
+
+}

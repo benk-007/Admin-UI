@@ -32,6 +32,7 @@ import {MultiUnitCreateModalComponent} from "../multi-unit-create-modal/multi-un
 import {PageFilterModel} from "../../../../shared/models/page-filter.model";
 import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
 import {UnitItemGetModel} from '../../models/unit/unit-item-get.model';
+import {UtilsService} from '../../../../shared/services/utils.service';
 
 @Component({
   selector: 'app-unit-list',
@@ -65,7 +66,7 @@ import {UnitItemGetModel} from '../../models/unit/unit-item-get.model';
   providers: [BsModalService]
 })
 export class UnitListComponent extends ListContentComponent {
-
+  protected readonly UtilsService = UtilsService;
   icons = {cilSearch, cilBed, cilBath, cilPen, cilMediaPlay, cilArrowBottom, cilChevronRight}
   unitIdExpanded!: string | null;
   expand: boolean = false;
@@ -169,4 +170,7 @@ export class UnitListComponent extends ListContentComponent {
   }
 
 
+  goToEdit(unit: UnitItemGetModel) {
+    this.router.navigate(['/properties/units/', unit.id]).then(() => console.log('Routing to unit', unit.name, 'details page'));
+  }
 }

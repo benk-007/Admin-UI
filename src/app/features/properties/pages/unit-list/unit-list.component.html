@@ -45,12 +45,12 @@
 
   @if (!isListEmpty) {
     <div class="table-responsive">
-      <table cTable hover [responsive]="true">
+      <table cTable [responsive]="true">
         <thead>
         <tr>
-          <th style="width: 30px;"></th>
+          <th class="unit-nature"></th>
           <th class="expand"></th>
-          <th style="padding-left: 2.3rem;">{{ 'units.unit-list.table.header.name'|translate }}</th>
+          <th >{{ 'units.unit-list.table.header.name'|translate }}</th>
           <th>{{ 'units.unit-list.table.header.description'|translate }}</th>
           <th>{{ 'units.unit-list.table.header.contact'|translate }}</th>
           <th>{{ 'units.unit-list.table.header.city'|translate }}</th>
@@ -62,7 +62,7 @@
         <tbody>
           @for (unit of listContent; track unit.id) {
             <tr>
-              <td class="badge-cell">
+              <td class="unit-nature">
                 @if (unit.nature == 'MULTI_UNIT') {
                   <span class="vertical-badge bg-secondary-transparent">
                     MULTI
@@ -84,7 +84,7 @@
                 <div class="d-flex align-items-center gap-2">
 
                   @if (unit.nature === 'MULTI_UNIT') {
-                    <c-avatar [size]="'md'" shape="rounded" textColor="white" color="secondary" class="multi-unit-avatar">
+                    <c-avatar [size]="'md'" shape="rounded" textColor="white" [color]="UtilsService.getAvatarColor(unit.name)" class="multi-unit-avatar">
                       {{ getNameInitials(unit.name) }}
                     </c-avatar>
                   } @else {
@@ -150,17 +150,17 @@
                 }
               </td>
               <td>
-                <a cButton size="sm" color="primary" class="btn-light" [routerLink]="['/units/', unit.id]">
+                <button size="sm" cButton class="btn-secondary-light" type="button" (click)="goToEdit(unit)">
                   <svg [cIcon]="icons.cilPen" size="sm"></svg>
-                </a>
+                </button>
               </td>
             </tr>
 
             @if (expand && unitIdExpanded == unit.id) {
               @for (subUnit of unit.subUnits; track subUnit.id) {
                 <tr class="sub-unit-row">
-                  <td class="badge-cell">
-                    <span class="vertical-badge bg-info-transparent">SUB</span>
+                  <td class="unit-nature">
+                    <span class="vertical-badge bg-dark">SUB</span>
                   </td>
                   <td class="expand">
                   </td>
@@ -223,9 +223,9 @@
                     }
                   </td>
                   <td>
-                    <a cButton size="sm" color="primary" class="btn-light" [routerLink]="['/units/', subUnit.id]">
+                    <button size="sm" cButton class="btn-secondary-light" type="button" (click)="goToEdit(unit)">
                       <svg [cIcon]="icons.cilPen" size="sm"></svg>
-                    </a>
+                    </button>
                   </td>
                 </tr>
               }
