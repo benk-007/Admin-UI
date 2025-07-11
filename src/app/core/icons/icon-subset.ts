@@ -57,6 +57,7 @@ import {
   cilJustifyCenter,
   cilLanguage,
   cilLayers,
+  cilLifeRing,
   cilList,
   cilListNumbered,
   cilLocationPin,
@@ -97,8 +98,8 @@ import {
   cilUserUnfollow
 } from '@coreui/icons';
 
-import { signet } from './signet';
-import { logo } from './logo';
+import {signet} from './signet';
+import {logo} from './logo';
 
 export const iconSubset = {
   cibCcAmex,
@@ -198,7 +199,8 @@ export const iconSubset = {
   cilUserFollow,
   cilUserUnfollow,
   logo,
-  signet
+  signet,
+  cilLifeRing
 };
 
 export enum IconSubset {
@@ -299,6 +301,7 @@ export enum IconSubset {
   cilUserFollow = 'cilUserFollow',
   cilUserUnfollow = 'cilUserUnfollow',
   logo = 'logo',
-  signet = 'signet'
+  signet = 'signet',
+  cilLifeRing = 'cilLifeRing'
 }
 

@@ -1,0 +1,12 @@
+export enum UnitTypeEnum {
+  ROOM = 'ROOM',
+  APARTMENT = 'APARTMENT',
+  HOUSE = 'HOUSE',
+  VILLA = 'VILLA',
+  CABIN = 'CABIN',
+  CARAVAN = 'CARAVAN',
+  FARMHOUSE = 'FARMHOUSE',
+  MOBILE_HOME = 'MOBILE_HOME',
+  RIAD = 'RIAD',
+  STUDIO = 'STUDIO'
+}

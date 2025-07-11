@@ -11,48 +11,68 @@
     >
       <svg cIcon name="cilMenu" size="lg"></svg>
     </button>
-    <c-header-nav class="d-none d-md-flex">
-      <c-nav-item>
-        <a cNavLink routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      </c-nav-item>
-      <c-nav-item>
-        <a cNavLink routerLink="/users" routerLinkActive="active">Users</a>
-      </c-nav-item>
-      <c-nav-item>
-        <a cNavLink routerLink="/settings" routerLinkActive="active">Settings</a>
-      </c-nav-item>
-    </c-header-nav>
+
+    <div class="d-md-flex">
+      <input cFormControl
+             type="text"
+             ngxDaterangepickerBootstrap
+             [locale]="{applyLabel: 'ok', format: 'DD-MM-YYYY'}"
+             startKey="start"
+             endKey="end"
+             [(ngModel)]="selected"
+             placeholder="StartDate -> EndDate"
+             name="daterange"
+             style="{width: 40px !important;}"
+             class="me-2"/>
+
+      <button cButton type="button" >
+        <svg [cIcon]="icons.cilSearch"></svg>
+      </button>
+    </div>
+
+    <!--    <c-header-nav class="d-none d-md-flex">
+          <c-nav-item>
+            <a cNavLink routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+          </c-nav-item>
+          <c-nav-item>
+            <a cNavLink routerLink="/users" routerLinkActive="active">Users</a>
+          </c-nav-item>
+          <c-nav-item>
+            <a cNavLink routerLink="/settings" routerLinkActive="active">Settings</a>
+          </c-nav-item>
+        </c-header-nav>-->
+
 
     <c-header-nav class="d-none d-md-flex ms-auto ">
-      <a cNavLink>
-        <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
-      </a>
-      <a cNavLink>
-        <svg cIcon class="my-1" name="cilList" size="lg"></svg>
-      </a>
-      <a cNavLink>
-        <svg cIcon class="my-1" name="cilEnvelopeOpen" size="lg"></svg>
-      </a>
+            <a cNavLink>
+              <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
+            </a>
+            <a cNavLink>
+              <svg cIcon class="my-1" name="cilList" size="lg"></svg>
+            </a>
+            <a cNavLink>
+              <svg cIcon class="my-1" name="cilEnvelopeOpen" size="lg"></svg>
+            </a>
     </c-header-nav>
 
-    <c-header-nav class="ms-auto ms-md-0">
-      <div class="nav-item py-1">
-        <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
-      </div>
-      <ng-container *ngTemplateOutlet="themeDropdown" />
-      <div class="nav-item py-1">
-        <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
-      </div>
-    </c-header-nav>
+    <!--    <c-header-nav class="ms-auto ms-md-0">
+          <div class="nav-item py-1">
+            <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+          </div>
+          <ng-container *ngTemplateOutlet="themeDropdown"/>
+          <div class="nav-item py-1">
+            <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
+          </div>
+        </c-header-nav>-->
 
     <c-header-nav class="mx-0">
-      <ng-container *ngTemplateOutlet="userDropdown" />
+      <ng-container *ngTemplateOutlet="userDropdown"/>
     </c-header-nav>
 
   </c-container>
-<!--  <c-container [fluid]="true" class="px-4">
-    <c-breadcrumb-router />
-  </c-container>-->
+  <!--  <c-container [fluid]="true" class="px-4">
+      <c-breadcrumb-router />
+    </c-container>-->
 </ng-container>
 <!--</c-header>-->
 
@@ -62,7 +82,7 @@
       <c-avatar
         shape="rounded-1"
         size="md"
-        src="./assets/images/avatars/8.jpg"
+        src="./assets/images/avatars/1.jpg"
         status="success"
         textColor="primary"
         alt="User avatar"
@@ -141,7 +161,7 @@
         </a>
       </li>
       <li>
-        <hr cDropdownDivider />
+        <hr cDropdownDivider/>
       </li>
       <li>
         <a cDropdownItem routerLink="">
@@ -150,16 +170,16 @@
         </a>
       </li>
       <li>
-        <a cDropdownItem routerLink="">
+        <button cDropdownItem cButton color="link" (click)="logout()">
           <svg cIcon class="me-2" name="cilAccountLogout"></svg>
           Logout
-        </a>
+        </button>
       </li>
     </ul>
   </c-dropdown>
 </ng-template>
 
-<ng-template #themeDropdown>
+<!--<ng-template #themeDropdown>
   <c-dropdown alignment="end" variant="nav-item">
     <button [caret]="false" cDropdownToggle aria-label="Open theme picker">
       <svg cIcon [name]="icons()" size="lg"></svg>
@@ -178,4 +198,4 @@
       }
     </div>
   </c-dropdown>
-</ng-template>
+</ng-template>-->

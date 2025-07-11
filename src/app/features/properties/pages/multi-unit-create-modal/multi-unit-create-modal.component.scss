@@ -1,0 +1,72 @@
+/*
+@use "../../../../../scss/variables" as vars;
+
+// Style existant repris
+input#name {
+  text-transform: capitalize;
+}
+
+// Step indicators uniquement
+.step-indicator {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid vars.$border-color;
+  background-color: vars.$light;
+  color: vars.$gray;
+  transition: all 0.2s ease;
+
+  &.active {
+    background-color: vars.$primary;
+    border-color: vars.$primary;
+    color: white;
+  }
+
+  &.completed {
+    background-color: vars.$success;
+    border-color: vars.$success;
+    color: white;
+  }
+}
+
+.step-connector {
+  width: 3rem;
+  height: 2px;
+  background-color: vars.$border-color;
+}
+
+// Information section
+.info-section {
+  background: linear-gradient(135deg, #f8f9ff 0%, vars.$primary01 100%);
+  border-color: vars.$primary01 !important;
+}
+
+// Add subunit link cliquable
+.add-subunit-link {
+  color: vars.$primary;
+  cursor: pointer;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: vars.$secondary;
+    text-decoration: underline;
+  }
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+// Ajustement du positionnement du toggle Status
+.mb-3.d-flex.flex-column.justify-content-center {
+  .form-check {
+    margin-top: 0.5rem; // Descendre un peu plus le toggle
+  }
+}
+*/

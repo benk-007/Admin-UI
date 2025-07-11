@@ -1,10 +1,11 @@
 import {NgTemplateOutlet} from '@angular/common';
 import {Component, computed, inject, input} from '@angular/core';
-import {RouterLink, RouterLinkActive} from '@angular/router';
+import {RouterLink} from '@angular/router';
 
 import {
   AvatarComponent,
   BadgeComponent,
+  ButtonDirective,
   ColorModeService,
   ContainerComponent,
   DropdownComponent,
@@ -13,22 +14,29 @@ import {
   DropdownItemDirective,
   DropdownMenuDirective,
   DropdownToggleDirective,
+  FormControlDirective,
   HeaderComponent,
   HeaderNavComponent,
-  HeaderTogglerDirective,
-  NavItemComponent,
-  NavLinkDirective,
+  HeaderTogglerDirective, NavLinkDirective,
   SidebarToggleDirective
 } from '@coreui/angular';
 
 import {IconDirective} from '@coreui/icons-angular';
+import {AuthService} from '../../../services/auth.service';
+import {NgxDaterangepickerBootstrapDirective} from 'ngx-daterangepicker-bootstrap';
+import {FormsModule} from '@angular/forms';
+import {Dayjs} from "dayjs";
+import {cilSearch} from '@coreui/icons';
 
 @Component({
   selector: 'app-default-header',
   templateUrl: './default-header.component.html',
-  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective]
+  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, RouterLink, NgTemplateOutlet, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective, ButtonDirective, NgxDaterangepickerBootstrapDirective, FormsModule, FormControlDirective, NavLinkDirective]
 })
 export class DefaultHeaderComponent extends HeaderComponent {
+
+  readonly icons = {cilSearch}
+
 
   readonly #colorModeService = inject(ColorModeService);
   readonly colorMode = this.#colorModeService.colorMode;
@@ -39,14 +47,10 @@ export class DefaultHeaderComponent extends HeaderComponent {
     {name: 'auto', text: 'Auto', icon: 'cilContrast'}
   ];
 
-  readonly icons = computed(() => {
+/*  readonly icons = computed(() => {
     const currentMode = this.colorMode();
     return this.colorModes.find(mode => mode.name === currentMode)?.icon ?? 'cilSun';
-  });
-
-  constructor() {
-    super();
-  }
+  });*/
 
   sidebarId = input('sidebar1');
 
@@ -124,5 +128,15 @@ export class DefaultHeaderComponent extends HeaderComponent {
     {id: 3, title: 'Add new layouts', value: 75, color: 'info'},
     {id: 4, title: 'Angular Version', value: 100, color: 'success'}
   ];
+
+  selected!: { start: Dayjs, end: Dayjs };
+
+  constructor(private readonly authService: AuthService) {
+    super();
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 
 }

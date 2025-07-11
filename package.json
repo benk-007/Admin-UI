@@ -56,7 +56,8 @@
     "moment-timezone": "^0.6.0",
     "ngx-bootstrap": "^19.0.2",
     "ngx-intl-tel-input": "^17.0.0",
-    "ngx-toastr": "^19.0.0"
+    "ngx-toastr": "^19.0.0",
+    "ngx-daterangepicker-bootstrap": "^19.5.5"
   },
   "devDependencies": {
     "@angular/build": "^20.0.4",

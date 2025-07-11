@@ -1,0 +1,243 @@
+<app-page-title [title]="'units.unit-list.title'|translate">
+  <c-button-group>
+    <button cButton color="primary" size="sm" variant="outline" (click)="openCreateUnitModal()">
+      {{ 'units.unit-list.cta.add-btn'|translate }}
+    </button>
+    <c-dropdown variant="btn-group">
+      <button cButton color="primary" cDropdownToggle size="sm"></button>
+      <ul cDropdownMenu>
+        <li>
+          <button cButton cDropdownItem (click)="openCreateMultiUnitModal()" color="secondary">Multi unit</button>
+        </li>
+      </ul>
+    </c-dropdown>
+  </c-button-group>
+</app-page-title>
+
+<c-row class="mb-3">
+  <c-col [md]="2">
+    <c-input-group sizing="sm" class="search-input">
+        <span cInputGroupText>
+          <svg [cIcon]="icons.cilSearch"></svg>
+        </span>
+      <input id="searchBar" cFormControl (input)="triggerBasicSearch($event)"
+             [placeholder]="'commons.form.search-input.placeholder'|translate"/>
+    </c-input-group>
+  </c-col>
+</c-row>
+
+<app-table-control></app-table-control>
+
+@if (!firstCallDone) {
+  <c-row class="d-flex justify-content-center mt-5">
+    <c-spinner color="secondary"/>
+  </c-row>
+  <c-row class="d-flex justify-content-center mt-1">
+    <c-col [md]="4" class="d-flex justify-content-center text-center">
+      {{ 'commons.snippets.loading'|translate }}
+    </c-col>
+  </c-row>
+} @else {
+
+  @if (!isListEmpty) {
+    <div class="table-responsive">
+      <table cTable hover [responsive]="true">
+        <thead>
+        <tr>
+          <th style="width: 30px;"></th>
+          <th class="expand"></th>
+          <th style="padding-left: 2.3rem;">{{ 'units.unit-list.table.header.name'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.description'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.contact'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.city'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.country'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.ready'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.actions'|translate }}</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (unit of listContent; track unit.id) {
+            <tr>
+              <td class="badge-cell">
+                @if (unit.nature == 'MULTI_UNIT') {
+                  <span class="vertical-badge bg-secondary-transparent">
+                    MULTI
+                  </span>
+                }
+              </td>
+              <td class="expand">
+                @if (unit.nature == 'MULTI_UNIT' && unit.subUnits) {
+                  <button cButton size="sm" class="expand" type="button" (click)="expandSubUnits(unit)">
+                    @if (this.expand && this.unitIdExpanded == unit.id) {
+                      <i class="bi bi-chevron-down"></i>
+                    } @else {
+                      <i class="bi bi-chevron-right"></i>
+                    }
+                  </button>
+                }
+              </td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+
+                  @if (unit.nature === 'MULTI_UNIT') {
+                    <c-avatar [size]="'md'" shape="rounded" textColor="white" color="secondary" class="multi-unit-avatar">
+                      {{ getNameInitials(unit.name) }}
+                    </c-avatar>
+                  } @else {
+                    <c-avatar [size]="'md'" shape="rounded" textColor="white" color="primary">
+                      {{ getNameInitials(unit.name) }}
+                    </c-avatar>
+                  }
+                  <div class="d-flex flex-column" [adaptivePosition]="true" [tooltip]="unit.subtitle">
+                    <div>
+                      <span class="me-1">{{ unit.name }}</span>
+                      @if (unit.nature === 'MULTI_UNIT') {
+                        <span class="text-muted small">
+                          ({{ unit.subUnits.length }} {{ unit.subUnits.length === 1 ? 'unit' : 'units' }})
+                        </span>
+                      }
+                    </div>
+
+                    <div class="small text-body-secondary text-nowrap">
+                      <span>{{ 'commons.snippets.audit.created-by'|translate }} {{ unit.audit.createdBy | auditName }}</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <span [adaptivePosition]="true"
+                      [tooltip]="'units.unit-list.table.body.beds'|translate">
+                  <span class="me-1 fs-6">{{ unit.beds }}</span>
+                  <svg [cIcon]="icons.cilBed" size="lg" class="text-secondary"></svg>
+                </span>
+                <span [adaptivePosition]="true"
+                      [tooltip]="'units.unit-list.table.body.bathrooms'|translate">
+                  <span class=" ms-2 me-1 fs-6">{{ unit.bathrooms }}</span>
+                  <svg [cIcon]="icons.cilBath" size="lg" class="text-warning"></svg>
+                </span>
+              </td>
+              <td>
+                <div class="d-flex flex-column">
+                  <div>
+                    <span class="me-1">{{ unit.contact.mobile }}</span>
+                  </div>
+                  @if (unit.contact.email) {
+                    <div class="small text-body-secondary text-nowrap">
+                      {{ unit.contact.email }}
+                    </div>
+                  }
+                </div>
+              </td>
+              <td>
+                {{ unit.address.city }}
+              </td>
+              <td>
+                {{ 'commons.countries.' + unit.address.country|translate }}
+              </td>
+              <td>
+                @if (unit.readiness) {
+                  <span class="text-success">
+                    <i class="bi bi-check-square-fill"></i> {{ 'units.unit-list.table.body.ready'|translate }}
+                  </span>
+                } @else {
+                  <span class="text-danger">
+                    <i class="bi bi-x-square-fill"></i> {{ 'units.unit-list.table.body.not-ready'|translate }}
+                  </span>
+                }
+              </td>
+              <td>
+                <a cButton size="sm" color="primary" class="btn-light" [routerLink]="['/units/', unit.id]">
+                  <svg [cIcon]="icons.cilPen" size="sm"></svg>
+                </a>
+              </td>
+            </tr>
+
+            @if (expand && unitIdExpanded == unit.id) {
+              @for (subUnit of unit.subUnits; track subUnit.id) {
+                <tr class="sub-unit-row">
+                  <td class="badge-cell">
+                    <span class="vertical-badge bg-info-transparent">SUB</span>
+                  </td>
+                  <td class="expand">
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <c-avatar [size]="'md'" shape="rounded" textColor="white" color="dark"
+                                class="multi-unit-avatar">
+                        {{ getNameInitials(subUnit.name) }}
+                      </c-avatar>
+                      <div class="d-flex flex-column" [adaptivePosition]="true" [tooltip]="subUnit.subtitle">
+                        <div>
+                          <span class="me-1">{{ subUnit.name }}</span>
+                        </div>
+                        <div class="small text-body-secondary text-nowrap">
+                          <span>{{ 'commons.snippets.audit.created-by'|translate }} {{ subUnit.audit.createdBy | auditName }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span [adaptivePosition]="true"
+                          [tooltip]="'units.unit-list.table.body.beds'|translate">
+                      <span class="me-1 fs-6">{{ subUnit.beds }}</span>
+                      <svg [cIcon]="icons.cilBed" size="lg" class="text-secondary"></svg>
+                    </span>
+                    <span [adaptivePosition]="true"
+                          [tooltip]="'units.unit-list.table.body.bathrooms'|translate">
+                      <span class=" ms-2 me-1 fs-6">{{ subUnit.bathrooms }}</span>
+                      <svg [cIcon]="icons.cilBath" size="lg" class="text-warning"></svg>
+                    </span>
+                  </td>
+
+                  <td>
+                    <div class="d-flex flex-column">
+                      <div>
+                        <span class="me-1">{{ subUnit.contact.mobile }}</span>
+                      </div>
+                      @if (subUnit.contact.email) {
+                        <div class="small text-body-secondary text-nowrap">
+                          {{ subUnit.contact.email }}
+                        </div>
+                      }
+                    </div>
+                  </td>
+                  <td>
+                    {{ subUnit.address.city }}
+                  </td>
+                  <td>
+                    {{ 'commons.countries.' + subUnit.address.country|translate }}
+                  </td>
+                  <td>
+                    @if (subUnit.readiness) {
+                      <span class="text-success">
+                    <i class="bi bi-check-square-fill"></i> {{ 'units.unit-list.table.body.ready'|translate }}
+                  </span>
+                    } @else {
+                      <span class="text-danger">
+                    <i class="bi bi-x-square-fill"></i> {{ 'units.unit-list.table.body.not-ready'|translate }}
+                  </span>
+                    }
+                  </td>
+                  <td>
+                    <a cButton size="sm" color="primary" class="btn-light" [routerLink]="['/units/', subUnit.id]">
+                      <svg [cIcon]="icons.cilPen" size="sm"></svg>
+                    </a>
+                  </td>
+                </tr>
+              }
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    @if (!isSearchActive) {
+      <app-empty-data imageSrc="assets/images/animations/units.gif" [message]="'units.unit-list.empty-data'|translate">
+      </app-empty-data>
+    } @else {
+      <app-empty-data imageSrc="assets/images/animations/no-result.gif">
+      </app-empty-data>
+    }
+  }
+
+}

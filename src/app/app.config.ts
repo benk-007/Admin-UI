@@ -20,6 +20,7 @@ import {provideToastr} from "ngx-toastr";
 import {JwtModule} from "@auth0/angular-jwt";
 import {AuthService} from "./core/services/auth.service";
 import {tokenExpiredInterceptor} from "./core/interceptors/token-expired.interceptor";
+import {provideDaterangepickerLocale} from 'ngx-daterangepicker-bootstrap';
 
 export function tokenGetter() {
   return localStorage.getItem(AuthService.TOKEN);
@@ -28,6 +29,7 @@ export function tokenGetter() {
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes,
@@ -67,5 +69,9 @@ export const appConfig: ApplicationConfig = {
         },
       })
     ),
+    provideDaterangepickerLocale({
+      separator: ' - ',
+      applyLabel: 'Okay'
+    })
   ]
 };

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
 export const routes: Routes = [
   {
@@ -16,6 +16,10 @@ export const routes: Routes = [
       {
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
+      },
+      {
+        path: 'properties',
+        loadChildren: () => import('./features/properties/routes').then((m) => m.routes)
       },
       {
         path: 'theme',
@@ -104,5 +108,5 @@ export const routes: Routes = [
       title: 'Register Page'
     }
   },
-  { path: '**', redirectTo: 'dashboard' }
+  {path: '**', redirectTo: 'dashboard'}
 ];

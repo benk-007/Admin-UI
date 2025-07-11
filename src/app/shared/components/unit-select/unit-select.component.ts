@@ -1,10 +1,10 @@
 import {Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR} from "@angular/forms";
-import {UnitItemGetModel} from "../../../features/units/models/unit-item-get.model";
 import {BehaviorSubject, debounceTime, distinctUntilChanged, Subscription} from "rxjs";
-import {UnitApiService} from "../../../features/units/services/unit-api.service";
 import {PageFilterModel} from "../../models/page-filter.model";
 import {NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent} from "@ng-select/ng-select";
+import {UnitApiService} from '../../../features/properties/services/unit-api.service';
+import {UnitItemGetModel} from '../../../features/properties/models/unit/unit-item-get.model';
 
 @Component({
   selector: 'app-unit-select',

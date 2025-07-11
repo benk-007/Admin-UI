@@ -1,0 +1,77 @@
+/*
+@use "../../../../../scss/variables" as vars;
+
+table {
+  thead {
+    tr {
+      th {
+        &.expand {
+          width: 10px;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        &.expand {
+          width: 10px;
+
+          button.expand {
+            padding: 0;
+            background-color: transparent;
+            color: vars.$body-color !important;
+            border: 0;
+          }
+        }
+
+        &.badge-cell {
+          width: 30px;
+          padding: 0 !important;
+          position: relative;
+          vertical-align: middle;
+
+          span {
+            &.vertical-badge {
+              position: absolute;
+              transform: translateY(-50%) rotate(-90deg);
+              font-size: 0.5rem;
+              padding: 0.125rem 0.25rem;
+              border-radius: 2px;
+              font-weight: 600;
+              letter-spacing: 0.5px;
+
+              &.bg-primary-transparent {
+                background-color: vars.$primary01 !important;
+                color: vars.$primary !important;
+              }
+
+              &.bg-secondary-transparent {
+                background-color: vars.$secondary01 !important;
+                color: vars.$secondary !important;
+              }
+
+              &.bg-info-transparent {
+                background-color: vars.$info01 !important;
+                color: vars.$info !important;
+              }
+            }
+          }
+
+        }
+      }
+
+      &.sub-unit-row {
+        td {
+          background-color: #f5f6f7 !important;
+        }
+        background-color: #f5f6f7 !important;
+        &:hover {
+          background-color: #f5f6f7 !important;
+        }
+      }
+    }
+  }
+}
+*/

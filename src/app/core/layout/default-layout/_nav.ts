@@ -8,14 +8,23 @@ export const navItems: INavData[] = [
   },
   {
     title: true,
-    name: 'Theme'
+    name: 'Properties'
   },
   {
-    name: 'Colors',
+    name: 'Units',
+    url: '/properties/units',
+    iconComponent: {name: 'cil-home'}
+  },
+  {
+    name: 'Maintenance',
     url: '/theme/colors',
-    iconComponent: {name: 'cil-drop'}
+    iconComponent: {name: 'cil-life-ring'}
   },
   {
+    title: true,
+    name: 'Guests'
+  },
+  /*{
     name: 'Typography',
     url: '/theme/typography',
     linkProps: {fragment: 'headings'},
@@ -404,5 +413,5 @@ export const navItems: INavData[] = [
     url: 'https://coreui.io/angular/docs/',
     iconComponent: {name: 'cil-description'},
     attributes: {target: '_blank'}
-  }
+  }*/
 ];
