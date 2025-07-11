@@ -1,0 +1,48 @@
+@use './variables' as *;
+
+.sidebar {
+  &.sidebar-dark {
+
+    .sidebar-header {
+      border-color: $primary !important;
+    }
+
+    &:not(.sidebar-narrow-unfoldable) {
+      .sidebar-nav {
+        .nav-item, .nav-group {
+          a.nav-link {
+            margin-right: .75rem;
+            margin-left: .75rem;
+          }
+        }
+      }
+    }
+
+    .sidebar-nav {
+
+      .nav-item, .nav-group {
+        a.nav-link {
+          font-size: 14px;
+          font-weight: 300;
+
+          svg.nav-icon {
+            color: $light !important;
+          }
+
+          &.active {
+            font-weight: 400;
+
+            &:hover {
+              background-color: $secondary !important;
+            }
+          }
+        }
+      }
+
+    }
+
+    .sidebar-footer {
+      border-color: $primary !important;
+    }
+  }
+}

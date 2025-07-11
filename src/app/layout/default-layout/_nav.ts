@@ -1,14 +1,10 @@
-import { INavData } from '@coreui/angular';
+import {INavData} from '@coreui/angular';
 
 export const navItems: INavData[] = [
   {
     name: 'Dashboard',
     url: '/dashboard',
-    iconComponent: { name: 'cil-speedometer' },
-    badge: {
-      color: 'info',
-      text: 'NEW'
-    }
+    iconComponent: {name: 'cil-speedometer'},
   },
   {
     title: true,
@@ -17,13 +13,13 @@ export const navItems: INavData[] = [
   {
     name: 'Colors',
     url: '/theme/colors',
-    iconComponent: { name: 'cil-drop' }
+    iconComponent: {name: 'cil-drop'}
   },
   {
     name: 'Typography',
     url: '/theme/typography',
-    linkProps: { fragment: 'headings' },
-    iconComponent: { name: 'cil-pencil' }
+    linkProps: {fragment: 'headings'},
+    iconComponent: {name: 'cil-pencil'}
   },
   {
     name: 'Components',
@@ -32,7 +28,7 @@ export const navItems: INavData[] = [
   {
     name: 'Base',
     url: '/base',
-    iconComponent: { name: 'cil-puzzle' },
+    iconComponent: {name: 'cil-puzzle'},
     children: [
       {
         name: 'Accordion',
@@ -52,7 +48,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Cards',
@@ -97,7 +93,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Smart Pagination',
@@ -107,7 +103,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Popovers',
@@ -144,7 +140,7 @@ export const navItems: INavData[] = [
   {
     name: 'Buttons',
     url: '/buttons',
-    iconComponent: { name: 'cil-cursor' },
+    iconComponent: {name: 'cil-cursor'},
     children: [
       {
         name: 'Buttons',
@@ -169,14 +165,14 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       }
     ]
   },
   {
     name: 'Forms',
     url: '/forms',
-    iconComponent: { name: 'cil-notes' },
+    iconComponent: {name: 'cil-notes'},
     children: [
       {
         name: 'Form Control',
@@ -196,7 +192,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Date Range Picker',
@@ -206,7 +202,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Floating Labels',
@@ -226,7 +222,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Password Input',
@@ -236,7 +232,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Range',
@@ -251,7 +247,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Rating',
@@ -261,7 +257,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Select',
@@ -276,7 +272,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Time Picker',
@@ -286,7 +282,7 @@ export const navItems: INavData[] = [
           color: 'danger',
           text: 'PRO'
         },
-        attributes: { target: '_blank' }
+        attributes: {target: '_blank'}
       },
       {
         name: 'Layout',
@@ -302,12 +298,12 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Charts',
-    iconComponent: { name: 'cil-chart-pie' },
+    iconComponent: {name: 'cil-chart-pie'},
     url: '/charts'
   },
   {
     name: 'Icons',
-    iconComponent: { name: 'cil-star' },
+    iconComponent: {name: 'cil-star'},
     url: '/icons',
     children: [
       {
@@ -334,7 +330,7 @@ export const navItems: INavData[] = [
   {
     name: 'Notifications',
     url: '/notifications',
-    iconComponent: { name: 'cil-bell' },
+    iconComponent: {name: 'cil-bell'},
     children: [
       {
         name: 'Alerts',
@@ -361,7 +357,7 @@ export const navItems: INavData[] = [
   {
     name: 'Widgets',
     url: '/widgets',
-    iconComponent: { name: 'cil-calculator' },
+    iconComponent: {name: 'cil-calculator'},
     badge: {
       color: 'info',
       text: 'NEW'
@@ -374,7 +370,7 @@ export const navItems: INavData[] = [
   {
     name: 'Pages',
     url: '/login',
-    iconComponent: { name: 'cil-star' },
+    iconComponent: {name: 'cil-star'},
     children: [
       {
         name: 'Login',
@@ -406,7 +402,7 @@ export const navItems: INavData[] = [
   {
     name: 'Docs',
     url: 'https://coreui.io/angular/docs/',
-    iconComponent: { name: 'cil-description' },
-    attributes: { target: '_blank' }
+    iconComponent: {name: 'cil-description'},
+    attributes: {target: '_blank'}
   }
 ];

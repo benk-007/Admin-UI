@@ -1,12 +1,15 @@
 // Here you can add other styles
 
 // custom .chartjs-tooltip-body-item padding
-@use "charts";
-
+@use './charts';
 // custom tweaks for scrollbar styling (wip)
-@use "scrollbar";
+@use './scrollbar';
+// custom typography
+@use './typography';
+// custom sidebar
+@use './sidebar';
 
- // custom calendar today cell color
+// custom calendar today cell color
 .calendar-cell.today {
   --cui-calendar-cell-today-color: var(--cui-info) !important;
 }

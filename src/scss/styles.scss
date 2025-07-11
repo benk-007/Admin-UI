@@ -1,8 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
-
+@use './variables' as *;
 // Import styles with default layout.
-@use "@coreui/coreui/scss/coreui" as * with (
-  $enable-deprecation-messages: false
+@use '@coreui/coreui/scss/coreui' as * with (
+  $enable-deprecation-messages: false,
+  $primary: #013557,
+  $secondary: #1976D2,
+  $info: #478bf3,
+  $success: #4CAF50,
+  $warning: #FDA015,
+  $danger: #FF3D00,
+  $light: #DFDFDF,
+  $dark: #262626,
+  $body-color:#5F5F5F,
+  $body-bg: #F3FBFF,
+  $sidebar-bg: $primary,
+  $sidebar-nav-link-color: $light,
+  $sidebar-nav-link-icon-color: $light,
+  $sidebar-nav-link-active-color: $light,
+  $sidebar-nav-link-active-icon-color: $light,
+  $sidebar-nav-link-active-bg: $secondary,
+  $sidebar-nav-link-hover-color: $light,
+  $sidebar-nav-link-hover-icon-color: $light,
+  $sidebar-nav-link-hover-bg: transparent,
+  $sidebar-nav-link-padding-y: .4rem ,
+  $sidebar-nav-link-padding-x: .85rem,
+  $sidebar-width: 15rem,
 );
 
 // Import Chart.js custom tooltips styles
@@ -11,13 +33,4 @@
 // Custom styles for this theme
 @use "theme";
 
-// Some temp fixes
-//@use "fixes";
-
-// If you want to add custom CSS you can put it here.
 @use "custom";
-
-// Examples
-// We use those styles to show code examples, you should remove them in your application.
-@use "examples";
-

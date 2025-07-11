@@ -1,8 +1,9 @@
 @use "@coreui/coreui/scss/mixins/transition" as *;
 @use "@coreui/coreui/scss/mixins/color-mode" as *;
+@use './variables' as *;
 
 body {
-  background-color: var(--cui-tertiary-bg);
+  background-color: $body-bg;
 }
 
 .wrapper {
@@ -50,6 +51,7 @@ body {
 }
 
 .footer {
+  background-color: $body-bg;
   min-height: calc(3rem + 1px); // stylelint-disable-line function-disallowed-list
 }
 
