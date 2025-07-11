@@ -31,7 +31,7 @@ import {PageTitleComponent} from "../../../../shared/components/page-title/page-
 import {MultiUnitCreateModalComponent} from "../multi-unit-create-modal/multi-unit-create-modal.component";
 import {PageFilterModel} from "../../../../shared/models/page-filter.model";
 import {BsDatepickerModule} from "ngx-bootstrap/datepicker";
-import {UnitItemGetModel} from '../../models/unit/unit-item-get.model';
+import {UnitItemGetModel} from '../../models/unit/get/unit-item-get.model';
 import {UtilsService} from '../../../../shared/services/utils.service';
 
 @Component({

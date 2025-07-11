@@ -5,4 +5,22 @@ body {
   font-weight: 400;
   font-size: 14px !important;
 
+  h6.section-title{
+    font-weight: 500 !important;
+    color: $secondary !important;
+    &.underline{
+      margin-bottom: 1.5rem;
+
+      &:after {
+        content: ' ';
+        display: block;
+        background: $secondary !important;
+        opacity: 30%;
+        border-radius: 50px;
+        height: .3rem;
+        margin-top: .1rem;
+        width: 2rem;
+      }
+    }
+  }
 }

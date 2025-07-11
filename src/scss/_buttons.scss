@@ -2,6 +2,15 @@
 
 button.btn {
 
+  &.btn-ghost-light{
+    color: $dark;
+    background-color: transparent;
+    &:hover{
+      background-color: $light;
+      color: $dark;
+    }
+  }
+
   &.btn-secondary-light {
     background-color: $secondary-10 ;
     border-color: $secondary-10;
@@ -11,7 +20,6 @@ button.btn {
       border-color: $secondary;
       color: white;
     }
-
   }
 
 }

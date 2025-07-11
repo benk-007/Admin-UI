@@ -1,7 +1,7 @@
-import {AddressModel} from '../../../../shared/models/address.model';
-import {ContactModel} from '../../../../shared/models/contact.model';
-import {UnitNatureEnum} from './commons/unit-nature.enum';
-import {AuditGetModel} from '../../../../shared/models/audit-get.model';
+import {AddressModel} from '../../../../../shared/models/address.model';
+import {ContactModel} from '../../../../../shared/models/contact.model';
+import {UnitNatureEnum} from '../enums/unit-nature.enum';
+import {AuditGetModel} from '../../../../../shared/models/audit-get.model';
 import {ParentUnitGetModel} from './parent-unit-get.model';
 
 

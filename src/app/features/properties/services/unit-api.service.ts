@@ -15,7 +15,8 @@ import {RoomGetModel} from "../models/rooms-bedding/room-get.model";
 import {RoomPostModel} from "../models/rooms-bedding/room-post.model";
 import {RoomPatchModel} from "../models/rooms-bedding/room-patch.model";*/
 import {PageFilterModel} from 'src/app/shared/models/page-filter.model';
-import {UnitItemGetModel} from '../models/unit/unit-item-get.model';
+import {UnitItemGetModel} from '../models/unit/get/unit-item-get.model';
+import {UnitPostModel} from '../models/unit/post/unit-post.model';
 // import {MultiUnitPostModel} from "../models/multi-unit-post.model";
 
 
@@ -27,11 +28,9 @@ export class UnitApiService {
   constructor(private httpClient: HttpClient) {
   }
 
-/*
   postUnit(payload: UnitPostModel) {
     return this.httpClient.post<UnitItemGetModel>(environment.apiBaseUrl.concat(environment.unitList), payload);
   }
-*/
 /*
   updateUnitInfosById(unitId: string, payload: UnitInfosPatchModel) {
     return this.httpClient.patch<UnitInfosGetModel>(environment.apiBaseUrl.concat(environment.unitInfosById).replace(':unitId', unitId), payload);

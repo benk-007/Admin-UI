@@ -123,11 +123,11 @@
               <td>
                 <div class="d-flex flex-column">
                   <div>
-                    <span class="me-1">{{ unit.contact.mobile }}</span>
+                    <span class="me-1">{{ unit?.contact?.mobile }}</span>
                   </div>
-                  @if (unit.contact.email) {
+                  @if (unit?.contact?.email) {
                     <div class="small text-body-secondary text-nowrap">
-                      {{ unit.contact.email }}
+                      {{ unit.contact?.email }}
                     </div>
                   }
                 </div>
@@ -196,11 +196,11 @@
                   <td>
                     <div class="d-flex flex-column">
                       <div>
-                        <span class="me-1">{{ subUnit.contact.mobile }}</span>
+                        <span class="me-1">{{ subUnit?.contact?.mobile }}</span>
                       </div>
-                      @if (subUnit.contact.email) {
+                      @if (subUnit?.contact?.email) {
                         <div class="small text-body-secondary text-nowrap">
-                          {{ subUnit.contact.email }}
+                          {{ subUnit.contact?.email }}
                         </div>
                       }
                     </div>

@@ -4,7 +4,7 @@ import {BehaviorSubject, debounceTime, distinctUntilChanged, Subscription} from 
 import {PageFilterModel} from "../../models/page-filter.model";
 import {NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent} from "@ng-select/ng-select";
 import {UnitApiService} from '../../../features/properties/services/unit-api.service';
-import {UnitItemGetModel} from '../../../features/properties/models/unit/unit-item-get.model';
+import {UnitItemGetModel} from '../../../features/properties/models/unit/get/unit-item-get.model';
 
 @Component({
   selector: 'app-unit-select',

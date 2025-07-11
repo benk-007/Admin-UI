@@ -31,6 +31,11 @@
 @use "@coreui/chartjs/scss/coreui-chartjs";
 
 // Custom styles for this theme
-@use "theme";
+@use './theme';
 
-@use "custom";
+@use './custom';
+
+@use "@ng-select/ng-select/themes/default.theme.css";
+@use 'intl-tel-input/build/css/intlTelInput.css';
+@use 'ngx-toastr/toastr';
+@use "leaflet/dist/leaflet.css";

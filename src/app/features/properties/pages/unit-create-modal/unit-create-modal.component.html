@@ -1,20 +1,18 @@
-<!--
-
-&lt;!&ndash;Modal title&ndash;&gt;
+<!--Modal title-->
 <div class="modal-header justify-content-center align-items-center">
   <h6 class="modal-title">
     {{ 'units.create-unit.title'|translate }}
   </h6>
 </div>
 
-&lt;!&ndash;Modal body&ndash;&gt;
+<!--Modal body-->
 <div class="modal-body">
 
   <form (submit)="submit()" [formGroup]="unitForm" cForm>
 
-    &lt;!&ndash;Name & Subtitle input&ndash;&gt;
+    <!--Name & Subtitle input-->
     <c-row>
-      &lt;!&ndash;Name input&ndash;&gt;
+      <!--Name input-->
       <c-col [md]="6" sm="12" class="mb-3">
         <label cLabel class="required me-2" for="name">
           {{ 'units.create-unit.form.name-input.label'|translate }}
@@ -27,7 +25,7 @@
           }
         }
       </c-col>
-      &lt;!&ndash;Subtitle input&ndash;&gt;
+      <!--Subtitle input-->
       <c-col [md]="6" sm="12" class="mb-3">
         <label cLabel for="subtitle">
           {{ 'units.create-unit.form.subtitle-input.label'|translate }}
@@ -40,7 +38,7 @@
     <c-row class="mt-2">
 
       <c-col md="7">
-        <h6 class="card-title mb-3">{{ 'units.create-unit.form.address.title'|translate }}</h6>
+        <h6 class="section-title underline mb-3">{{ 'units.create-unit.form.address.title'|translate }}</h6>
 
         <c-row>
           <c-col md="12" class="mb-3">
@@ -110,11 +108,11 @@
       </c-col>
 
       <c-col md="5">
-        <h6 class="card-title mb-3">{{ 'units.create-unit.form.contact.title'|translate }}</h6>
+        <h6 class="section-title underline mb-3">{{ 'units.create-unit.form.contact.title'|translate }}</h6>
 
         <c-row>
           <c-col [md]="6" class="mb-3 w-100">
-            <label cLabel for="mobile" class="required">
+            <label cLabel for="mobile">
               {{ 'units.create-unit.form.contact.mobile-input.label'|translate }}
             </label>
             <ngx-intl-tel-input
@@ -159,7 +157,7 @@
 
     </c-row>
 
-    &lt;!&ndash;Modal footer&ndash;&gt;
+    <!--Modal footer-->
     <c-row class="mt-4">
       <c-col class="d-flex justify-content-end">
         <button cButton color="light" size="sm" variant="ghost" (click)="closeModal()">
@@ -173,4 +171,3 @@
   </form>
 
 </div>
--->

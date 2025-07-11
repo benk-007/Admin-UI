@@ -26,6 +26,20 @@ label.form-label {
   }
 }
 
+.ng-select.custom.ng-select-single {
+  div.ng-select-container {
+    height: 38px;
+    border-color: $border-color;
+    background-color: $body-bg;
+
+    &:hover {
+      box-shadow: none;
+    }
+  }
+
+}
+
+
 // search input
 .search-input {
   border: 1px solid $light;

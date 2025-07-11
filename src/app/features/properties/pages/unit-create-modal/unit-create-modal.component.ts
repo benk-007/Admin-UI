@@ -17,8 +17,8 @@ import {CountryISO, NgxIntlTelInputModule, SearchCountryField} from "ngx-intl-te
 import {emailValidator} from "../../../../shared/validators/email.validator";
 import {CountrySelectComponent} from "../../../../shared/components/country-select/country-select.component";
 import {noNumbersValidator} from "../../../../shared/validators/no-number.validator";
-// import {UnitPostModel} from "../../models/unit-post.model";
 import {UnitApiService} from "../../services/unit-api.service";
+import {UnitPostModel} from '../../models/unit/post/unit-post.model';
 
 @Component({
   selector: 'app-unit-create-modal',
@@ -41,7 +41,7 @@ import {UnitApiService} from "../../services/unit-api.service";
 })
 export class UnitCreateModalComponent implements OnDestroy {
 
-  // unitForm: FormGroup;
+  unitForm: FormGroup;
   @Output() actionConfirmed = new EventEmitter<string>();
 
   protected readonly SearchCountryField = SearchCountryField;
@@ -51,19 +51,19 @@ export class UnitCreateModalComponent implements OnDestroy {
   public constructor(private readonly fb: FormBuilder, private readonly unitApiService: UnitApiService,
                      private readonly modalRef: BsModalRef, private readonly translateService: TranslateService,
                      private readonly toastrService: ToastrService) {
-    // this.unitForm = this.fb.group({
-    //   name: [null, [Validators.required]],
-    //   subtitle: [null],
-    //   street1: [null, [Validators.required]],
-    //   street2: [null],
-    //   postcode: [null],
-    //   city: [null, [Validators.required, noNumbersValidator()]],
-    //   country: [null, [Validators.required]],
-    //   mobile: [null, [Validators.required]],
-    //   email: [null, [emailValidator()]]
-    // })
+    this.unitForm = this.fb.group({
+      name: [null, [Validators.required]],
+      subtitle: [null],
+      street1: [null, [Validators.required]],
+      street2: [null],
+      postcode: [null],
+      city: [null, [Validators.required, noNumbersValidator()]],
+      country: [null, [Validators.required]],
+      mobile: [null],
+      email: [null, [emailValidator()]]
+    })
   }
-/*
+
   submit() {
     let payload: UnitPostModel = {
       name: this.unitForm.value.name,
@@ -76,7 +76,7 @@ export class UnitCreateModalComponent implements OnDestroy {
         country: this.unitForm.value.country
       },
       contact: {
-        mobile: this.unitForm.value.mobile.e164Number,
+        mobile: this.unitForm.value.mobile?.e164Number,
         email: this.unitForm.value.email
       }
     }
@@ -105,7 +105,7 @@ export class UnitCreateModalComponent implements OnDestroy {
   closeModal() {
     this.modalRef.hide();
     this.unitForm.reset();
-  }*/
+  }
 
   ngOnDestroy(): void {
     console.log('unsubscribe')
