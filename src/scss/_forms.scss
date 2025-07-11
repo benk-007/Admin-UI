@@ -1,0 +1,54 @@
+@use './variables' as *;
+
+label.form-label {
+
+  &.required:after {
+    content: " *";
+    color: $danger;
+  }
+}
+
+.form-check-input {
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.form-control {
+  border-radius: 0.25rem;
+
+  &:focus {
+    box-shadow: none;
+  }
+
+  &:focus-within {
+    border-color: $secondary !important;
+  }
+}
+
+// search input
+.search-input {
+  border: 1px solid $light;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 0.25rem;
+
+  &:focus-within {
+    border-color: $secondary !important;
+  }
+
+  span.input-group-text {
+    background-color: $body-bg;
+    border: none;
+  }
+
+  input {
+    border: none;
+    outline: none;
+  }
+}
+
+.iti {
+  width: 100%;
+}

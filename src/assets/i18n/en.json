@@ -1,5 +1,8 @@
 {
   "commons": {
+    "labels": {
+      "of": "Of"
+    },
     "boolean": {
       "true": "yes",
       "false": "no"
@@ -465,6 +468,31 @@
     }
   },
   "units": {
+    "unit-list": {
+      "title": "unit listings",
+      "cta": {
+        "add-btn": "+ Add unit",
+        "add-multi-btn": "+ Add multi-unit"
+      },
+      "table": {
+        "header": {
+          "name": "Name",
+          "description": "Description",
+          "contact": "Contact",
+          "city": "City",
+          "country": "Country",
+          "ready": "Ready",
+          "actions": "Actions"
+        },
+        "body": {
+          "ready": "Ready",
+          "not-ready": "Not ready",
+          "beds": "Bed(s)",
+          "bathrooms": "Bathroom(s)"
+        }
+      },
+      "empty-data": "Jump start your <span class=\"text-primary xstay\">xStay</span> account by adding your first rental. Click the 'Add unit' button above to begin."
+    },
     "create-multi-unit": {
       "title": "Add Multi-unit",
       "steps": {
@@ -550,31 +578,6 @@
           }
         }
       }
-    },
-    "unit-list": {
-      "title": "Unit list",
-      "cta": {
-        "add-btn": "+ Add unit",
-        "add-multi-btn": "+ Add multi-unit"
-      },
-      "table": {
-        "header": {
-          "name": "Name",
-          "description": "Description",
-          "contact": "Contact",
-          "city": "City",
-          "country": "Country",
-          "ready": "Ready",
-          "actions": "Actions"
-        },
-        "body": {
-          "ready": "Ready",
-          "not-ready": "Not ready",
-          "beds": "Bed(s)",
-          "bathrooms": "Bathroom(s)"
-        }
-      },
-      "empty-data": "Jump start your <span class=\"text-primary xstay\">xStay</span> account by adding your first rental. Click the 'Add unit' button above to begin."
     },
     "create-unit": {
       "title": "Add unit",

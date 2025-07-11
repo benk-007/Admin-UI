@@ -1,6 +1,10 @@
+@use '../../../../scss/variables' as *;
+
 .page-title {
   h1 {
-    font-size: 1.125rem;
+    font-size: 1.3rem;
     font-weight: 500 !important;
+    color: $primary;
+    letter-spacing: 1px;
   }
 }

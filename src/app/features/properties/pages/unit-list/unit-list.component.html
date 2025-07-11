@@ -26,7 +26,11 @@
   </c-col>
 </c-row>
 
-<app-table-control></app-table-control>
+<app-table-control (nextClicked)="next()" (previousClicked)="previous()" (sizeChanged)="changeSize($event)"
+                   [currentNumberElements]="currentNumberOfElements" [hasNext]="hasNext"
+                   [hasPrevious]="hasPrevious"
+                   [size]="size"
+                   [totalElements]="totalElements" ></app-table-control>
 
 @if (!firstCallDone) {
   <c-row class="d-flex justify-content-center mt-5">
