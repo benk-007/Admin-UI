@@ -1,35 +1,37 @@
-<!--
-
-&lt;!&ndash;Modal title&ndash;&gt;
+<!--Modal title-->
 <div class="modal-header justify-content-center align-items-center">
   <h6 class="modal-title">
     {{ 'units.create-multi-unit.title'|translate }}
   </h6>
 </div>
 
-&lt;!&ndash;Modal body&ndash;&gt;
+<!--Modal body-->
 <div class="modal-body">
   <form (submit)="submit()" [formGroup]="multiUnitForm" cForm>
 
-    &lt;!&ndash; Step Navigation &ndash;&gt;
-    <c-row class="mb-4">
+    <!-- Wizard stepper -->
+    <c-row class="mb-4 wizard-navigation">
       <c-col md="12">
         <div class="d-flex align-items-center justify-content-center">
-          &lt;!&ndash; Step 1 &ndash;&gt;
+          <!-- Step 1 -->
           <div class="d-flex align-items-center me-4">
             <div class="step-indicator me-2" [ngClass]="{'active': currentStep === 1, 'completed': currentStep > 1}">
-              <span *ngIf="currentStep === 1">1</span>
-              <i *ngIf="currentStep > 1" class="bi bi-check-circle-fill"></i>
+              @if (currentStep === 1) {
+                <span>1</span>
+              }
+              @if (currentStep > 1) {
+                <i class="bi bi-check-circle-fill"></i>
+              }
             </div>
             <span class="step-title">
               {{ 'units.create-multi-unit.steps.details.title'|translate }}
             </span>
           </div>
 
-          &lt;!&ndash; Step connector &ndash;&gt;
+          <!-- Step connector -->
           <div class="step-connector me-4"></div>
 
-          &lt;!&ndash; Step 2 &ndash;&gt;
+          <!-- Step 2 -->
           <div class="d-flex align-items-center">
             <div class="step-indicator me-2" [ngClass]="{'active': currentStep === 2}">2</div>
             <span class="step-title">
@@ -40,286 +42,301 @@
       </c-col>
     </c-row>
 
-    &lt;!&ndash; Step 1: Multi-Unit Details &ndash;&gt;
-    <div *ngIf="currentStep === 1">
+    <!-- Step 1: Multi-Unit Details -->
+    @if (currentStep === 1) {
+      <div class="step1">
+        <!-- Information Section -->
+        <c-row class="mb-4">
+          <c-col md="12">
+            <c-card class="info-section bg-white">
+              <c-card-body>
+                <c-row>
+                  <c-col md="3">
+                    <img src="assets/images/animations/building-multi-unit.gif" alt="Multi-unit building"
+                         style="width:100px;height:100px;">
+                  </c-col>
 
-      &lt;!&ndash; Information Section with GIF &ndash;&gt;
-      <c-row class="mb-4">
-        <c-col md="12">
-          <div class="info-section p-4 border rounded">
-            <div class="d-flex align-items-start">
-              <div class="info-icon me-3">
-                <img src="assets/images/animations/building-multi-unit.gif"
-                     alt="Multi-unit building"
-                     style="width:100px;height:100px;">
+                  <c-col md="9">
+                    <h6 class="mb-2 fw-semibold">{{ 'units.create-multi-unit.info.title'|translate }}</h6>
+                    <p class="mb-2 small">
+                      {{ 'units.create-multi-unit.info.description'|translate }}
+                    </p>
+                    <div class="example-text">
+                      <span
+                        class="fw-semibold small">{{ 'units.create-multi-unit.info.example.label'|translate }}</span>
+                      <span class="small ms-1">
+                        {{ 'units.create-multi-unit.info.example.text'|translate }}
+                      </span>
+                    </div>
+                  </c-col>
+                </c-row>
+              </c-card-body>
+            </c-card>
+          </c-col>
+        </c-row>
+
+        <c-row>
+          <!--Name input-->
+          <c-col md="12" class="mb-3">
+            <label cLabel class="required me-2" for="name">
+              {{ 'units.create-multi-unit.form.main-unit-name.label'|translate }}
+            </label>
+            <input cFormControl formControlName="name" class="unit-name" name="name"
+                   [placeholder]="'units.create-multi-unit.form.main-unit-name.placeholder'|translate" type="text"/>
+            @if (multiUnitForm.get('name')?.touched || multiUnitForm.get('name')?.dirty) {
+              @if (multiUnitForm.get('name')?.hasError('required')) {
+                <c-form-feedback [valid]="false">
+                  {{ 'commons.errors.required'|translate }}
+                </c-form-feedback>
+              }
+            }
+          </c-col>
+
+          <!-- New Subunits Section -->
+          @if (newSubUnits.length > 0) {
+            <c-col md="12">
+              <div formArrayName="newSubUnits">
+                @for (subUnit of newSubUnits.controls; track subUnit; let i = $index) {
+                  <div [formGroupName]="i">
+                    <c-row>
+                      <!-- Subunit Name -->
+                      <c-col md="6" class="mb-3">
+                        <label cLabel class="required" [for]="'name'+1">
+                          {{ 'units.create-multi-unit.form.subunit-name.label'|translate }}
+                        </label>
+                        <input [id]="'name'+i" cFormControl formControlName="name" type="text"
+                               [placeholder]="'units.create-multi-unit.form.subunit-name.placeholder'|translate"/>
+                        @if (subUnit.get('name')?.touched || subUnit.get('name')?.dirty) {
+                          @if (subUnit.get('name')?.hasError('required')) {
+                            <c-form-feedback [valid]="false">
+                              {{ 'commons.errors.required'|translate }}
+                            </c-form-feedback>
+                          }
+                        }
+
+                      </c-col>
+
+                      <!-- Priority -->
+                      <c-col md="3" class="mb-3">
+                        <label cLabel class="required" [for]="'priority'+1">
+                          {{ 'units.create-multi-unit.form.priority.label'|translate }}
+                        </label>
+                        <input [id]="'priority'+i" cFormControl formControlName="priority" type="number" min="1"
+                               max="99"/>
+                        @if (subUnit.get('priority')?.touched || subUnit.get('priority')?.dirty) {
+                          @if (subUnit.get('priority')?.hasError('required')) {
+                            <c-form-feedback [valid]="false">
+                              {{ 'commons.errors.required'|translate }}
+                            </c-form-feedback>
+                          }
+                        }
+                      </c-col>
+
+                      <!-- Status Toggle -->
+                      <c-col md="1" class="mb-3 d-flex flex-column justify-content-center">
+                        <label cLabel
+                               [for]="'status'+i">{{ 'units.create-multi-unit.form.status.label'|translate }}</label>
+                        <c-form-check [switch]="true">
+                          <input cFormCheckInput formControlName="readiness" type="checkbox" [id]="'status' + i"/>
+                          <label cFormCheckLabel [for]="'status-' + i">
+                            {{ 'units.unit-list.table.body.ready'|translate }}
+                          </label>
+                        </c-form-check>
+                      </c-col>
+
+                      <!-- Remove Button -->
+                      <c-col md="2" class="mb-3 d-flex align-items-end justify-content-center">
+                        <button cButton size="sm" color="danger" class="btn-light"
+                                (click)="removeNewSubUnit(i)">
+                          <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                        </button>
+                      </c-col>
+                    </c-row>
+                  </div>
+
+                }
               </div>
+            </c-col>
+          }
 
-              <div class="info-content">
-                <h6 class="mb-2 fw-semibold">{{ 'units.create-multi-unit.info.title'|translate }}</h6>
-                <p class="mb-2 small">
-                  {{ 'units.create-multi-unit.info.description'|translate }}
-                </p>
-                <div class="example-text">
-                  <span class="fw-semibold small">{{ 'units.create-multi-unit.info.example.label'|translate }}</span>
-                  <span class="small ms-1">
-                    {{ 'units.create-multi-unit.info.example.text'|translate }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </c-col>
-      </c-row>
+          <!-- Add New Subunit Link -->
+          <c-col md="12" class="mb-3">
+            <button class="add-subunit-link" cButton color="link" type="button" (click)="addNewSubUnit()">
+              <i class="bi bi-plus me-1"></i> {{ 'units.create-multi-unit.form.add-subunit.label'|translate }}
+            </button>
+          </c-col>
 
-      &lt;!&ndash;Name input&ndash;&gt;
-      <c-row>
-        <c-col md="12" class="mb-3">
-          <label cLabel class="required me-2" for="name">
-            {{ 'units.create-multi-unit.form.main-unit-name.label'|translate }}
-          </label>
-          <input cFormControl formControlName="name" id="name" name="name"
-                 [placeholder]="'units.create-multi-unit.form.main-unit-name.placeholder'|translate" type="text"/>
-          <c-form-feedback
-            *ngIf="((multiUnitForm.get('name')?.touched || multiUnitForm.get('name')?.dirty) && multiUnitForm.get('name')?.hasError('required'))"
-            [valid]="false">
-            {{ 'commons.errors.required'|translate }}
-          </c-form-feedback>
-        </c-col>
-      </c-row>
+          <!-- Existing Units Selection -->
+          <c-col md="12">
+            <label cLabel for="existingUnits">
+              {{ 'units.create-multi-unit.form.existing-units.label'|translate }}
+            </label>
+            <app-unit-select formControlName="existingUnits" id="existingUnits"
+                             [allowMultiUnit]="false"></app-unit-select>
+          </c-col>
 
-      &lt;!&ndash; New Subunits Section &ndash;&gt;
-      <c-row *ngIf="newSubUnits.length > 0">
-        <c-col md="12">
-          <div formArrayName="newSubUnits">
-            <div *ngFor="let subUnit of newSubUnits.controls; let i = index" [formGroupName]="i">
-              <c-row>
-                &lt;!&ndash; Subunit Name &ndash;&gt;
-                <c-col md="6" class="mb-3">
-                  <label cLabel class="required me-2">
-                    {{ 'units.create-multi-unit.form.subunit-name.label'|translate }}
-                  </label>
-                  <input cFormControl formControlName="name" type="text"
-                         [placeholder]="'units.create-multi-unit.form.subunit-name.placeholder'|translate"/>
+        </c-row>
+
+      </div>
+    }
+
+    <!-- Step 2: Rental Details -->
+    @if (currentStep === 2) {
+      <div class="step2">
+        <c-row class="mt-2">
+          <c-col md="7">
+            <h6 class="section-title underline mb-3">{{ 'units.create-unit.form.address.title'|translate }}</h6>
+
+            <c-row>
+              <c-col md="12" class="mb-3">
+                <label cLabel class="required me-2" for="street1">
+                  {{ 'units.create-unit.form.address.street1-input.label'|translate }}
+                </label>
+                <input cFormControl formControlName="street1" id="street1" name="street1" type="text"/>
+                @if (((multiUnitForm.get('street1')?.touched || multiUnitForm.get('street1')?.dirty) && multiUnitForm.get('street1')?.hasError('required'))) {
                   <c-form-feedback
-                    *ngIf="((subUnit.get('name')?.touched || subUnit.get('name')?.dirty) && subUnit.get('name')?.hasError('required'))"
                     [valid]="false">
                     {{ 'commons.errors.required'|translate }}
                   </c-form-feedback>
-                </c-col>
+                }
+              </c-col>
+            </c-row>
 
-                &lt;!&ndash; Priority &ndash;&gt;
-                <c-col md="3" class="mb-3">
-                  <label cLabel class="required me-2">
-                    {{ 'units.create-multi-unit.form.priority.label'|translate }}
-                  </label>
-                  <input cFormControl formControlName="priority" type="number" min="1" max="99"/>
-                  <c-form-feedback
-                    *ngIf="((subUnit.get('priority')?.touched || subUnit.get('priority')?.dirty) && subUnit.get('priority')?.hasError('required'))"
-                    [valid]="false">
+            <c-row>
+              <c-col md="8" class="mb-3">
+                <label cLabel for="street2">
+                  {{ 'units.create-unit.form.address.street2-input.label'|translate }}
+                </label>
+                <input cFormControl formControlName="street2" id="street2" name="street2" type="text"/>
+              </c-col>
+
+              <c-col md="4" class="mb-3">
+                <label cLabel for="postcode">
+                  {{ 'units.create-unit.form.address.postcode-input.label'|translate }}
+                </label>
+                <input cFormControl formControlName="postcode" id="postcode" name="postcode" type="text"/>
+              </c-col>
+            </c-row>
+
+            <c-row>
+              <c-col md="6" class="mb-3">
+                <label cLabel class="required me-2" for="city">
+                  {{ 'units.create-unit.form.address.city-input.label'|translate }}
+                </label>
+                <input cFormControl formControlName="city" id="city" name="city" type="text"/>
+                <c-form-feedback
+                  *ngIf="((multiUnitForm.get('city')?.touched || multiUnitForm.get('city')?.dirty) && multiUnitForm.get('city')?.hasError('required'))"
+                  [valid]="false">
+                  {{ 'commons.errors.required'|translate }}
+                </c-form-feedback>
+                <c-form-feedback
+                  *ngIf="((multiUnitForm.get('city')?.touched || multiUnitForm.get('city')?.dirty) && multiUnitForm.get('city')?.hasError('noNumbers'))"
+                  [valid]="false">
+                  {{ 'commons.errors.no-numbers'|translate }}
+                </c-form-feedback>
+              </c-col>
+
+              <c-col md="6" class="mb-3">
+                <label cLabel class="required me-2" for="country">
+                  {{ 'units.create-unit.form.address.country-input.label'|translate }}
+                </label>
+                <app-country-select formControlName="country" id="country"></app-country-select>
+                <c-form-feedback
+                  *ngIf="((multiUnitForm.get('country')?.touched || multiUnitForm.get('country')?.dirty) && multiUnitForm.get('country')?.hasError('required'))"
+                  [valid]="false">
+                  {{ 'commons.errors.required'|translate }}
+                </c-form-feedback>
+              </c-col>
+            </c-row>
+
+          </c-col>
+
+          <c-col md="5">
+            <h6 class="section-title underline mb-3">{{ 'units.create-unit.form.contact.title'|translate }}</h6>
+
+            <c-row>
+              <c-col [md]="6" class="mb-3 w-100">
+                <label cLabel for="mobile" class="required">
+                  {{ 'units.create-unit.form.contact.mobile-input.label'|translate }}
+                </label>
+                <ngx-intl-tel-input
+                  [enableAutoCountrySelect]="false"
+                  [enablePlaceholder]="true"
+                  [maxLength]="15"
+                  [phoneValidation]="true"
+                  [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                  [searchCountryFlag]="true"
+                  [selectFirstCountry]="false"
+                  [selectedCountryISO]="CountryISO.Morocco"
+                  cssClass="form-control"
+                  formControlName="mobile"
+                  id="mobile"
+                  inputId="mobile">
+                </ngx-intl-tel-input>
+                @if (((multiUnitForm.get('mobile')?.touched) && multiUnitForm.get('mobile')?.hasError('required'))) {
+                  <c-form-feedback [valid]="false">
                     {{ 'commons.errors.required'|translate }}
                   </c-form-feedback>
-                </c-col>
+                }
+              </c-col>
+            </c-row>
 
-                &lt;!&ndash; Status Toggle &ndash;&gt;
-                <c-col md="1" class="mb-3 d-flex flex-column justify-content-center">
-                  <label cLabel class="me-2">{{ 'units.create-multi-unit.form.status.label'|translate }}</label>
-                  <c-form-check [switch]="true">
-                    <input cFormCheckInput formControlName="readiness" type="checkbox" [id]="'status-' + i"/>
-                    <label cFormCheckLabel [for]="'status-' + i">
-                      {{ 'units.unit-list.table.body.ready'|translate }}
-                    </label>
-                  </c-form-check>
-                </c-col>
+            <c-row>
+              <c-col md="12" class="mb-3">
+                <label cLabel for="email">
+                  {{ 'units.create-unit.form.contact.email-input.label'|translate }}
+                </label>
+                <input cFormControl formControlName="email" id="email" name="email" type="text"/>
+                @if (((multiUnitForm.get('email')?.touched || multiUnitForm.get('email')?.dirty) && multiUnitForm.get('email')?.hasError('invalidEmail'))) {
+                  <c-form-feedback [valid]="false">
+                    {{ 'commons.errors.email'|translate }}
+                  </c-form-feedback>
+                }
+              </c-col>
+            </c-row>
 
-                &lt;!&ndash; Remove Button &ndash;&gt;
-                <c-col md="2" class="mb-3 d-flex align-items-end justify-content-center">
-                  <button cButton size="sm" color="danger" class="btn-light"
-                          (click)="removeNewSubUnit(i)">
-                    <svg [cIcon]="icons.cilTrash" size="sm"></svg>
-                  </button>
-                </c-col>
-              </c-row>
-            </div>
-          </div>
-        </c-col>
-      </c-row>
+          </c-col>
 
-      &lt;!&ndash; Add New Subunit Link &ndash;&gt;
-      <c-row>
-        <c-col md="12">
-          <span class="add-subunit-link" (click)="addNewSubUnit()">
-            <i class="bi bi-plus me-1"></i>
-            {{ 'units.create-multi-unit.form.add-subunit.label'|translate }}
-          </span>
-        </c-col>
-      </c-row>
+        </c-row>
+      </div>
+    }
 
-      &lt;!&ndash; Existing Units Selection &ndash;&gt;
-      <c-row>
-        <c-col md="12">
-          <label cLabel for="existingUnits">
-            {{ 'units.create-multi-unit.form.existing-units.label'|translate }}
-          </label>
-          <app-unit-select formControlName="existingUnits" id="existingUnits"
-                           [allowMultiUnit]="false"></app-unit-select>
-        </c-col>
-      </c-row>
 
-    </div>
-
-    &lt;!&ndash; Step 2: Rental Details &ndash;&gt;
-    <div *ngIf="currentStep === 2">
-
-      <c-row class="mt-2">
-        <c-col md="7">
-          <h6 class="section-title underline mb-3">{{ 'units.create-unit.form.address.title'|translate }}</h6>
-
-          <c-row>
-            <c-col md="12" class="mb-3">
-              <label cLabel class="required me-2" for="street1">
-                {{ 'units.create-unit.form.address.street1-input.label'|translate }}
-              </label>
-              <input cFormControl formControlName="street1" id="street1" name="street1" type="text"/>
-              <c-form-feedback
-                *ngIf="((multiUnitForm.get('street1')?.touched || multiUnitForm.get('street1')?.dirty) && multiUnitForm.get('street1')?.hasError('required'))"
-                [valid]="false">
-                {{ 'commons.errors.required'|translate }}
-              </c-form-feedback>
-            </c-col>
-          </c-row>
-
-          <c-row>
-            <c-col md="8" class="mb-3">
-              <label cLabel for="street2">
-                {{ 'units.create-unit.form.address.street2-input.label'|translate }}
-              </label>
-              <input cFormControl formControlName="street2" id="street2" name="street2" type="text"/>
-            </c-col>
-
-            <c-col md="4" class="mb-3">
-              <label cLabel for="postcode">
-                {{ 'units.create-unit.form.address.postcode-input.label'|translate }}
-              </label>
-              <input cFormControl formControlName="postcode" id="postcode" name="postcode" type="text"/>
-            </c-col>
-          </c-row>
-
-          <c-row>
-            <c-col md="6" class="mb-3">
-              <label cLabel class="required me-2" for="city">
-                {{ 'units.create-unit.form.address.city-input.label'|translate }}
-              </label>
-              <input cFormControl formControlName="city" id="city" name="city" type="text"/>
-              <c-form-feedback
-                *ngIf="((multiUnitForm.get('city')?.touched || multiUnitForm.get('city')?.dirty) && multiUnitForm.get('city')?.hasError('required'))"
-                [valid]="false">
-                {{ 'commons.errors.required'|translate }}
-              </c-form-feedback>
-              <c-form-feedback
-                *ngIf="((multiUnitForm.get('city')?.touched || multiUnitForm.get('city')?.dirty) && multiUnitForm.get('city')?.hasError('noNumbers'))"
-                [valid]="false">
-                {{ 'commons.errors.no-numbers'|translate }}
-              </c-form-feedback>
-            </c-col>
-
-            <c-col md="6" class="mb-3">
-              <label cLabel class="required me-2" for="country">
-                {{ 'units.create-unit.form.address.country-input.label'|translate }}
-              </label>
-              <app-country-select formControlName="country" id="country"></app-country-select>
-              <c-form-feedback
-                *ngIf="((multiUnitForm.get('country')?.touched || multiUnitForm.get('country')?.dirty) && multiUnitForm.get('country')?.hasError('required'))"
-                [valid]="false">
-                {{ 'commons.errors.required'|translate }}
-              </c-form-feedback>
-            </c-col>
-          </c-row>
-
-        </c-col>
-
-        <c-col md="5">
-          <h6 class="section-title underline mb-3">{{ 'units.create-unit.form.contact.title'|translate }}</h6>
-
-          <c-row>
-            <c-col [md]="6" class="mb-3 w-100">
-              <label cLabel for="mobile" class="required">
-                {{ 'units.create-unit.form.contact.mobile-input.label'|translate }}
-              </label>
-              <ngx-intl-tel-input
-                [enableAutoCountrySelect]="false"
-                [enablePlaceholder]="true"
-                [maxLength]="15"
-                [phoneValidation]="true"
-                [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
-                [searchCountryFlag]="true"
-                [selectFirstCountry]="false"
-                [selectedCountryISO]="CountryISO.Morocco"
-                cssClass="form-control"
-                formControlName="mobile"
-                id="mobile"
-                inputId="mobile">
-              </ngx-intl-tel-input>
-              <c-form-feedback
-                *ngIf="((multiUnitForm.get('mobile')?.touched) && multiUnitForm.get('mobile')?.hasError('required'))"
-                [valid]="false">
-                {{ 'commons.errors.required'|translate }}
-              </c-form-feedback>
-            </c-col>
-          </c-row>
-
-          <c-row>
-            <c-col md="12" class="mb-3">
-              <label cLabel for="email">
-                {{ 'units.create-unit.form.contact.email-input.label'|translate }}
-              </label>
-              <input cFormControl formControlName="email" id="email" name="email" type="text"/>
-              <c-form-feedback
-                *ngIf="((multiUnitForm.get('email')?.touched || multiUnitForm.get('email')?.dirty) && multiUnitForm.get('email')?.hasError('invalidEmail'))"
-                [valid]="false">
-                {{ 'commons.errors.email'|translate }}
-              </c-form-feedback>
-            </c-col>
-          </c-row>
-
-        </c-col>
-
-      </c-row>
-
-    </div>
-
-    &lt;!&ndash;Modal footer&ndash;&gt;
+    <!--Modal footer-->
     <c-row class="mt-4">
       <c-col class="d-flex justify-content-between">
-        &lt;!&ndash; Left side buttons &ndash;&gt;
+        <!-- Left side buttons -->
         <div>
-          <button *ngIf="currentStep === 2" type="button" cButton color="secondary" size="sm"
-                  variant="outline" (click)="previousStep()">
-            <i class="bi bi-arrow-left me-1"></i>
-            {{ 'commons.form.buttons.previous-btn'|translate }}
-          </button>
+          @if (currentStep === 2) {
+            <button type="button" cButton color="secondary" size="sm"
+                    variant="outline" (click)="previousStep()">
+              <i class="bi bi-arrow-left me-1"></i>
+              {{ 'commons.form.buttons.previous-btn'|translate }}
+            </button>
+          }
         </div>
 
-        &lt;!&ndash; Right side buttons &ndash;&gt;
+        <!-- Right side buttons -->
         <div>
           <button type="button" cButton color="light" size="sm" variant="ghost"
                   (click)="closeModal()" class="me-2">
             {{ 'commons.form.buttons.cancel'|translate }}
           </button>
 
-          <button *ngIf="currentStep === 1" type="button" cButton color="primary" size="sm"
-                  (click)="nextStep()" [disabled]="!isStep1Valid()">
-            {{ 'commons.form.buttons.next-btn'|translate }}
-            <i class="bi bi-arrow-right ms-1"></i>
-          </button>
+          @if (currentStep === 1) {
+            <button type="button" cButton color="primary" size="sm"
+                    (click)="nextStep()" [disabled]="!isStep1Valid()">
+              {{ 'commons.form.buttons.next-btn'|translate }}
+              <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          }
 
-          <button *ngIf="currentStep === 2" type="submit" cButton color="primary" size="sm"
-                  [disabled]="!isStep2Valid()">
-            <span *ngIf="!isSubmitting">{{ 'commons.form.save-btn'|translate }}</span>
-            <span *ngIf="isSubmitting" class="d-flex align-items-center">
-              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-              {{ 'commons.snippets.loading'|translate }}...
-            </span>
-          </button>
+          @if (currentStep === 2) {
+            <button type="submit" cButton color="primary" size="sm" [disabled]="!isStep2Valid()">
+              {{ 'commons.form.save-btn'|translate }}
+            </button>
+          }
+
         </div>
       </c-col>
     </c-row>
@@ -327,4 +344,3 @@
   </form>
 
 </div>
--->

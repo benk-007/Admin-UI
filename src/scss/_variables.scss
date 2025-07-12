@@ -8,6 +8,7 @@ $warning: #FDA015;
 $danger: #FF3D00;
 $light: #DFDFDF;
 $dark: #262626;
+$gray: #5F5F5F;
 
 /*Opacity colors*/
 $primary-10: #F3FBFF;
@@ -21,7 +22,7 @@ $dark-10: #EDEDED;
 
 
 /*Body colors*/
-$body-color: #5F5F5F;
+$body-color: $gray;
 $body-bg: #F3FBFF;
 
 /*Table colors*/

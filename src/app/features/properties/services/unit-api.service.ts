@@ -31,6 +31,7 @@ export class UnitApiService {
   postUnit(payload: UnitPostModel) {
     return this.httpClient.post<UnitItemGetModel>(environment.apiBaseUrl.concat(environment.unitList), payload);
   }
+
 /*
   updateUnitInfosById(unitId: string, payload: UnitInfosPatchModel) {
     return this.httpClient.patch<UnitInfosGetModel>(environment.apiBaseUrl.concat(environment.unitInfosById).replace(':unitId', unitId), payload);
@@ -105,9 +106,7 @@ export class UnitApiService {
     return this.httpClient.delete<void>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId));
   }
 
-  postMultiUnit(payload: MultiUnitPostModel) {
-    return this.httpClient.post<UnitItemGetModel>(environment.apiBaseUrl.concat(environment.unitList), payload);
-  }*/
+*/
 
   getSubUnits(multiUnitId: string, pageFilter?: PageFilterModel ) {
     let params = new HttpParams();

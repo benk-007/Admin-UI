@@ -1,7 +1,7 @@
-import {Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {
-  ButtonDirective,
+  ButtonDirective, CardBodyComponent, CardComponent,
   ColComponent,
   FormCheckComponent,
   FormCheckInputDirective,
@@ -17,15 +17,16 @@ import {BsModalRef} from "ngx-bootstrap/modal";
 import {ToastrService} from "ngx-toastr";
 import {Subscription} from "rxjs";
 import {CountryISO, NgxIntlTelInputModule, SearchCountryField} from "ngx-intl-tel-input";
-import {emailValidator} from "../../../../shared/validators/email.validator";
 import {CountrySelectComponent} from "../../../../shared/components/country-select/country-select.component";
 import {noNumbersValidator} from "../../../../shared/validators/no-number.validator";
 import {UnitApiService} from "../../services/unit-api.service";
 import {UnitSelectComponent} from "../../../../shared/components/unit-select/unit-select.component";
 import {CommonModule} from "@angular/common";
-// import {MultiUnitPostModel, SubUnitModel} from "../../models/multi-unit-post.model";
 import {IconDirective} from "@coreui/icons-angular";
 import {cilTrash} from "@coreui/icons";
+import {SubUnitModel} from '../../models/unit/commons/sub-unit.model';
+import {UnitPostModel} from '../../models/unit/post/unit-post.model';
+import {UnitNatureEnum} from '../../models/unit/enums/unit-nature.enum';
 
 @Component({
   selector: 'app-multi-unit-create-modal',
@@ -49,16 +50,18 @@ import {cilTrash} from "@coreui/icons";
     FormCheckInputDirective,
     FormCheckLabelDirective,
     TranslatePipe,
-    IconDirective
+    IconDirective,
+    CardComponent,
+    CardBodyComponent
   ],
   templateUrl: './multi-unit-create-modal.component.html',
   styleUrl: './multi-unit-create-modal.component.scss'
 })
 export class MultiUnitCreateModalComponent implements OnDestroy {
- icons = {
+  icons = {
     cilTrash
   };
-  // multiUnitForm: FormGroup;
+  multiUnitForm: FormGroup;
   currentStep: 1 | 2 = 1;
   isSubmitting: boolean = false;
   @Output() actionConfirmed = new EventEmitter<string>();
@@ -74,20 +77,20 @@ export class MultiUnitCreateModalComponent implements OnDestroy {
     private readonly translateService: TranslateService,
     private readonly toastrService: ToastrService
   ) {
-   /* this.multiUnitForm = this.fb.group({
+    this.multiUnitForm = this.fb.group({
       name: [null, [Validators.required]],
       street1: [null, [Validators.required]],
       street2: [null],
       postcode: [null],
       city: [null, [Validators.required, noNumbersValidator()]],
       country: [null, [Validators.required]],
-      mobile: [null, [Validators.required]],
-      email: [null, [emailValidator()]],
+      mobile: [null],
+      email: [null],
       existingUnits: [null],
       newSubUnits: this.fb.array([])
-    });*/
+    });
   }
-/*
+
   get newSubUnits(): FormArray {
     return this.multiUnitForm.get('newSubUnits') as FormArray;
   }
@@ -207,9 +210,9 @@ export class MultiUnitCreateModalComponent implements OnDestroy {
       });
     }
 
-    const payload: MultiUnitPostModel = {
+    const payload: UnitPostModel = {
       name: formValue.name.trim(),
-      nature: "MULTI_UNIT",
+      nature: UnitNatureEnum.MULTI_UNIT,
       address: {
         street1: formValue.street1.trim(),
         street2: formValue.street2?.trim() || undefined,
@@ -228,7 +231,7 @@ export class MultiUnitCreateModalComponent implements OnDestroy {
 
     // Call API service
     this.subscriptions.push(
-      this.unitApiService.postMultiUnit(payload).subscribe({
+      this.unitApiService.postUnit(payload).subscribe({
         next: (data) => {
           console.log('Multi-unit created successfully:', data);
           this.isSubmitting = false;
@@ -266,7 +269,7 @@ export class MultiUnitCreateModalComponent implements OnDestroy {
     while (this.newSubUnits.length !== 0) {
       this.newSubUnits.removeAt(0);
     }
-  }*/
+  }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
