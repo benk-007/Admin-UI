@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
 import {
-  ButtonDirective,
-  ColComponent,
+  ButtonDirective, CardBodyComponent, CardComponent, CardGroupComponent,
+  ColComponent, ContainerComponent,
   FormControlDirective,
   FormDirective,
   FormFeedbackComponent,
   FormFloatingDirective,
-  FormLabelDirective,
+  FormLabelDirective, InputGroupComponent, InputGroupTextDirective,
   RowComponent
 } from "@coreui/angular";
 import {Router, RouterLink} from "@angular/router";
@@ -18,6 +18,8 @@ import {AlertService} from "../../../../core/services/alert.service";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {emailValidator} from "../../../../shared/validators/email.validator";
 import {AuthService} from "../../../../core/services/auth.service";
+import {IconDirective} from '@coreui/icons-angular';
+import {NgOptimizedImage, NgStyle} from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -34,7 +36,16 @@ import {AuthService} from "../../../../core/services/auth.service";
     FormDirective,
     AlertComponent,
     TranslatePipe,
-    FormFeedbackComponent
+    FormFeedbackComponent,
+    CardBodyComponent,
+    CardComponent,
+    CardGroupComponent,
+    ContainerComponent,
+    IconDirective,
+    InputGroupComponent,
+    InputGroupTextDirective,
+    NgStyle,
+    NgOptimizedImage
   ],
   templateUrl: './login.component.html',
   standalone: true,

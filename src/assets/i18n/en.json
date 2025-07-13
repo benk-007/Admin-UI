@@ -372,10 +372,7 @@
   },
   "authentication": {
     "login": {
-      "sub-title": {
-        "text-1": "wherever you roam,",
-        "text-2": "marks your home"
-      },
+      "sub-title": "Built for Managers. Loved by Guests.",
       "form": {
         "email-input": {
           "label": "Email address"
