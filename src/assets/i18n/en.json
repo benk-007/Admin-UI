@@ -397,7 +397,7 @@
         "email-input": {
           "label": "Email address"
         },
-        "submit-btn": "Send",
+        "submit-btn": "Request password reset",
         "errors": {
           "undefined": "Something went wrong at our end, and we are working to fix the problem! "
         },

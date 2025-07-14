@@ -6,7 +6,7 @@ import {AlertService} from "../../../../core/services/alert.service";
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {RouterLink} from "@angular/router";
 import {
-  ButtonDirective,
+  ButtonDirective, CardBodyComponent, CardComponent,
   ColComponent,
   FormControlDirective,
   FormDirective,
@@ -17,6 +17,7 @@ import {
 } from "@coreui/angular";
 import {AlertComponent} from "../../../../shared/components/alert/alert.component";
 import {emailValidator} from "../../../../shared/validators/email.validator";
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-forgot-password',
@@ -32,7 +33,10 @@ import {emailValidator} from "../../../../shared/validators/email.validator";
     FormFeedbackComponent,
     RouterLink,
     ButtonDirective,
-    FormDirective
+    FormDirective,
+    CardBodyComponent,
+    CardComponent,
+    NgOptimizedImage
   ],
   templateUrl: './forgot-password.component.html',
   standalone: true,
