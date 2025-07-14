@@ -92,88 +92,125 @@
             }
           </c-col>
 
-          <!-- New Subunits Section -->
-          @if (newSubUnits.length > 0) {
-            <c-col md="12">
-              <div formArrayName="newSubUnits">
-                @for (subUnit of newSubUnits.controls; track subUnit; let i = $index) {
-                  <div [formGroupName]="i">
-                    <c-row>
-                      <!-- Subunit Name -->
-                      <c-col md="6" class="mb-3">
-                        <label cLabel class="required" [for]="'name'+1">
-                          {{ 'units.create-multi-unit.form.subunit-name.label'|translate }}
-                        </label>
-                        <input [id]="'name'+i" cFormControl formControlName="name" type="text"
-                               [placeholder]="'units.create-multi-unit.form.subunit-name.placeholder'|translate"/>
-                        @if (subUnit.get('name')?.touched || subUnit.get('name')?.dirty) {
-                          @if (subUnit.get('name')?.hasError('required')) {
-                            <c-form-feedback [valid]="false">
-                              {{ 'commons.errors.required'|translate }}
-                            </c-form-feedback>
-                          }
-                        }
+          <c-col md="12" class="mb-3 d-flex justify-content-center">
+            <c-button-group>
+              <input class="btn-check" formControlName="subUnitMode" id="bulk-radio" type="radio" value="bulk"/>
+              <label (click)="setSubUnitMode('bulk')" cButton cFormCheckLabel color="secondary" for="bulk-radio"
+                     variant="outline">
+                {{ 'units.create-multi-unit.form.subunit-bulk-input.label'|translate }}
+              </label>
 
-                      </c-col>
+              <input class="btn-check" formControlName="subUnitMode" id="standalone-radio" type="radio"
+                     value="standalone"/>
+              <label (click)="setSubUnitMode('standalone')" cButton cFormCheckLabel color="secondary"
+                     for="standalone-radio"
+                     variant="outline">
+                {{ 'units.create-multi-unit.form.subunit-standalone-input.label'|translate }}
+              </label>
 
-                      <!-- Priority -->
-                      <c-col md="3" class="mb-3">
-                        <label cLabel class="required" [for]="'priority'+1">
-                          {{ 'units.create-multi-unit.form.priority.label'|translate }}
-                        </label>
-                        <input [id]="'priority'+i" cFormControl formControlName="priority" type="number" min="1"
-                               max="99"/>
-                        @if (subUnit.get('priority')?.touched || subUnit.get('priority')?.dirty) {
-                          @if (subUnit.get('priority')?.hasError('required')) {
-                            <c-form-feedback [valid]="false">
-                              {{ 'commons.errors.required'|translate }}
-                            </c-form-feedback>
-                          }
-                        }
-                      </c-col>
+            </c-button-group>
+          </c-col>
 
-                      <!-- Status Toggle -->
-                      <c-col md="1" class="mb-3 d-flex flex-column justify-content-center">
-                        <label cLabel
-                               [for]="'status'+i">{{ 'units.create-multi-unit.form.status.label'|translate }}</label>
-                        <c-form-check [switch]="true">
-                          <input cFormCheckInput formControlName="readiness" type="checkbox" [id]="'status' + i"/>
-                          <label cFormCheckLabel [for]="'status-' + i">
-                            {{ 'units.unit-list.table.body.ready'|translate }}
+          @if (multiUnitForm.value.subUnitMode === 'bulk') {
+
+            <c-col md="4">
+              <label for="quantity" cLabel
+                     class="required">{{ 'units.create-multi-unit.form.quantity-input.label'|translate }}</label>
+              <input id="quantity" cFormControl formControlName="quantity" name="quantity" type="number" min="1"
+                     max="999">
+            </c-col>
+
+            <c-col md="8">
+              <label for="subUnitPrefix"
+                     cLabel>{{ 'units.create-multi-unit.form.prefix-input.label'|translate }}</label>
+              <input id="subUnitPrefix" cFormControl formControlName="subUnitPrefix" name="subUnitPrefix">
+            </c-col>
+
+          } @else {
+            <!-- New Subunits Section -->
+            @if (newSubUnits.length > 0) {
+              <c-col md="12">
+                <div formArrayName="newSubUnits">
+                  @for (subUnit of newSubUnits.controls; track subUnit; let i = $index) {
+                    <div [formGroupName]="i">
+                      <c-row>
+                        <!-- Subunit Name -->
+                        <c-col md="6" class="mb-3">
+                          <label cLabel class="required" [for]="'name'+1">
+                            {{ 'units.create-multi-unit.form.subunit-name.label'|translate }}
                           </label>
-                        </c-form-check>
-                      </c-col>
+                          <input [id]="'name'+i" cFormControl formControlName="name" type="text"
+                                 [placeholder]="'units.create-multi-unit.form.subunit-name.placeholder'|translate"/>
+                          @if (subUnit.get('name')?.touched || subUnit.get('name')?.dirty) {
+                            @if (subUnit.get('name')?.hasError('required')) {
+                              <c-form-feedback [valid]="false">
+                                {{ 'commons.errors.required'|translate }}
+                              </c-form-feedback>
+                            }
+                          }
 
-                      <!-- Remove Button -->
-                      <c-col md="2" class="mb-3 d-flex align-items-end justify-content-center">
-                        <button cButton size="sm" color="danger" class="btn-light"
-                                (click)="removeNewSubUnit(i)">
-                          <svg [cIcon]="icons.cilTrash" size="sm"></svg>
-                        </button>
-                      </c-col>
-                    </c-row>
-                  </div>
+                        </c-col>
 
-                }
-              </div>
+                        <!-- Priority -->
+                        <c-col md="3" class="mb-3">
+                          <label cLabel class="required" [for]="'priority'+1">
+                            {{ 'units.create-multi-unit.form.priority.label'|translate }}
+                          </label>
+                          <input [id]="'priority'+i" cFormControl formControlName="priority" type="number" min="1"
+                                 max="99"/>
+                          @if (subUnit.get('priority')?.touched || subUnit.get('priority')?.dirty) {
+                            @if (subUnit.get('priority')?.hasError('required')) {
+                              <c-form-feedback [valid]="false">
+                                {{ 'commons.errors.required'|translate }}
+                              </c-form-feedback>
+                            }
+                          }
+                        </c-col>
+
+                        <!-- Status Toggle -->
+                        <c-col md="1" class="mb-3 d-flex flex-column justify-content-center">
+                          <label cLabel
+                                 [for]="'status'+i">{{ 'units.create-multi-unit.form.status.label'|translate }}</label>
+                          <c-form-check [switch]="true">
+                            <input cFormCheckInput formControlName="readiness" type="checkbox" [id]="'status' + i"/>
+                            <label cFormCheckLabel [for]="'status-' + i">
+                              {{ 'units.unit-list.table.body.ready'|translate }}
+                            </label>
+                          </c-form-check>
+                        </c-col>
+
+                        <!-- Remove Button -->
+                        <c-col md="2" class="mb-3 d-flex align-items-end justify-content-center">
+                          <button cButton size="sm" type="button" class="btn-danger-light"
+                                  (click)="removeNewSubUnit(i)">
+                            <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                          </button>
+                        </c-col>
+                      </c-row>
+                    </div>
+
+                  }
+                </div>
+              </c-col>
+            }
+
+            <!-- Add New Subunit Link -->
+            <c-col md="12" class="mb-3">
+              <button class="add-subunit-link" cButton color="link" type="button" (click)="addNewSubUnit()">
+                <i class="bi bi-plus me-1"></i> {{ 'units.create-multi-unit.form.add-subunit.label'|translate }}
+              </button>
+            </c-col>
+
+            <!-- Existing Units Selection -->
+            <c-col md="12">
+              <label cLabel for="existingUnits">
+                {{ 'units.create-multi-unit.form.existing-units.label'|translate }}
+              </label>
+              <app-unit-select formControlName="existingUnits" id="existingUnits"
+                               [allowMultiUnit]="false"></app-unit-select>
             </c-col>
           }
 
-          <!-- Add New Subunit Link -->
-          <c-col md="12" class="mb-3">
-            <button class="add-subunit-link" cButton color="link" type="button" (click)="addNewSubUnit()">
-              <i class="bi bi-plus me-1"></i> {{ 'units.create-multi-unit.form.add-subunit.label'|translate }}
-            </button>
-          </c-col>
-
-          <!-- Existing Units Selection -->
-          <c-col md="12">
-            <label cLabel for="existingUnits">
-              {{ 'units.create-multi-unit.form.existing-units.label'|translate }}
-            </label>
-            <app-unit-select formControlName="existingUnits" id="existingUnits"
-                             [allowMultiUnit]="false"></app-unit-select>
-          </c-col>
 
         </c-row>
 

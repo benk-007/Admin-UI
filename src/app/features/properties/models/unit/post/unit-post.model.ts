@@ -10,4 +10,6 @@ export interface UnitPostModel {
   address: AddressModel;
   contact: ContactModel;
   subUnits?: SubUnitModel[];
+  quantity?: number;
+  subUnitPrefix?: string;
 }

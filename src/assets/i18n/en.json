@@ -517,6 +517,18 @@
           "label": "Subunit Name",
           "placeholder": "Enter subunit name"
         },
+        "subunit-bulk-input": {
+          "label": "Bulk"
+        },
+        "subunit-standalone-input": {
+          "label": "Standalone"
+        },
+        "quantity-input": {
+          "label": "Quantity"
+        },
+        "prefix-input": {
+          "label": "Prefix"
+        },
         "priority": {
           "label": "Priority"
         },

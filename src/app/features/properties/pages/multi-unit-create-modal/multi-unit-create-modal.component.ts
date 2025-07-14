@@ -1,7 +1,10 @@
 import {Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 import {
-  ButtonDirective, CardBodyComponent, CardComponent,
+  ButtonDirective,
+  ButtonGroupComponent,
+  CardBodyComponent,
+  CardComponent,
   ColComponent,
   FormCheckComponent,
   FormCheckInputDirective,
@@ -52,7 +55,8 @@ import {UnitNatureEnum} from '../../models/unit/enums/unit-nature.enum';
     TranslatePipe,
     IconDirective,
     CardComponent,
-    CardBodyComponent
+    CardBodyComponent,
+    ButtonGroupComponent
   ],
   templateUrl: './multi-unit-create-modal.component.html',
   styleUrl: './multi-unit-create-modal.component.scss'
@@ -86,9 +90,16 @@ export class MultiUnitCreateModalComponent implements OnDestroy {
       country: [null, [Validators.required]],
       mobile: [null],
       email: [null],
+      subUnitMode: ['bulk'],
+      quantity: [null],
+      subUnitPrefix: [null],
       existingUnits: [null],
       newSubUnits: this.fb.array([])
     });
+  }
+
+  setSubUnitMode(value: string) {
+    this.multiUnitForm.patchValue({subUnitMode: value})
   }
 
   get newSubUnits(): FormArray {
@@ -210,7 +221,7 @@ export class MultiUnitCreateModalComponent implements OnDestroy {
       });
     }
 
-    const payload: UnitPostModel = {
+    let payload: UnitPostModel = {
       name: formValue.name.trim(),
       nature: UnitNatureEnum.MULTI_UNIT,
       address: {
@@ -224,8 +235,17 @@ export class MultiUnitCreateModalComponent implements OnDestroy {
         mobile: formValue.mobile?.e164Number || formValue.mobile,
         email: formValue.email?.trim() || undefined
       },
-      subUnits: subUnits
+
     };
+    if (this.multiUnitForm.value.subUnitMode === 'bulk') {
+      payload = {
+        ...payload,
+        quantity: formValue.quantity,
+        subUnitPrefix: formValue.subUnitPrefix.trim() || undefined
+      }
+    } else {
+      payload = {...payload, subUnits: subUnits}
+    }
 
     console.log('Multi-unit payload:', payload);
 
