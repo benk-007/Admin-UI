@@ -53,7 +53,7 @@ export const appConfig: ApplicationConfig = {
     provideToastr({
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
-      timeOut: 2500
+      timeOut: 250000
     }),
     importProvidersFrom(JwtModule.forRoot({
       config: {

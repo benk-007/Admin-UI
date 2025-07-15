@@ -1,67 +1,77 @@
+/*
 @use './variables' as *;
 
-.toast-container {
-  &:hover {
+.toast-container{
+  &:hover{
     box-shadow: none;
   }
-
-  .ngx-toastr {
+  .ngx-toastr{
     padding: 0 0;
-
-    &:hover {
+    &:hover{
       box-shadow: none;
     }
 
-    .toast-title {
+    .toast-title{
       padding: 0.375rem 0.75rem !important;
     }
 
-    .toast-message {
+    .toast-message{
       padding: 0.75rem !important;
     }
 
 
-    &.toast-error {
+    &.toast-error{
       background-image: none;
       background-color: $danger-10;
 
-      .toast-title {
+      .toast-title{
         background-color: $danger !important;
       }
 
-      .toast-message {
+      .toast-message{
         background-color: $danger-10 !important;
         color: $danger !important;
       }
     }
 
-    &.toast-success {
+    &.toast-success{
       background-image: none;
       background-color: $success-10;
 
-      .toast-title {
+      .toast-title{
         background-color: $success !important;
       }
 
-      .toast-message {
+      .toast-message{
         background-color: $success-10 !important;
         color: $success !important;
       }
     }
 
-    &.toast-info {
+    &.toast-info{
       background-image: none;
       background-color: $info-10;
 
-      .toast-title {
-        background-color: $info-10 !important;
+      .toast-title{
+        background-color: $info !important;
       }
 
-      .toast-message {
+      .toast-message{
         background-color: $info-10 !important;
         color: $info !important;
       }
     }
+
+
+
   }
+
+
 }
 
+
+
+!*.toast-container .ngx-toastr:hover {
+  box-shadow: none;
+}*!
+*/

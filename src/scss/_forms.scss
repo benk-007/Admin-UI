@@ -30,7 +30,7 @@ label.form-label {
   div.ng-select-container {
     height: 38px;
     border-color: $border-color;
-    background-color: $body-bg;
+    //background-color: $body-bg;
 
     &:hover {
       box-shadow: none;
@@ -53,7 +53,7 @@ label.form-label {
   }
 
   span.input-group-text {
-    background-color: $body-bg;
+    //background-color: $body-bg;
     border: none;
   }
 

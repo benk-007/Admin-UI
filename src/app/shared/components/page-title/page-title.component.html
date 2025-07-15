@@ -1,6 +1,9 @@
 <c-row class="page-title mb-3">
   <c-col [md]="6" class="d-flex align-items-center">
-    <h1 class="page-title mb-0">{{ title |titlecase }}</h1>
+    <h1 class="page-title mb-0">
+      {{ title |titlecase }}
+      <span class="fs-6 text-secondary">{{ subTitle|titlecase }}</span>
+    </h1>
   </c-col>
   <c-col [md]="6" class="d-flex justify-content-end">
     <ng-content></ng-content>

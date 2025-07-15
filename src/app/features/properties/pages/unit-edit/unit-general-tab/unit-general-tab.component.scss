@@ -1,0 +1,89 @@
+@use "../../../../../../scss/variables" as vars;
+
+.save-btn{
+  margin-top: 29px;
+}
+.map-container {
+  height: 300px ;
+  position: relative;
+  overflow: hidden;
+}
+
+div.colors-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+
+  div.color {
+    margin-top: 7px;
+    cursor: pointer;
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+    min-height: 24px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+
+    &.selected {
+      border-color: vars.$dark;
+    }
+  }
+}
+
+label.upload-placeholder-first {
+  div {
+    height: 300px;
+    background-color: vars.$light;
+
+    border: 2px dashed vars.$border-color;
+    border-radius: 0.25rem;
+
+    img {
+      width: 100px;
+    }
+
+  }
+}
+
+//désactiver visuellement la carte
+.disabled-map {
+  pointer-events: none;
+  opacity: 0.6;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.3);
+    z-index: 1000;
+  }
+}
+
+/*.image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-wrapper:hover .image-overlay {
+  display: flex !important;
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(33, 37, 41, 0.6); !* dark mask *!
+  backdrop-filter: grayscale(2%);
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease-in-out;
+  z-index: 10;
+}*/

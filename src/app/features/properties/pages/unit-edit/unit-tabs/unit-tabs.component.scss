@@ -1,0 +1,15 @@
+@use '../../../../../../scss/variables' as *;
+
+.nav-tabs {
+  .nav-item {
+    a.nav-link {
+      &.active {
+        color: $secondary;
+
+        i.bi {
+          color: $primary;
+        }
+      }
+    }
+  }
+}

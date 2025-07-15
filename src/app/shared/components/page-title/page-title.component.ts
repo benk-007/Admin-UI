@@ -17,4 +17,7 @@ export class PageTitleComponent {
   @Input()
   title!: string;
 
+  @Input()
+  subTitle!: string;
+
 }

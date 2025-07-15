@@ -17,6 +17,9 @@ import {RoomPatchModel} from "../models/rooms-bedding/room-patch.model";*/
 import {PageFilterModel} from 'src/app/shared/models/page-filter.model';
 import {UnitItemGetModel} from '../models/unit/get/unit-item-get.model';
 import {UnitPostModel} from '../models/unit/post/unit-post.model';
+import {UnitGetModel} from '../models/unit/get/unit-get.model';
+import {UnitGeneralPatchModel} from '../models/unit/patch/unit-general-patch.model';
+
 // import {MultiUnitPostModel} from "../models/multi-unit-post.model";
 
 
@@ -32,10 +35,10 @@ export class UnitApiService {
     return this.httpClient.post<UnitItemGetModel>(environment.apiBaseUrl.concat(environment.unitList), payload);
   }
 
-/*
-  updateUnitInfosById(unitId: string, payload: UnitInfosPatchModel) {
-    return this.httpClient.patch<UnitInfosGetModel>(environment.apiBaseUrl.concat(environment.unitInfosById).replace(':unitId', unitId), payload);
-  }*/
+
+  updateUnitInfosById(unitId: string, payload: UnitGeneralPatchModel) {
+    return this.httpClient.patch<UnitGetModel>(environment.apiBaseUrl.concat(environment.unitInfosById).replace(':unitId', unitId), payload);
+  }
 
   getUnitsByPage(pageFilter: PageFilterModel) {
     let params = new HttpParams();
@@ -59,56 +62,59 @@ export class UnitApiService {
 
     return this.httpClient.get<PageModel<UnitItemGetModel>>(environment.apiBaseUrl.concat(environment.unitList), {params});
   }
-/*
+
   getUnitById(unitId: string) {
     return this.httpClient.get<UnitGetModel>(environment.apiBaseUrl.concat(environment.unitById).replace(':unitId', unitId));
   }
 
   getUnitInfosById(unitId: string) {
-    return this.httpClient.get<UnitInfosGetModel>(environment.apiBaseUrl.concat(environment.unitInfosById).replace(':unitId', unitId));
+    return this.httpClient.get<UnitGetModel>(environment.apiBaseUrl.concat(environment.unitInfosById).replace(':unitId', unitId));
   }
 
-  getUnitDetailsById(unitId: string) {
-    return this.httpClient.get<UnitDetailsGetModel>(environment.apiBaseUrl.concat(environment.unitDetailsById).replace(':unitId', unitId))
-  }
-
-  updateUnitDetailsById(unitId: string, payload: UnitDetailsPatchModel) {
-    return this.httpClient.patch<UnitDetailsGetModel>(environment.apiBaseUrl.concat(environment.unitDetailsById).replace(':unitId', unitId), payload);
-  }
-
-  getUnitInstructionsById(unitId: string) {
-    return this.httpClient.get<UnitInstructionsGetModel>(
-      environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId)
-    );
-  }
-
-  updateUnitInstructionsById(unitId: string, payload: UnitInstructionsPatchModel) {
-    return this.httpClient.patch<UnitInstructionsGetModel>(
-      environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId),
-      payload
-    );
-  }
+  /*
 
 
-  getUnitRooms(unitId: string) {
-    return this.httpClient.get<PageModel<RoomGetModel>>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId));
-  }
+    getUnitDetailsById(unitId: string) {
+      return this.httpClient.get<UnitDetailsGetModel>(environment.apiBaseUrl.concat(environment.unitDetailsById).replace(':unitId', unitId))
+    }
 
-  createRoom(payload: RoomPostModel, unitId: string) {
-    return this.httpClient.post<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId), payload);
-  }
+    updateUnitDetailsById(unitId: string, payload: UnitDetailsPatchModel) {
+      return this.httpClient.patch<UnitDetailsGetModel>(environment.apiBaseUrl.concat(environment.unitDetailsById).replace(':unitId', unitId), payload);
+    }
 
-  updateRoom(payload: RoomPatchModel, unitId: string, roomId: string) {
-    return this.httpClient.patch<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId), payload);
-  }
+    getUnitInstructionsById(unitId: string) {
+      return this.httpClient.get<UnitInstructionsGetModel>(
+        environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId)
+      );
+    }
 
-  deleteRoom(unitId: string, roomId: string) {
-    return this.httpClient.delete<void>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId));
-  }
+    updateUnitInstructionsById(unitId: string, payload: UnitInstructionsPatchModel) {
+      return this.httpClient.patch<UnitInstructionsGetModel>(
+        environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId),
+        payload
+      );
+    }
 
-*/
 
-  getSubUnits(multiUnitId: string, pageFilter?: PageFilterModel ) {
+    getUnitRooms(unitId: string) {
+      return this.httpClient.get<PageModel<RoomGetModel>>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId));
+    }
+
+    createRoom(payload: RoomPostModel, unitId: string) {
+      return this.httpClient.post<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId), payload);
+    }
+
+    updateRoom(payload: RoomPatchModel, unitId: string, roomId: string) {
+      return this.httpClient.patch<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId), payload);
+    }
+
+    deleteRoom(unitId: string, roomId: string) {
+      return this.httpClient.delete<void>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId));
+    }
+
+  */
+
+  getSubUnits(multiUnitId: string, pageFilter?: PageFilterModel) {
     let params = new HttpParams();
 
     if (pageFilter) {
@@ -132,7 +138,7 @@ export class UnitApiService {
     // GET /units/{unitId}/sub-units
     return this.httpClient.get<PageModel<UnitItemGetModel>>(
       environment.apiBaseUrl.concat(environment.unitSubUnits).replace(':unitId', multiUnitId),
-      { params }
+      {params}
     );
   }
 
@@ -150,7 +156,6 @@ export class UnitApiService {
       payload
     );
   }
-
 
 
   detachSubUnit(subUnitId: string) {
