@@ -666,6 +666,9 @@
                   "label": "Calendar color"
                 }
               }
+            },
+            "images": {
+              "title": "Images"
             }
           },
           "form": {
