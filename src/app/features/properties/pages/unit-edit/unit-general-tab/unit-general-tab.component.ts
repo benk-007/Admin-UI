@@ -23,6 +23,7 @@ import {UnitGetModel} from '../../../models/unit/get/unit-get.model';
 import {LeafletModule} from '@bluehalo/ngx-leaflet';
 import {UnitNatureEnum} from '../../../models/unit/enums/unit-nature.enum';
 import {CountrySelectComponent} from '../../../../../shared/components/country-select/country-select.component';
+import {UnitGalleryComponent} from './unit-gallery/unit-gallery.component';
 
 @Component({
   selector: 'app-unit-general-tab',
@@ -40,6 +41,7 @@ import {CountrySelectComponent} from '../../../../../shared/components/country-s
     LeafletModule,
     ButtonDirective,
     CountrySelectComponent,
+    UnitGalleryComponent,
   ],
   templateUrl: './unit-general-tab.component.html',
   styleUrl: './unit-general-tab.component.scss'
