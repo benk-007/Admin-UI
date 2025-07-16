@@ -1,1 +1,172 @@
-<p>unit-default-rate works!</p>
+<!-- Modal Body -->
+<div class="modal-body">
+  <form [formGroup]="ratesForm" (ngSubmit)="onSubmit()" cForm>
+
+    <!-- Base Pricing Section -->
+    <h6 class="section-title underline mb-3 mt-4">
+      {{ 'units.edit-unit.tabs.rates.settings.BaseRate' | translate }}
+    </h6>
+    <c-row class="mb-3">
+      <c-col [md]="4" sm="12">
+        <label cLabel class="required" for="nightly">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
+        <input cFormControl formControlName="nightly" id="nightly" type="number" step="50" />
+        @if (ratesForm.get('nightly')?.touched || ratesForm.get('nightly')?.dirty) {
+          @if (ratesForm.get('nightly')?.hasError('required')) {
+            <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+          }
+          @if (ratesForm.get('nightly')?.hasError('min')) {
+            <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
+          }
+        }
+      </c-col>
+
+      <c-col [md]="4" sm="12">
+        <label cLabel class="required" for="minStay">{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}</label>
+        <input cFormControl formControlName="minStay" id="minStay" type="number" min="1" />
+      </c-col>
+
+      <c-col [md]="4" sm="12">
+        <label cLabel for="maxStay">{{ 'units.edit-unit.tabs.rates.settings.maxStay' | translate }}</label>
+        <input cFormControl formControlName="maxStay" id="maxStay" type="number" min="1" />
+        <div *ngIf="ratesForm.errors?.['maxLowerThanMin']" class="text-danger mt-2">
+          {{ 'commons.errors.min-max-stay'| translate }}
+        </div>
+      </c-col>
+    </c-row>
+
+    <!-- Day Specific Pricing -->
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+      <h6 class="section-title underline mb-0">
+        {{ 'units.edit-unit.tabs.rates.settings.daySpecificPricing.title' | translate }}
+      </h6>
+      <button type="button" class="btn btn-sm btn-primary rounded-circle" (click)="addDaySpecificPricing()">
+        +
+      </button>
+    </div>
+
+    <div formArrayName="daySpecificRates" class="border-bottom">
+      <div *ngFor="let group of daySpecificRates.controls; let i = index" [formGroupName]="i">
+        <c-row class="mb-3 pb-3">
+
+          <c-col md="4">
+            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
+            <input cFormControl type="number" formControlName="nightly" min="0" step="50" />
+          </c-col>
+
+          <c-col md="4">
+            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ApplyToDays' | translate }}</label>
+            <ng-select formControlName="days"
+                       [items]="daysOfWeekOptions"
+                       [multiple]="true"
+                       bindValue="value"
+                       (add)="onDaySelect($event, i)"
+                       (remove)="onDayRemove($event, i)"
+                       [closeOnSelect]="false"
+                       class="ng-select-sm">
+              <ng-template ng-option-tmp let-item="item">
+                <span [ngClass]="getDayClass(item.value, i)">
+                  {{ ('units.edit-unit.tabs.rates.settings.days.' + item.value) | translate }}
+                </span>
+              </ng-template>
+            </ng-select>
+          </c-col>
+
+          <c-col md="1" class="btn-remove">
+            <button cButton size="sm" type="button" class="btn-danger-light" (click)="removeDaySpecificPricing(i)">
+              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+            </button>
+          </c-col>
+        </c-row>
+      </div>
+    </div>
+
+    <!-- Additional Guest Fee -->
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+      <h6 class="section-title underline mb-0">
+        {{ 'units.edit-unit.tabs.rates.settings.additionalGuestFee' | translate }}
+      </h6>
+      <button type="button" class="btn btn-sm btn-primary rounded-circle" (click)="addAdditionalGuestFee()">
+        +
+      </button>
+    </div>
+
+    <div formArrayName="additionalGuestFees" class="border-bottom">
+      <div *ngFor="let feeGroup of additionalGuestFees.controls; let i = index" [formGroupName]="i">
+        <c-row class="mb-3 pb-3 align-items-center">
+
+          <c-col [md]="2">
+            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.guestCount' | translate }}</label>
+            <input cFormControl type="number" formControlName="guestCount" min="1" />
+          </c-col>
+
+          <c-col [md]="2">
+            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.type' | translate }}</label>
+            <div cFormControl>
+              <select formControlName="guestType" class="form-select">
+                <option value="ADULT" [disabled]="hasAdult(i)">
+                  {{ 'units.edit-unit.tabs.rates.settings.enums.guestType.adult' | translate }}
+                </option>
+                <option value="CHILD">
+                  {{ 'units.edit-unit.tabs.rates.settings.enums.guestType.child' | translate }}
+                </option>
+              </select>
+            </div>
+          </c-col>
+
+          <c-col [md]="2">
+            <label cLabel class="required">
+              {{ 'units.edit-unit.tabs.rates.settings.amountType' | translate }}
+            </label>
+            <div cFormControl>
+              <select formControlName="amountType" class="form-select">
+                <option value="FLAT">{{ 'units.edit-unit.tabs.rates.settings.enums.amountType.flat' | translate }}</option>
+                <option value="PERCENT">{{ 'units.edit-unit.tabs.rates.settings.enums.amountType.percent' | translate }}</option>
+              </select>
+            </div>
+          </c-col>
+
+
+          <!-- ageBucket fields shown only when guestType === 'CHILD' -->
+          <c-col [md]="2" *ngIf="feeGroup.get('guestType')?.value === 'CHILD'" [formGroupName]="'ageBucket'">
+            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageFrom' | translate }}</label>
+            <input cFormControl type="number" formControlName="fromAge" min="0" />
+          </c-col>
+
+          <c-col [md]="2" *ngIf="feeGroup.get('guestType')?.value === 'CHILD'" [formGroupName]="'ageBucket'">
+            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageTo' | translate }}</label>
+            <input cFormControl type="number" formControlName="toAge" min="0" />
+            <div *ngIf="feeGroup.get('ageBucket')?.errors?.['invalidAgeRange']" class="text-danger mt-2">
+              {{ 'units.edit-unit.tabs.rates.settings.errors.invalid-age-range' | translate }}
+            </div>
+          </c-col>
+
+          <c-col [md]="1">
+            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.value' | translate }}</label>
+            <input cFormControl [attr.type]="'number'" formControlName="value" min="0" />
+          </c-col>
+
+
+          <c-col [md]="1" class="btn-remove">
+            <button cButton size="sm" type="button" class="btn-danger-light" (click)="removeAdditionalGuestFee(i)">
+              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+            </button>
+          </c-col>
+        </c-row>
+      </div>
+    </div>
+    <div *ngIf="additionalGuestFees.errors?.['childAgeOverlap']" class="text-danger mt-2">
+      {{ 'units.edit-unit.tabs.rates.settings.errors.child-age-overlap' | translate }}
+    </div>
+
+
+
+    <!-- Footer -->
+    <c-row class="mt-4">
+      <c-col class="d-flex justify-content-end">
+        <button cButton color="primary" type="submit" [disabled]="!ratesForm.valid">
+          {{ 'commons.form.save-btn' | translate }}
+        </button>
+      </c-col>
+    </c-row>
+  </form>
+</div>

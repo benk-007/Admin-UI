@@ -1040,13 +1040,39 @@
             "BaseRate": "Rental Base Rate Details",
             "GuestFee": "Additional Guest Fee",
             "nightly": "Nightly",
-            "weekendNight": "Weekend Night",
-            "weekly": "Weekly",
-            "monthly": "Monthly",
             "minStay": "Minimum Stay (nights)",
             "maxStay": "Maximum Stay (nights)",
-            "feePPPN": "Additional Guest Fee (per person per night)",
+            "daySpecificPricing": {
+              "title": "Day Specific Pricing"
+            },
+            "ApplyToDays": "Apply to Days",
+            "days": {
+              "MONDAY": "Monday",
+              "TUESDAY": "Tuesday",
+              "WEDNESDAY": "Wednesday",
+              "THURSDAY": "Thursday",
+              "FRIDAY": "Friday",
+              "SATURDAY": "Saturday",
+              "SUNDAY": "Sunday"
+            },
             "guestCount": "Guest Count",
+            "type": "Guest Type",
+            "amountType": "Amount Type",
+            "ageFrom": "Age From",
+            "ageTo": "Age To",
+            "add": "Add Fee",
+            "value": "Value",
+            "enums": {
+              "guestType": {
+                "adult": "Adult",
+                "child": "Child"
+              },
+              "amountType": {
+                "flat": "Flat",
+                "percent": "Percent"
+              }
+            },
+            "additionalGuestFee": "Additional Guest Fee",
             "notifications": {
               "success": {
                 "title": "Rates updated",
@@ -1064,7 +1090,9 @@
             "errors": {
               "weeklyLowerThanNightly": "Weekly price must be higher than nightly price.",
               "monthlyLowerThanNightly": "Monthly price must be higher than nightly price.",
-              "monthlyLowerThanWeekly": "Monthly price must be higher than weekly price."
+              "monthlyLowerThanWeekly": "Monthly price must be higher than weekly price.",
+              "child-age-overlap": "Overlapping age ranges for children are not allowed.",
+              "invalid-age-range": "End age must be greater than start age."
             }
           },
           "ratesTable": {

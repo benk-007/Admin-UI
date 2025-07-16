@@ -1,6 +1,5 @@
 export interface DaySpecificPricingModel {
-  daysOfWeek: string[];
+  id?: string;
   nightly: number;
-  ppPn?: number;
-  guestCount?: number;
+  days: string[];
 }
