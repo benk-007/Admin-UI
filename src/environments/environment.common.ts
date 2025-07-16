@@ -1,6 +1,8 @@
 export const UAA_SERVICE = 'authMgtApi/';
 export const UNIT_SERVICE = 'unitMgtApi/';
-export const GUEST_SERVICE = 'guestMgtApi/'
+export const GUEST_SERVICE = 'guestMgtApi/';
+export const MEDIA_SERVICE = 'mediaMgtApi/';
+
 
 export const commonProperties = {
   /*===========UAA Service===========*/
@@ -52,5 +54,7 @@ export const commonProperties = {
   idDocumentImages: GUEST_SERVICE + 'images',
   idDocumentImageById: GUEST_SERVICE + 'images/:imageId',
 
+  /*===========MEDIA Service===========*/
+  mediaById: MEDIA_SERVICE + 'medias/:mediaId',
 
 }

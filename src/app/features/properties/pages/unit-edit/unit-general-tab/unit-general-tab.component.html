@@ -189,11 +189,10 @@
         <!--Images section-->
         <c-row>
           <!--Title-->
-          <h6
-            class="section-title underline mb-3">{{ 'units.edit-unit.tabs.general-information.sections.images.title'|translate }}</h6>
+          <h6 class="section-title underline mb-3">{{ 'units.edit-unit.tabs.general-information.sections.images.title'|translate }}</h6>
 
           <c-col [md]="12">
-
+            <app-unit-gallery [unitId]="unitId"></app-unit-gallery>
           </c-col>
         </c-row>
       </c-col>
