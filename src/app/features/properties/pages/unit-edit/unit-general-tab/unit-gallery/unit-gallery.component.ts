@@ -129,25 +129,25 @@ export class UnitGalleryComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get images to display in right zone (max 4 images, 2x2 grid)
+   * Get images to display in right zone (max 6 images, 3x2 grid)
    */
   getDisplayedRightImages(): ImageGetModel[] {
-    return this.regularImages.slice(0, 4);
+    return this.regularImages.slice(0, 6);
   }
 
   /**
-   * Get images to display in bottom row (starting from 5th image)
+   * Get images to display in bottom row (starting from 7th image)
    */
   getBottomRowImages(): ImageGetModel[] {
-    return this.regularImages.slice(4);
+    return this.regularImages.slice(6);
   }
 
   /**
    * Check if add button should be shown in bottom row
    */
   shouldShowBottomAddButton(): boolean {
-    // Show in bottom if right zone is full (4 images) or if there are bottom images
-    return this.regularImages.length >= 4;
+    // Show in bottom if right zone is full (6 images) or if there are bottom images
+    return this.regularImages.length >= 6;
   }
 
   /**

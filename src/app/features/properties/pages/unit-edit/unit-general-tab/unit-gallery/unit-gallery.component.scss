@@ -5,6 +5,7 @@
 
   .upload-placeholder-cover {
     height: 100%;
+    width: 100%;
     border: 2px dashed $border-color;
     border-radius: 0.5rem;
     display: block;
@@ -23,25 +24,29 @@
 
   .cover-image-wrapper {
     height: 100%;
+    width: 100%;
 
     .cover-image {
       height: 100%;
+      width: 100%;
       object-fit: cover;
     }
   }
 }
 
 .thumbnail-wrapper {
-  height: 140px; // Adjusted for 2x2 grid in right zone
+  height: 95px; // Same height as bottom images
 
   .thumbnail-image {
     height: 100%;
+    width: 100%;
     object-fit: cover;
   }
 }
 
+// BUTTON +
 .add-image-btn {
-  height: 140px; // Match thumbnail height
+  height: 95px; // Same height as thumbnails
   border: 2px dashed $border-color;
   border-radius: 0.5rem;
   display: block;
@@ -52,23 +57,12 @@
     border-radius: 0.5rem;
 
     &:hover {
-      background-color: darken($light, 5%);
+      filter: brightness(0.95);
     }
   }
 }
 
-// Bottom row thumbnails (smaller)
-c-row.mt-3 {
-  .thumbnail-wrapper {
-    height: 100px;
-  }
-
-  .add-image-btn {
-    height: 100px;
-  }
-}
-
-// Overlay for actions (no shadow)
+// Overlay for actions
 .image-overlay {
   position: absolute;
   top: 0;
@@ -81,6 +75,14 @@ c-row.mt-3 {
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease-in-out;
+  .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.5rem;
+
+    i {
+      font-size: 0.7rem;
+    }
+  }
 }
 
 .cover-image-wrapper:hover .image-overlay,

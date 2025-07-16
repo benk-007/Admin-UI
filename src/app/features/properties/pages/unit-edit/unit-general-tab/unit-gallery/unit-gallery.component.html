@@ -34,7 +34,7 @@
     </div>
   </c-col>
 
-  <!-- RIGHT THUMBNAILS ZONE (2 columns) -->
+  <!-- RIGHT THUMBNAILS ZONE (3 rows of 2 images each) -->
   <c-col [md]="4">
     <c-row>
       @for (image of getDisplayedRightImages(); track image.id; let i = $index) {
@@ -64,7 +64,7 @@
       }
 
       <!-- Add button (always visible in right zone if space available) -->
-      @if (getDisplayedRightImages().length < 4) {
+      @if (getDisplayedRightImages().length < 6) {
         <c-col [md]="6" class="mb-2">
           <label class="add-image-btn w-100 cursor-pointer">
             <input type="file" (change)="onFileSelected($event)" multiple accept="image/*" hidden/>
@@ -76,7 +76,6 @@
       }
     </c-row>
   </c-col>
-</c-row>
 
 <!-- BOTTOM ROW for additional images -->
 @if (getBottomRowImages().length > 0 || shouldShowBottomAddButton()) {
@@ -90,7 +89,7 @@
 
           <!-- Actions on hover -->
           <div class="image-overlay d-none">
-            <button class="btn btn-primary btn-sm me-1"
+            <button class="btn btn-primary btn-sm"
                     title="Set as cover"
                     type="button"
                     (click)="setAsCover(image)">
