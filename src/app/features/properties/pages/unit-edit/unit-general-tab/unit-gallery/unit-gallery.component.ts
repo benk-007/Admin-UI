@@ -187,8 +187,6 @@ export class UnitGalleryComponent implements OnInit, OnDestroy {
    * Load binary data of an image using Media Service
    */
   private loadImageData(image: ImageGetModel): void {
-    console.log('Loading image data for:', image);
-    console.log('UUID value:', image.uuid);
 
     if (!image.uuid) {
       console.error(`No UUID found for image ${image.id}. Full image object:`, image);
@@ -198,7 +196,6 @@ export class UnitGalleryComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.imageApiService.getImageByUuid(image.uuid).subscribe({
         next: (blob) => {
-          console.log(`Successfully loaded image blob for ${image.id}`);
           const objectUrl = URL.createObjectURL(blob);
           image.imageUrl = this.sanitizer.bypassSecurityTrustUrl(objectUrl);
         },
@@ -216,19 +213,11 @@ export class UnitGalleryComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.imageApiService.postImages(this.unitId, files).subscribe({
         next: (response) => {
-          console.log('Upload response type:', typeof response);
           console.log('Upload response:', response);
 
-          let uploadedImages: ImageGetModel[] = [];
+          const uploadedImages = response as ImageGetModel[];
 
-          if (Array.isArray(response)) {
-            uploadedImages = response;
-          } else if (response && typeof response === 'object') {
-            // Si c'est un objet avec une propriété content (comme une Page)
-            uploadedImages = (response as any).content || [];
-          }
-
-          if (uploadedImages.length === 0) {
+          if (!uploadedImages || uploadedImages.length === 0) {
             console.warn('No images found in upload response');
             return;
           }

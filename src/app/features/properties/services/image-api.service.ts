@@ -13,7 +13,7 @@ export class ImageApiService {
   constructor(private httpClient: HttpClient) {}
 
   /**
-   * Get images of unit
+   * Get images metadata for a unit from Unit Service
    */
   getImagesByUnitId(unitId: string) {
     let params = new HttpParams();
@@ -29,13 +29,11 @@ export class ImageApiService {
    */
   getImageByUuid(mediaUuid: string): Observable<Blob> {
     const url = `${environment.apiBaseUrl}mediaMgtApi/medias/${mediaUuid}?file=true`;
-    console.log('Requesting image from URL:', url); // Debug log
-
     return this.httpClient.get(url, { responseType: "blob" });
   }
 
   /**
-   * Upload Images
+   * Send Images to Unit Service which transfers them to Media Service and create metadata
    */
   postImages(unitId: string, files: File[]): Observable<ImageGetModel[]> {
     const formData = new FormData();
