@@ -5,7 +5,7 @@ export function ageRangeValidator(): ValidatorFn {
     const from = group.get('fromAge')?.value;
     const to = group.get('toAge')?.value;
 
-    if (from != null && to != null && to <= from) {
+    if (from != null && to != null && to < from) {
       return { invalidAgeRange: true };
     }
 

@@ -1,3 +1,5 @@
+{{ ratesForm.value | json }}
+
 <!-- Modal Body -->
 <div class="modal-body">
   <form [formGroup]="ratesForm" (ngSubmit)="onSubmit()" cForm>
@@ -10,19 +12,27 @@
       <c-col [md]="4" sm="12">
         <label cLabel class="required" for="nightly">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
         <input cFormControl formControlName="nightly" id="nightly" type="number" step="50" />
-        @if (ratesForm.get('nightly')?.touched || ratesForm.get('nightly')?.dirty) {
-          @if (ratesForm.get('nightly')?.hasError('required')) {
-            <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
-          }
-          @if (ratesForm.get('nightly')?.hasError('min')) {
-            <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
-          }
-        }
+        <div *ngIf="ratesForm.get('nightly')?.touched && ratesForm.get('nightly')?.invalid" class="text-danger mt-2">
+          <div *ngIf="ratesForm.get('nightly')?.errors?.['required']">
+            {{ 'commons.errors.required' | translate }}
+          </div>
+          <div *ngIf="ratesForm.get('nightly')?.errors?.['min']">
+            {{ 'commons.errors.strictly-positive' | translate }}
+          </div>
+        </div>
       </c-col>
 
       <c-col [md]="4" sm="12">
         <label cLabel class="required" for="minStay">{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}</label>
         <input cFormControl formControlName="minStay" id="minStay" type="number" min="1" />
+        <div *ngIf="ratesForm.get('minStay')?.touched && ratesForm.get('minStay')?.invalid" class="text-danger mt-2">
+          <div *ngIf="ratesForm.get('minStay')?.errors?.['required']">
+            {{ 'commons.errors.required' | translate }}
+          </div>
+          <div *ngIf="ratesForm.get('minStay')?.errors?.['min']">
+            {{ 'commons.errors.strictly-positive' | translate }}
+          </div>
+        </div>
       </c-col>
 
       <c-col [md]="4" sm="12">
@@ -51,6 +61,14 @@
           <c-col md="4">
             <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
             <input cFormControl type="number" formControlName="nightly" min="0" step="50" />
+            <div *ngIf="group.get('nightly')?.touched && group.get('nightly')?.invalid" class="text-danger mt-2">
+              <div *ngIf="group.get('nightly')?.errors?.['required']">
+                {{ 'commons.errors.required' | translate }}
+              </div>
+              <div *ngIf="group.get('nightly')?.errors?.['min']">
+                {{ 'commons.errors.strictly-positive' | translate }}
+              </div>
+            </div>
           </c-col>
 
           <c-col md="4">
@@ -69,6 +87,11 @@
                 </span>
               </ng-template>
             </ng-select>
+            <div *ngIf="group.get('days')?.touched && group.get('days')?.invalid" class="text-danger mt-2">
+              <div *ngIf="group.get('days')?.errors?.['required']">
+                {{ 'commons.errors.required' | translate }}
+              </div>
+            </div>
           </c-col>
 
           <c-col md="1" class="btn-remove">
@@ -90,13 +113,21 @@
       </button>
     </div>
 
-    <div formArrayName="additionalGuestFees" class="border-bottom">
+    <div formArrayName="additionalGuestFees">
       <div *ngFor="let feeGroup of additionalGuestFees.controls; let i = index" [formGroupName]="i">
         <c-row class="mb-3 pb-3 align-items-center">
 
           <c-col [md]="2">
             <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.guestCount' | translate }}</label>
             <input cFormControl type="number" formControlName="guestCount" min="1" />
+            <div *ngIf="feeGroup.get('guestCount')?.touched && feeGroup.get('guestCount')?.invalid" class="text-danger mt-2">
+              <div *ngIf="feeGroup.get('guestCount')?.errors?.['required']">
+                {{ 'commons.errors.required' | translate }}
+              </div>
+              <div *ngIf="feeGroup.get('guestCount')?.errors?.['min']">
+                {{ 'commons.errors.strictly-positive' | translate }}
+              </div>
+            </div>
           </c-col>
 
           <c-col [md]="2">
@@ -111,6 +142,35 @@
                 </option>
               </select>
             </div>
+            <div *ngIf="feeGroup.get('guestType')?.touched && feeGroup.get('guestType')?.invalid" class="text-danger mt-2">
+              <div *ngIf="feeGroup.get('guestType')?.errors?.['required']">
+                {{ 'commons.errors.required' | translate }}
+              </div>
+            </div>
+          </c-col>
+
+          <!-- ageBucket fields shown only when guestType === 'CHILD' -->
+          <c-col [md]="2" *ngIf="feeGroup.get('guestType')?.value === 'CHILD'" [formGroupName]="'ageBucket'">
+            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageFrom' | translate }}</label>
+            <input cFormControl type="number" formControlName="fromAge" min="0" />
+            <div *ngIf="feeGroup.get('ageBucket.fromAge')?.touched && feeGroup.get('ageBucket.fromAge')?.invalid" class="text-danger mt-2">
+              <div *ngIf="feeGroup.get('ageBucket.fromAge')?.errors?.['min']">
+                {{ 'commons.errors.strictly-positive' | translate }}
+              </div>
+            </div>
+          </c-col>
+
+          <c-col [md]="2" *ngIf="feeGroup.get('guestType')?.value === 'CHILD'" [formGroupName]="'ageBucket'">
+            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageTo' | translate }}</label>
+            <input cFormControl type="number" formControlName="toAge" min="0" />
+            <div *ngIf="feeGroup.get('ageBucket.toAge')?.touched && feeGroup.get('ageBucket.toAge')?.invalid" class="text-danger mt-2">
+              <div *ngIf="feeGroup.get('ageBucket.toAge')?.errors?.['min']">
+                {{ 'commons.errors.positive' | translate }}
+              </div>
+            </div>
+            <div *ngIf="feeGroup.get('ageBucket')?.errors?.['invalidAgeRange']" class="text-danger mt-2">
+              {{ 'units.edit-unit.tabs.rates.settings.errors.invalid-age-range' | translate }}
+            </div>
           </c-col>
 
           <c-col [md]="2">
@@ -123,26 +183,25 @@
                 <option value="PERCENT">{{ 'units.edit-unit.tabs.rates.settings.enums.amountType.percent' | translate }}</option>
               </select>
             </div>
-          </c-col>
-
-
-          <!-- ageBucket fields shown only when guestType === 'CHILD' -->
-          <c-col [md]="2" *ngIf="feeGroup.get('guestType')?.value === 'CHILD'" [formGroupName]="'ageBucket'">
-            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageFrom' | translate }}</label>
-            <input cFormControl type="number" formControlName="fromAge" min="0" />
-          </c-col>
-
-          <c-col [md]="2" *ngIf="feeGroup.get('guestType')?.value === 'CHILD'" [formGroupName]="'ageBucket'">
-            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageTo' | translate }}</label>
-            <input cFormControl type="number" formControlName="toAge" min="0" />
-            <div *ngIf="feeGroup.get('ageBucket')?.errors?.['invalidAgeRange']" class="text-danger mt-2">
-              {{ 'units.edit-unit.tabs.rates.settings.errors.invalid-age-range' | translate }}
+            <div *ngIf="feeGroup.get('amountType')?.touched && feeGroup.get('amountType')?.invalid" class="text-danger mt-2">
+              <div *ngIf="feeGroup.get('amountType')?.errors?.['required']">
+                {{ 'commons.errors.required' | translate }}
+              </div>
             </div>
           </c-col>
 
+
           <c-col [md]="1">
             <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.value' | translate }}</label>
-            <input cFormControl [attr.type]="'number'" formControlName="value" min="0" />
+            <input cFormControl type="number" formControlName="value" min="0" />
+            <div *ngIf="feeGroup.get('value')?.touched && feeGroup.get('value')?.invalid" class="text-danger mt-2">
+              <div *ngIf="feeGroup.get('value')?.errors?.['required']">
+                {{ 'commons.errors.required' | translate }}
+              </div>
+              <div *ngIf="feeGroup.get('value')?.errors?.['min']">
+                {{ 'commons.errors.positive' | translate }}
+              </div>
+            </div>
           </c-col>
 
 

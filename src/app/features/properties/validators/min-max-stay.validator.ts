@@ -1,22 +1,11 @@
-import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export function minMaxStayValidator(): ValidatorFn {
-  return (form: AbstractControl): ValidationErrors | null => {
-    const group = form as FormGroup;
-    const rentalBaseRate = group.get('rentalBaseRate') as FormGroup;
+  return (group: AbstractControl): ValidationErrors | null => {
+    const minStay = group.get('minStay')?.value;
+    const maxStay = group.get('maxStay')?.value;
 
-    if (!rentalBaseRate) {
-      return null;
-    }
-
-    const minValue = rentalBaseRate.get('minStay')?.value;
-    const maxValue = rentalBaseRate.get('maxStay')?.value;
-
-    if (minValue == null || maxValue == null) {
-      return null;
-    }
-
-    if (maxValue < minValue) {
+    if (minStay != null && maxStay != null && maxStay < minStay) {
       return { maxLowerThanMin: true };
     }
 

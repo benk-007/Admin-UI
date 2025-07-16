@@ -18,7 +18,7 @@ import {RateApiService} from '../../../../services/rate-api.service';
 import {IconDirective} from '@coreui/icons-angular';
 import {cilTrash} from '@coreui/icons';
 import {NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {JsonPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {noChildAgeOverlapValidator} from '../../../../validators/no-age-overlap.validator';
 import {minMaxStayValidator} from '../../../../validators/min-max-stay.validator';
 import {ageRangeValidator} from '../../../../validators/ageBucket.validator';
@@ -34,14 +34,14 @@ import {ageRangeValidator} from '../../../../validators/ageBucket.validator';
     ReactiveFormsModule,
     FormControlDirective,
     FormLabelDirective,
-    FormFeedbackComponent,
     TranslatePipe,
     IconDirective,
     NgSelectComponent,
     NgForOf,
     NgOptionTemplateDirective,
     NgIf,
-    NgClass
+    NgClass,
+    JsonPipe
   ],
   templateUrl: './unit-default-rate.component.html',
   styleUrl: './unit-default-rate.component.scss'
@@ -81,7 +81,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.unitId = this.route.parent?.parent?.snapshot.params['unitId'];
+    this.unitId = this.route.parent?.parent?.parent?.snapshot.params['unitId'];
     console.log("unit ID:", this.unitId)
     if (this.unitId) {
       const sub = this.rateApiService.getDefaultRate(this.unitId).subscribe({
@@ -92,7 +92,9 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
           }
         },
         error: () => {
-          this.toastrService.error(this.translateService.instant('default-rate.load-error'));
+          this.toastrService.warning(
+            this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.load-error.message'),
+            this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.load-error.title'));
         }
       });
       this.subscriptions.push(sub);
@@ -109,6 +111,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     const daySpecificRates = this.ratesForm.get('daySpecificRates') as FormArray;
     data.daySpecificRates?.forEach((rate: any) => {
       daySpecificRates.push(this.fb.group({
+        id: [rate.id],
         nightly: [rate.nightly, [Validators.required, Validators.min(1)]],
         days: [rate.days, [Validators.required]]
       }));
@@ -117,6 +120,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     const additionalGuestFees = this.ratesForm.get('additionalGuestFees') as FormArray;
     data.additionalGuestFees?.forEach((fee: any) => {
       additionalGuestFees.push(this.fb.group({
+        id: [fee.id],
         guestCount: [fee.guestCount, [Validators.required, Validators.min(1)]],
         guestType: [fee.guestType, [Validators.required]],
         amountType: [fee.amountType, [Validators.required]],
@@ -132,7 +136,15 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.ratesForm.invalid) return;
 
-    const formValue = this.ratesForm.value;
+    const formValue = structuredClone(this.ratesForm.value);
+
+    // Clean up ageBucket for ADULT entries
+    formValue.additionalGuestFees = formValue.additionalGuestFees.map((fee: any) => {
+      if (fee.guestType === 'ADULT') {
+        delete fee.ageBucket;
+      }
+      return fee;
+    });
     const payload = {
       ...formValue,
       unit: { uuid: this.unitId }
@@ -144,10 +156,14 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
 
     const sub = request$.subscribe({
       next: () => {
-        this.toastrService.success(this.translateService.instant('default-rate.save-success'));
+        this.toastrService.info(
+          this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.success.message'),
+          this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.success.title'));
       },
       error: () => {
-        this.toastrService.error(this.translateService.instant('default-rate.save-error'));
+        this.toastrService.error(
+          this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.error.message'),
+          this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.error.title'));
       }
     });
 
@@ -173,20 +189,28 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
 
     const defaultGuestType = hasAdult ? 'CHILD' : 'ADULT';
 
-    additionalGuestFees.push(
-      this.fb.group({
-        guestCount: [1, [Validators.required, Validators.min(1)]],
-        guestType: [defaultGuestType, [Validators.required]],
-        amountType: ['FLAT', [Validators.required]],
-        value: [0, [Validators.required, Validators.min(0)]],
-        ageBucket: this.fb.group({
-          fromAge: [null],
-          toAge: [null]
-        },{ validators: ageRangeValidator() })
-      })
-    );
-  }
+    const feeGroup = this.fb.group({
+      guestCount: [1, [Validators.required, Validators.min(1)]],
+      guestType: [defaultGuestType, [Validators.required]],
+      amountType: ['FLAT', [Validators.required]],
+      value: [0, [Validators.required, Validators.min(0)]]
+    });
 
+    if (defaultGuestType === 'CHILD') {
+      (feeGroup as FormGroup).addControl(
+        'ageBucket',
+        this.fb.group(
+          {
+            fromAge: [null, [Validators.required, Validators.min(0)]],
+            toAge: [null, [Validators.required, Validators.min(0)]]
+          },
+          { validators: ageRangeValidator() }
+        )
+      );
+    }
+
+    additionalGuestFees.push(feeGroup);
+  }
 
   get daySpecificRates(): FormArray {
     return this.ratesForm.get('daySpecificRates') as FormArray;
@@ -212,13 +236,11 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   }
 
   getAvailableDays(index: number): { label: string, value: string }[] {
-    // Get all days selected in OTHER entries
     const selectedInOthers = this.daySpecificRates.controls
       .filter((_, i) => i !== index) // exclude current entry
       .map(ctrl => ctrl.get('days')?.value ?? [])
       .flat();
 
-    // Return all days not selected in other entries
     return this.daysOfWeekOptions.filter(option =>
       !selectedInOthers.includes(option.value)
     );
