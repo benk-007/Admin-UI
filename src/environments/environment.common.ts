@@ -2,7 +2,7 @@ export const UAA_SERVICE = 'authMgtApi/';
 export const UNIT_SERVICE = 'unitMgtApi/';
 export const GUEST_SERVICE = 'guestMgtApi/';
 export const MEDIA_SERVICE = 'mediaMgtApi/';
-
+export const PRICING_SERVICE = 'rateMgtApi/'
 
 export const commonProperties = {
   /*===========UAA Service===========*/
@@ -34,11 +34,9 @@ export const commonProperties = {
   unitImageById: UNIT_SERVICE + 'images/:imageId',
 
   /*===========Rates===========*/
-  // Default resource
-  unitBaseRateById: UNIT_SERVICE + 'units/:unitId/rates/default',
-  // Tables resource
-  rateList: UNIT_SERVICE + 'rates-tables',
-  rateById: UNIT_SERVICE + 'rates-tables/:ratesTableId',
+  // Rate plans
+  RatePlan: PRICING_SERVICE + 'rate-plans',
+
 
   /*===========Guest Service===========*/
   // Guest resource

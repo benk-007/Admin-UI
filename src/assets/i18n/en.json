@@ -12,6 +12,7 @@
       "email": "Enter a valid email address",
       "no-numbers": "Numbers are not allowed",
       "strictly-positive": "The value must be strictly positive.",
+      "positive": "The value must be positive.",
       "min-max-stay": "Maximum stay must be greater than or equal to minimum stay.",
       "invalidDateRange": "The 'From Date' must be earlier than the 'Until Date'.",
       "session-expired": "Your session has expired. Please sign in again to continue!"
@@ -397,7 +398,7 @@
         "email-input": {
           "label": "Email address"
         },
-        "submit-btn": "Request password reset",
+        "submit-btn": "Send",
         "errors": {
           "undefined": "Something went wrong at our end, and we are working to fix the problem! "
         },
@@ -693,46 +694,41 @@
             }
           },
           "gallery": {
-            "upload-cover": "Upload your first image",
+            "upload-section": "Upload your image",
+            "upload-btn": "Upload another image",
             "delete-modal": {
-              "title": "Confirm image removal",
+              "title": "Confirm unit image removal",
               "message": "Do you want to delete this image? Please be aware that this action can't be rolled back."
             },
             "notifications": {
               "upload": {
                 "success": {
-                  "title": "Images uploaded",
-                  "message": "Your images were uploaded successfully"
+                  "title": "Image uploaded",
+                  "message": "Your rental image was uploaded successfully"
                 },
                 "error": {
-                  "title": "Upload error",
-                  "message": "An error occurred while uploading images"
-                }
-              },
-              "load": {
-                "error": {
-                  "title": "Loading error",
-                  "message": "An error occurred while loading images"
+                  "title": "Image upload error",
+                  "message": "An error occurred when uploading the image. Please try again or contact our support"
                 }
               },
               "cover": {
                 "success": {
-                  "title": "Cover updated",
-                  "message": "Image set as cover successfully"
+                  "title": "Image cover updated",
+                  "message": "Your new rental cover image is set successfully"
                 },
                 "error": {
-                  "title": "Cover update error",
-                  "message": "An error occurred while setting the image as cover"
+                  "title": "Image cover error",
+                  "message": "An error occurred when setting your cover image. Please try again or contact our support"
                 }
               },
               "delete": {
                 "success": {
                   "title": "Image removed",
-                  "message": "Your image was removed successfully"
+                  "message": "Your rental image was removed successfully"
                 },
                 "error": {
                   "title": "Image removal error",
-                  "message": "An error occurred while removing the image"
+                  "message": "An error occurred when removing your rental image. Please try again or contact our support"
                 }
               }
             }
@@ -1045,13 +1041,39 @@
             "BaseRate": "Rental Base Rate Details",
             "GuestFee": "Additional Guest Fee",
             "nightly": "Nightly",
-            "weekendNight": "Weekend Night",
-            "weekly": "Weekly",
-            "monthly": "Monthly",
             "minStay": "Minimum Stay (nights)",
             "maxStay": "Maximum Stay (nights)",
-            "feePPPN": "Additional Guest Fee (per person per night)",
+            "daySpecificPricing": {
+              "title": "Day Specific Pricing"
+            },
+            "ApplyToDays": "Weekdays",
+            "days": {
+              "MONDAY": "Monday",
+              "TUESDAY": "Tuesday",
+              "WEDNESDAY": "Wednesday",
+              "THURSDAY": "Thursday",
+              "FRIDAY": "Friday",
+              "SATURDAY": "Saturday",
+              "SUNDAY": "Sunday"
+            },
             "guestCount": "Guest Count",
+            "type": "Guest Type",
+            "amountType": "Amount Type",
+            "ageFrom": "Age From",
+            "ageTo": "Age To",
+            "add": "Add Fee",
+            "value": "Value",
+            "enums": {
+              "guestType": {
+                "adult": "Adult",
+                "child": "Child"
+              },
+              "amountType": {
+                "flat": "Flat",
+                "percent": "Percent"
+              }
+            },
+            "additionalGuestFee": "Additional Guest Fee",
             "notifications": {
               "success": {
                 "title": "Rates updated",
@@ -1069,7 +1091,61 @@
             "errors": {
               "weeklyLowerThanNightly": "Weekly price must be higher than nightly price.",
               "monthlyLowerThanNightly": "Monthly price must be higher than nightly price.",
-              "monthlyLowerThanWeekly": "Monthly price must be higher than weekly price."
+              "monthlyLowerThanWeekly": "Monthly price must be higher than weekly price.",
+              "child-age-overlap": "Overlapping age ranges for children are not allowed.",
+              "invalid-age-range": "End age must be greater than start age."
+            }
+          },
+          "ratesPlans": {
+            "list": {
+              "cta":{
+                "add-btn": "+ Add price plan"
+              },
+              "table": {
+                "headers": {
+                  "name": "Name",
+                  "segment": "Segment",
+                  "subSegment": "Subsegment"
+                }
+              },
+              "empty-data": "No rate plans have been defined for this unit yet.",
+              "notifications": {
+                "error": {
+                  "title": "Unable to Load Rate Plans",
+                  "message": "An error occurred while loading rate plans. Please try again later."
+                }
+              }
+            },
+            "create": {
+              "title": "Create Rate Plan",
+              "form": {
+                "name": {
+                  "label": "Rate Plan Name"
+                },
+                "segment": {
+                  "select": {
+                    "label": "Segment"
+                  }
+                },
+                "subSegment": {
+                  "select": {
+                    "label": "Subsegment"
+                  }
+                },
+                "enabled": {
+                  "label": "Status"
+                }
+              },
+              "notifications": {
+                "success": {
+                  "title": "Rate Plan Created",
+                  "message": "The rate plan has been successfully created."
+                },
+                "error": {
+                  "title": "Creation Failed",
+                  "message": "An error occurred while creating the rate plan."
+                }
+              }
             }
           },
           "ratesTable": {
