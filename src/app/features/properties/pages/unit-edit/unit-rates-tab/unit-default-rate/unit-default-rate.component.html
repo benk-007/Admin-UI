@@ -1,14 +1,21 @@
-{{ ratesForm.value | json }}
+
 
 <!-- Modal Body -->
 <div class="modal-body">
   <form [formGroup]="ratesForm" (ngSubmit)="onSubmit()" cForm>
 
     <!-- Base Pricing Section -->
-    <h6 class="section-title underline mb-3 mt-4">
-      {{ 'units.edit-unit.tabs.rates.settings.BaseRate' | translate }}
-    </h6>
-    <c-row class="mb-3">
+    <c-row>
+      <c-col [md]="1"></c-col>
+      <c-col [md]="11">
+        <h6 class="section-title underline mb-3 mt-4">
+          {{ 'units.edit-unit.tabs.rates.settings.BaseRate' | translate }}
+        </h6>
+      </c-col>
+    </c-row>
+
+    <c-row class="mb-3 pb-4 border-bottom">
+      <c-col [md]="1"></c-col>
       <c-col [md]="4" sm="12">
         <label cLabel class="required" for="nightly">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
         <input cFormControl formControlName="nightly" id="nightly" type="number" step="50" />
@@ -22,7 +29,7 @@
         </div>
       </c-col>
 
-      <c-col [md]="4" sm="12">
+      <c-col [md]="3" sm="12">
         <label cLabel class="required" for="minStay">{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}</label>
         <input cFormControl formControlName="minStay" id="minStay" type="number" min="1" />
         <div *ngIf="ratesForm.get('minStay')?.touched && ratesForm.get('minStay')?.invalid" class="text-danger mt-2">
@@ -35,7 +42,7 @@
         </div>
       </c-col>
 
-      <c-col [md]="4" sm="12">
+      <c-col [md]="3" sm="12">
         <label cLabel for="maxStay">{{ 'units.edit-unit.tabs.rates.settings.maxStay' | translate }}</label>
         <input cFormControl formControlName="maxStay" id="maxStay" type="number" min="1" />
         <div *ngIf="ratesForm.errors?.['maxLowerThanMin']" class="text-danger mt-2">
@@ -45,18 +52,28 @@
     </c-row>
 
     <!-- Day Specific Pricing -->
-    <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
-      <h6 class="section-title underline mb-0">
-        {{ 'units.edit-unit.tabs.rates.settings.daySpecificPricing.title' | translate }}
-      </h6>
-      <button type="button" class="btn btn-sm btn-primary rounded-circle" (click)="addDaySpecificPricing()">
-        +
-      </button>
+    <div class="d-flex mb-3 mt-4">
+      <c-col [md]="1">
+        <button type="button" class="btn btn-sm btn-primary rounded-circle" (click)="addDaySpecificPricing()">
+          +
+        </button>
+      </c-col>
+      <c-col [md]="11">
+        <h6 class="section-title underline mb-0">
+          {{ 'units.edit-unit.tabs.rates.settings.daySpecificPricing.title' | translate }}
+        </h6>
+      </c-col>
     </div>
 
     <div formArrayName="daySpecificRates" class="border-bottom">
       <div *ngFor="let group of daySpecificRates.controls; let i = index" [formGroupName]="i">
         <c-row class="mb-3 pb-3">
+
+          <c-col md="1" class="btn-remove">
+            <button cButton size="sm" type="button" class="btn-danger-light" (click)="removeDaySpecificPricing(i)">
+              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+            </button>
+          </c-col>
 
           <c-col md="4">
             <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
@@ -71,7 +88,7 @@
             </div>
           </c-col>
 
-          <c-col md="4">
+          <c-col md="3">
             <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ApplyToDays' | translate }}</label>
             <ng-select formControlName="days"
                        [items]="daysOfWeekOptions"
@@ -93,29 +110,33 @@
               </div>
             </div>
           </c-col>
-
-          <c-col md="1" class="btn-remove">
-            <button cButton size="sm" type="button" class="btn-danger-light" (click)="removeDaySpecificPricing(i)">
-              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
-            </button>
-          </c-col>
         </c-row>
       </div>
     </div>
 
     <!-- Additional Guest Fee -->
     <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
-      <h6 class="section-title underline mb-0">
-        {{ 'units.edit-unit.tabs.rates.settings.additionalGuestFee' | translate }}
-      </h6>
-      <button type="button" class="btn btn-sm btn-primary rounded-circle" (click)="addAdditionalGuestFee()">
-        +
-      </button>
+      <c-col [md]="1">
+        <button type="button" class="btn btn-sm btn-primary rounded-circle" (click)="addAdditionalGuestFee()">
+          +
+        </button>
+      </c-col>
+      <c-col [md]="11">
+        <h6 class="section-title underline mb-0">
+          {{ 'units.edit-unit.tabs.rates.settings.additionalGuestFee' | translate }}
+        </h6>
+      </c-col>
     </div>
 
     <div formArrayName="additionalGuestFees">
       <div *ngFor="let feeGroup of additionalGuestFees.controls; let i = index" [formGroupName]="i">
         <c-row class="mb-3 pb-3 align-items-center">
+
+          <c-col [md]="1" class="btn-remove">
+            <button cButton size="sm" type="button" class="btn-danger-light" (click)="removeAdditionalGuestFee(i)">
+              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+            </button>
+          </c-col>
 
           <c-col [md]="2">
             <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.guestCount' | translate }}</label>
@@ -203,13 +224,6 @@
               </div>
             </div>
           </c-col>
-
-
-          <c-col [md]="1" class="btn-remove">
-            <button cButton size="sm" type="button" class="btn-danger-light" (click)="removeAdditionalGuestFee(i)">
-              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
-            </button>
-          </c-col>
         </c-row>
       </div>
     </div>
@@ -220,7 +234,7 @@
 
 
     <!-- Footer -->
-    <c-row class="mt-4">
+    <c-row class="mt-4 mb-4">
       <c-col class="d-flex justify-content-end">
         <button cButton color="primary" type="submit" [disabled]="!ratesForm.valid">
           {{ 'commons.form.save-btn' | translate }}
