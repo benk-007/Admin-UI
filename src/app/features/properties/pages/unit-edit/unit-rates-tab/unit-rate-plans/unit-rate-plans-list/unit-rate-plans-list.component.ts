@@ -56,6 +56,8 @@ export class UnitRatePlansListComponent extends ListContentComponent {
   override listContent: RatePlanGetModel[] = [];
   unitId!: string;
 
+  expandedPlans: Set<string> = new Set();
+
   override listParamValidator = {
     page: /^[1-9]\d*$/,
     size: ['10', '20', '50', '100'],
@@ -117,4 +119,13 @@ export class UnitRatePlansListComponent extends ListContentComponent {
       })
     );
   }
+
+  toggleExpanded(id: string): void {
+    if (this.expandedPlans.has(id)) {
+      this.expandedPlans.delete(id);
+    } else {
+      this.expandedPlans.add(id);
+    }
+  }
+
 }

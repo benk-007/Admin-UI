@@ -1,7 +1,39 @@
-<!-- Add Rate Plan Button -->
 <c-col [md]="12" class="d-flex justify-content-end mt-3">
   <button cButton size="sm" color="secondary" type="button" (click)="openCreateModal()">
     {{ 'units.edit-unit.tabs.rates.ratesPlans.list.cta.add-btn' | translate }}
   </button>
 </c-col>
 
+<c-row class="mb-3">
+  <c-col [md]="2">
+    <c-input-group sizing="sm" class="search-input">
+      <span cInputGroupText>
+        <svg [cIcon]="icons.cilSearch"></svg>
+      </span>
+      <input id="searchBar" cFormControl (input)="triggerBasicSearch($event)"
+             [placeholder]="'commons.form.search-input.placeholder' | translate"/>
+    </c-input-group>
+  </c-col>
+</c-row>
+
+@if (!firstCallDone) {
+  <c-row class="d-flex justify-content-center mt-5">
+    <c-spinner color="secondary"/>
+  </c-row>
+  <c-row class="d-flex justify-content-center mt-1">
+    <c-col [md]="4" class="d-flex justify-content-center text-center">
+      {{ 'commons.snippets.loading' | translate }}
+    </c-col>
+  </c-row>
+} @else {
+  @if (!isListEmpty) {
+
+  } @else {
+    @if (!isSearchActive) {
+      <app-empty-data imageSrc="assets/images/animations/no-rate-plans.gif" [message]="'ratePlans.list.empty-data'|translate">
+      </app-empty-data>
+    } @else {
+      <app-empty-data imageSrc="assets/images/animations/no-result.gif"></app-empty-data>
+    }
+  }
+}

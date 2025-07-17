@@ -55,12 +55,12 @@ export class UnitRatePlansCreateModalComponent implements OnInit, OnDestroy {
 
 
   segments = [
-    {id: 'seg1', name: 'Segment 1'},
-    {id: 'seg2', name: 'Segment 2'},
+    {uuid: 'seg1', name: 'Segment 1'},
+    {uuid: 'seg2', name: 'Segment 2'},
   ];
   subSegments = [
-    {id: 'sub1', name: 'Subsegment A'},
-    {id: 'sub2', name: 'Subsegment B'},
+    {uuid: 'sub1', name: 'Subsegment A'},
+    {uuid: 'sub2', name: 'Subsegment B'},
   ];
 
   private readonly subscriptions: Subscription[] = [];
@@ -98,11 +98,11 @@ export class UnitRatePlansCreateModalComponent implements OnInit, OnDestroy {
     const payload = {
       name: formValue.name,
       segment: formValue.segment ? {
-        id: formValue.segment.id,
+        uuid: formValue.segment.uuid,
         name: formValue.segment.name
       } : null,
       subSegment: formValue.subSegment ? {
-        id: formValue.subSegment.id,
+        uuid: formValue.subSegment.uuid,
         name: formValue.subSegment.name
       } : null,
       enabled: formValue.enabled,

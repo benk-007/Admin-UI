@@ -2,11 +2,11 @@ export interface RatePlanPostModel {
   name: string;
   enabled: boolean;
   segment?: {
-    id: string;
+    uuid: string;
     name: string;
   } | null;
   subSegment?: {
-    id: string;
+    uuid: string;
     name: string;
   } | null;
   unit: {
