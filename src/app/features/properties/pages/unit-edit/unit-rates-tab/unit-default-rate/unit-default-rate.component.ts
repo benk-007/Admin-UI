@@ -217,7 +217,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
         this.fb.group(
           {
             fromAge: [null, [Validators.required, Validators.min(0)]],
-            toAge: [null, [Validators.required, Validators.min(0)]]
+            toAge: [null, [Validators.required, Validators.min(1)]]
           },
           { validators: ageRangeValidator() }
         )
@@ -231,7 +231,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
           'ageBucket',
           this.fb.group({
             fromAge: [null, [Validators.required, Validators.min(0)]],
-            toAge: [null, [Validators.required, Validators.min(0)]]
+            toAge: [null, [Validators.required, Validators.min(1)]]
           }, { validators: ageRangeValidator() })
         );
       } else if (type === 'ADULT' && feeGroup.get('ageBucket')) {

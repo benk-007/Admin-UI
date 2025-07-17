@@ -184,13 +184,13 @@
 
           <c-col [md]="2" *ngIf="feeGroup.get('guestType')?.value === 'CHILD'" [formGroupName]="'ageBucket'">
             <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageTo' | translate }}</label>
-            <input cFormControl type="number" formControlName="toAge" min="0" />
+            <input cFormControl type="number" formControlName="toAge" min="1" />
             <div *ngIf="feeGroup.get('ageBucket.toAge')?.touched && feeGroup.get('ageBucket.toAge')?.invalid" class="text-danger mt-2">
               <div *ngIf="feeGroup.get('ageBucket.toAge')?.errors?.['required']">
                 {{ 'commons.errors.required' | translate }}
               </div>
               <div *ngIf="feeGroup.get('ageBucket.toAge')?.errors?.['min']">
-                {{ 'commons.errors.positive' | translate }}
+                {{ 'commons.errors.strictly-positive' | translate }}
               </div>
             </div>
             <div *ngIf="feeGroup.get('ageBucket')?.errors?.['invalidAgeRange']" class="text-danger mt-2">
