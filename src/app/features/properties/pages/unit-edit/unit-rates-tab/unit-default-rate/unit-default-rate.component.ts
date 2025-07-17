@@ -161,7 +161,14 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
       : this.rateApiService.postDefaultRate(payload);
 
     const sub = request$.subscribe({
-      next: () => {
+      next: (data) => {
+        this.existingRateId = data.id ?? null;
+        this.ratesForm.reset();
+        (this.ratesForm.get('daySpecificRates') as FormArray).clear();
+        (this.ratesForm.get('additionalGuestFees') as FormArray).clear();
+        this.populateForm(data);
+
+
         this.toastrService.info(
           this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.success.message'),
           this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.success.title'));
@@ -180,6 +187,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     const daySpecificRates = this.ratesForm.get('daySpecificRates') as FormArray;
     daySpecificRates.push(
       this.fb.group({
+        id: [null],
         nightly: [null, [Validators.required, Validators.min(1)]],
         days: [[], [Validators.required]]
       })
@@ -196,6 +204,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     const defaultGuestType = hasAdult ? 'CHILD' : 'ADULT';
 
     const feeGroup = this.fb.group({
+      id: [null],
       guestCount: [1, [Validators.required, Validators.min(1)]],
       guestType: [defaultGuestType, [Validators.required]],
       amountType: ['FLAT', [Validators.required]],
@@ -214,6 +223,21 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
         )
       );
     }
+
+    const guestTypeControl = feeGroup.get('guestType');
+    guestTypeControl?.valueChanges.subscribe(type => {
+      if (type === 'CHILD' && !feeGroup.get('ageBucket')) {
+        (feeGroup as FormGroup).addControl(
+          'ageBucket',
+          this.fb.group({
+            fromAge: [null, [Validators.required, Validators.min(0)]],
+            toAge: [null, [Validators.required, Validators.min(0)]]
+          }, { validators: ageRangeValidator() })
+        );
+      } else if (type === 'ADULT' && feeGroup.get('ageBucket')) {
+        (feeGroup as FormGroup).removeControl('ageBucket');
+      }
+    });
 
     additionalGuestFees.push(feeGroup);
   }

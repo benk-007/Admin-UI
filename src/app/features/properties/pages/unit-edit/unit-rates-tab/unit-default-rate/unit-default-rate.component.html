@@ -1,5 +1,3 @@
-
-
 <!-- Modal Body -->
 <div class="modal-body">
   <form [formGroup]="ratesForm" (ngSubmit)="onSubmit()" cForm>
@@ -115,7 +113,7 @@
     </div>
 
     <!-- Additional Guest Fee -->
-    <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <div class="d-flex mb-3 mt-4">
       <c-col [md]="1">
         <button type="button" class="btn btn-sm btn-primary rounded-circle" (click)="addAdditionalGuestFee()">
           +
@@ -130,7 +128,7 @@
 
     <div formArrayName="additionalGuestFees">
       <div *ngFor="let feeGroup of additionalGuestFees.controls; let i = index" [formGroupName]="i">
-        <c-row class="mb-3 pb-3 align-items-center">
+        <c-row class="mb-3 pb-3">
 
           <c-col [md]="1" class="btn-remove">
             <button cButton size="sm" type="button" class="btn-danger-light" (click)="removeAdditionalGuestFee(i)">
@@ -175,8 +173,11 @@
             <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageFrom' | translate }}</label>
             <input cFormControl type="number" formControlName="fromAge" min="0" />
             <div *ngIf="feeGroup.get('ageBucket.fromAge')?.touched && feeGroup.get('ageBucket.fromAge')?.invalid" class="text-danger mt-2">
+              <div *ngIf="feeGroup.get('ageBucket.fromAge')?.errors?.['required']">
+                {{ 'commons.errors.required' | translate }}
+              </div>
               <div *ngIf="feeGroup.get('ageBucket.fromAge')?.errors?.['min']">
-                {{ 'commons.errors.strictly-positive' | translate }}
+                {{ 'commons.errors.positive' | translate }}
               </div>
             </div>
           </c-col>
@@ -185,6 +186,9 @@
             <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageTo' | translate }}</label>
             <input cFormControl type="number" formControlName="toAge" min="0" />
             <div *ngIf="feeGroup.get('ageBucket.toAge')?.touched && feeGroup.get('ageBucket.toAge')?.invalid" class="text-danger mt-2">
+              <div *ngIf="feeGroup.get('ageBucket.toAge')?.errors?.['required']">
+                {{ 'commons.errors.required' | translate }}
+              </div>
               <div *ngIf="feeGroup.get('ageBucket.toAge')?.errors?.['min']">
                 {{ 'commons.errors.positive' | translate }}
               </div>
