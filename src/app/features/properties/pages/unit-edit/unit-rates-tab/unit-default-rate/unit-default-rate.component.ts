@@ -89,12 +89,18 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
           if (data) {
             this.existingRateId = data.id ?? null;
             this.populateForm(data);
+          } else {
+            console.log("No existing default rate for this unit.");
           }
         },
-        error: () => {
-          this.toastrService.warning(
-            this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.load-error.message'),
-            this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.load-error.title'));
+        error: (err) => {
+          if (err.status === 404) {
+            console.log("No default rate found (404) — starting with empty form.");
+          } else {
+            this.toastrService.warning(
+              this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.load-error.message'),
+              this.translateService.instant('units.edit-unit.tabs.rates.settings.notifications.load-error.title'));
+          }
         }
       });
       this.subscriptions.push(sub);
