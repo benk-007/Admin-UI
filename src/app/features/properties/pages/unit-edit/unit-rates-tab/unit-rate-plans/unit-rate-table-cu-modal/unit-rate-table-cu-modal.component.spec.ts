@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {UnitRateTableCuModalComponent} from './unit-rate-table-create-modal.component';
 
-import { UnitRateTableCreateModalComponent } from './unit-rate-table-create-modal.component';
 
 describe('UnitRateTableCreateModalComponent', () => {
-  let component: UnitRateTableCreateModalComponent;
-  let fixture: ComponentFixture<UnitRateTableCreateModalComponent>;
+  let component: UnitRateTableCuModalComponent;
+  let fixture: ComponentFixture<UnitRateTableCuModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UnitRateTableCreateModalComponent]
+      imports: [UnitRateTableCuModalComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UnitRateTableCreateModalComponent);
+    fixture = TestBed.createComponent(UnitRateTableCuModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

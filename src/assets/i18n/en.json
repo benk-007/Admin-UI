@@ -86,7 +86,8 @@
         "by": "By"
       },
       "no-result": "No results match your search. Please try adjusting your keywords or filters.",
-      "loading": "Loading"
+      "loading": "Loading",
+      "years": "years"
     },
     "countries": {
       "AD": "Andorra",
@@ -1227,6 +1228,15 @@
             }
           },
           "rateTable": {
+            "list": {
+              "empty-data": "No rate tables found.",
+              "notifications": {
+                "error": {
+                  "title": "Failed to load rate tables",
+                  "message": "An error occurred while fetching rate tables. Please try again."
+                }
+              }
+            },
             "create": {
               "title": "Create Rate Table",
               "form": {
@@ -1245,6 +1255,13 @@
               "notifications": {
                 "success": "Rate table created successfully.",
                 "error": "Failed to create rate table."
+              }
+            },
+            "edit": {
+              "title": "Edit Rate Table",
+              "notifications": {
+                "success": "Rate table updated successfully.",
+                "error": "Failed to update rate table."
               }
             }
           }

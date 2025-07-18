@@ -1,9 +1,12 @@
 <!-- Modal title -->
 <div class="modal-header justify-content-center align-items-center">
   <h6 class="modal-title">
-    {{ 'units.edit-unit.tabs.rates.rateTable.create.title' | translate }}
+    {{ rateTableToEdit ?
+    ('units.edit-unit.tabs.rates.rateTable.edit.title' | translate) :
+    ('units.edit-unit.tabs.rates.rateTable.create.title' | translate) }}
   </h6>
 </div>
+
 
 <!-- Modal Body -->
 <div class="modal-body">
@@ -437,8 +440,13 @@
       <!-- Footer -->
     <c-row class="mt-4 mb-4">
       <c-col class="d-flex justify-content-end">
+        <button cButton class="ms-1" color="light" size="sm" variant="ghost" (click)="closeModal()">
+          {{ 'commons.form.cancel-btn' | translate }}
+        </button>
         <button cButton color="primary" type="submit" [disabled]="!rateTableForm.valid">
-          {{ 'commons.form.save-btn' | translate }}
+          {{ rateTableToEdit ?
+          ('commons.form.update-btn' | translate) :
+          ('commons.form.save-btn' | translate) }}
         </button>
       </c-col>
     </c-row>

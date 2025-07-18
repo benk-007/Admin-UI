@@ -1,0 +1,16 @@
+@use '../../../../../../../../scss/variables' as *;
+
+.badge{
+  padding: 5px;
+  background-color: $body-color;
+}
+
+.body {
+  c-row {
+    c-col {
+      span {
+        margin-left: 5px;
+      }
+    }
+  }
+}

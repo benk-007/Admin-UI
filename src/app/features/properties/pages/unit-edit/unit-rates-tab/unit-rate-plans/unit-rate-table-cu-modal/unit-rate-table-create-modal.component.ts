@@ -20,6 +20,7 @@ import {
 } from '@coreui/angular';
 import {NgClass, NgSwitch, NgSwitchCase} from '@angular/common';
 import {NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
+import {RateTableGetModel} from '../../../../../models/rate/get/rate-table.get.model';
 
 @Component({
   selector: 'app-unit-rate-table-create-modal',
@@ -46,11 +47,12 @@ import {NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select
     InputGroupComponent,
     InputGroupTextDirective,
   ],
-  templateUrl: './unit-rate-table-create-modal.component.html',
-  styleUrl: './unit-rate-table-create-modal.component.scss'
+  templateUrl: './unit-rate-table-cu-modal.component.html',
+  styleUrl: './unit-rate-table-cu-modal.component.scss'
 })
-export class UnitRateTableCreateModalComponent implements OnInit, OnDestroy {
+export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
   @Output() actionConfirmed = new EventEmitter<void>();
+  @Input() rateTableToEdit?: RateTableGetModel;
   ratePlanId!: string;
   unitId!: string;
 
@@ -115,6 +117,55 @@ export class UnitRateTableCreateModalComponent implements OnInit, OnDestroy {
       this.rateTableForm.get('maxRate')?.updateValueAndValidity();
       this.rateTableForm.get('maxOccupancy')?.updateValueAndValidity();
     });
+
+    if (this.rateTableToEdit) {
+      this.rateTableForm.patchValue({
+        name: this.rateTableToEdit.name,
+        startDate: this.rateTableToEdit.startDate,
+        endDate: this.rateTableToEdit.endDate,
+        type: this.rateTableToEdit.type,
+        nightly: this.rateTableToEdit.nightly,
+        lowRate: this.rateTableToEdit.lowRate,
+        lowestOccupancy: this.rateTableToEdit.lowestOccupancy,
+        maxRate: this.rateTableToEdit.maxRate,
+        maxOccupancy: this.rateTableToEdit.maxOccupancy,
+        minStay: this.rateTableToEdit.minStay,
+        maxStay: this.rateTableToEdit.maxStay
+      });
+
+      // Populate Day Specific Rates
+      this.rateTableToEdit.daySpecificRates?.forEach(rate => {
+        this.daySpecificRates.push(this.fb.group({
+          id: [rate.id],
+          nightly: [rate.nightly, [Validators.required, Validators.min(1)]],
+          days: [rate.days, [Validators.required]]
+        }));
+      });
+
+      // Populate Additional Guest Fees
+      this.rateTableToEdit.additionalGuestFees?.forEach(fee => {
+        const group = this.fb.group({
+          id: [fee.id],
+          guestCount: [fee.guestCount, [Validators.required, Validators.min(1)]],
+          guestType: [fee.guestType, [Validators.required]],
+          amountType: [fee.amountType, [Validators.required]],
+          value: [fee.value, [Validators.required, Validators.min(0)]]
+        });
+
+        if (fee.guestType === 'CHILD') {
+          (group as FormGroup).addControl(
+            'ageBucket',
+            this.fb.group({
+              fromAge: [fee.ageBucket?.fromAge, [Validators.required, Validators.min(0)]],
+              toAge: [fee.ageBucket?.toAge, [Validators.required, Validators.min(1)]]
+            }, { validators: ageRangeValidator() })
+          );
+        }
+
+        this.additionalGuestFees.push(group);
+      });
+    }
+
   }
 
   onSubmit(): void {
@@ -137,19 +188,31 @@ export class UnitRateTableCreateModalComponent implements OnInit, OnDestroy {
       ratePlan: { uuid: this.ratePlanId }
     };
 
-    this.rateApiService.createRateTable(payload).subscribe({
+    let request$;
+
+    if (this.rateTableToEdit) {
+      request$ = this.rateApiService.updateRateTable(this.rateTableToEdit.id, payload);
+    } else {
+      request$ = this.rateApiService.createRateTable(payload);
+    }
+
+    request$.subscribe({
       next: () => {
-        this.toastrService.success(
-            this.translateService.instant('units.edit-unit.tabs.rates.rateTable.create.notifications.success')
-        );
+        const successKey = this.rateTableToEdit
+          ? 'units.edit-unit.tabs.rates.rateTable.edit.notifications.success'
+          : 'units.edit-unit.tabs.rates.rateTable.create.notifications.success';
+
+        this.toastrService.success(this.translateService.instant(successKey));
         this.actionConfirmed.emit();
         this.modalRef.hide();
       },
       error: (err: any) => {
-        console.error('Rate table creation failed:', err);
-        this.toastrService.error(
-            this.translateService.instant('units.edit-unit.tabs.rates.rateTable.create.notifications.error')
-        );
+        console.error('Rate table save failed:', err);
+        const errorKey = this.rateTableToEdit
+          ? 'units.edit-unit.tabs.rates.rateTable.edit.notifications.error'
+          : 'units.edit-unit.tabs.rates.rateTable.create.notifications.error';
+
+        this.toastrService.error(this.translateService.instant(errorKey));
       }
     });
   }
@@ -259,6 +322,11 @@ export class UnitRateTableCreateModalComponent implements OnInit, OnDestroy {
   hasAdult(currentIndex: number): boolean {
     return this.additionalGuestFees.controls
       .some((group, index) => index !== currentIndex && group.get('guestType')?.value === 'ADULT');
+  }
+
+  closeModal(): void {
+    this.modalRef.hide();
+    this.rateTableForm.reset();
   }
 
   ngOnDestroy(): void {

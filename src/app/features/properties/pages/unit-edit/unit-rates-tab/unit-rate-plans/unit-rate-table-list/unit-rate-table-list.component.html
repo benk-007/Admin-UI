@@ -1,0 +1,154 @@
+<c-col [md]="12" class="d-flex justify-content-end">
+    <button cButton size="sm" color="primary" type="button" (click)="openRateTableCuModal(ratePlanId)">
+      {{ 'units.edit-unit.tabs.rates.ratesPlans.list.cta.add-rate-btn' | translate }}
+    </button>
+</c-col>
+
+
+<!-- Search Bar -->
+<c-row class="mb-3">
+  <c-col [md]="2">
+    <c-input-group sizing="sm" class="search-input">
+      <span cInputGroupText>
+        <svg [cIcon]="icons.cilSearch"></svg>
+      </span>
+      <input
+        id="searchBar"
+        cFormControl
+        (input)="triggerBasicSearch($event)"
+        [placeholder]="'commons.form.search-input.placeholder' | translate" />
+    </c-input-group>
+  </c-col>
+</c-row>
+
+<!-- Loading Spinner -->
+@if (!firstCallDone) {
+  <c-row class="d-flex justify-content-center mt-5">
+    <c-spinner color="secondary" />
+  </c-row>
+  <c-row class="d-flex justify-content-center mt-1">
+    <c-col [md]="4" class="d-flex justify-content-center text-center">
+      {{ 'commons.snippets.loading' | translate }}
+    </c-col>
+  </c-row>
+} @else {
+  <!-- Rate Table List -->
+  @if (!isListEmpty) {
+    <c-row class="gy-3">
+      @for (rate of listContent; track rate) {
+        <c-col [md]="12">
+          <div class="border rounded shadow-sm ">
+            <!-- Header: Table Name | Type | Duration -->
+            <div class="p-3 border d-flex align-items-center">
+              <strong class="ms-3">{{ rate.name }}</strong>
+              <span class="badge ms-3 fw-normal">
+                {{rate.type | translate }}
+              </span>
+              <span class="badge ms-3 fw-normal">
+                {{ rate.startDate }} → {{ rate.endDate }}
+              </span>
+              <div class="ms-auto">
+                <button cButton size="sm" class="btn-secondary-light ms-3" type="button" (click)="openRateTableCuModal(ratePlanId, rate)">
+                  <svg [cIcon]="icons.cilPen" class="me-1"></svg>
+                </button>
+                <button cButton size="sm" type="button" class="btn-danger-light ms-3">
+                  <svg [cIcon]="icons.cilTrash" class="me-1"></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Body: details -->
+            <div class="body">
+              <c-row class="px-3 mt-3">
+                @if (rate.type === 'STANDARD') {
+                  <c-col [md]="4" class="mb-3">
+                    <strong>{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}:</strong>
+                    <span>{{ rate.nightly }}</span>
+                  </c-col>
+                } @else {
+                  <c-col [md]="4" class="mb-3">
+                    <strong>{{ 'units.edit-unit.tabs.rates.rateTable.create.form.lowRate' | translate }}:</strong>
+                    <span>{{ rate.lowRate }}</span>
+                  </c-col>
+                  <c-col [md]="4" class="mb-3">
+                    <strong>{{ 'units.edit-unit.tabs.rates.rateTable.create.form.lowestOccupancy' | translate }}:</strong>
+                    <span>{{ rate.lowestOccupancy }}</span>
+                  </c-col>
+                  <c-col [md]="4" class="mb-3">
+                    <strong>{{ 'units.edit-unit.tabs.rates.rateTable.create.form.maxRate' | translate }}:</strong>
+                    <span>{{ rate.maxRate }}</span>
+                  </c-col>
+                  <c-col [md]="4" class="mb-3">
+                    <strong>{{ 'units.edit-unit.tabs.rates.rateTable.create.form.maxOccupancy' | translate }}:</strong>
+                    <span>{{ rate.maxOccupancy }}</span>
+                  </c-col>
+                }
+
+                <c-col [md]="4" class="mb-3">
+                  <strong>{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}:</strong>
+                  <span>{{ rate.minStay }}</span>
+                </c-col>
+                <c-col [md]="4" class="mb-3">
+                  <strong>{{ 'units.edit-unit.tabs.rates.settings.maxStay' | translate }}:</strong>
+                  <span>{{ rate.maxStay || '-' }}</span>
+                </c-col>
+              </c-row>
+
+              <!-- Day Specific Rates -->
+              @if (rate.daySpecificRates?.length) {
+                <c-row class="px-3">
+                  <h6 class="section-title underline mb-3">
+                    <strong>{{ 'units.edit-unit.tabs.rates.settings.daySpecificPricing.title' | translate }}:</strong>
+                  </h6>
+                  @for (dsr of rate.daySpecificRates; track dsr) {
+                    <c-col [md]="4" class="mb-2 pb-2">
+                      <span>
+                        <strong>{{ dsr.days.join(', ') }}:</strong>
+                        {{ dsr.nightly }}
+                      </span>
+                    </c-col>
+                  }
+                </c-row>
+              }
+
+              <!-- Additional Guest Fees -->
+              @if (rate.additionalGuestFees?.length) {
+                <c-row class="px-3 pb-2">
+                  <h6 class="section-title underline mb-3">
+                    <strong>{{ 'units.edit-unit.tabs.rates.settings.additionalGuestFee' | translate }}:</strong>
+                  </h6>
+                  @for (fee of rate.additionalGuestFees; track fee) {
+                    <c-col [md]="4" class="mb-2">
+                      <span>
+                        {{ fee.guestCount }}x
+                        {{ 'units.edit-unit.tabs.rates.settings.enums.guestType.' + fee.guestType.toLowerCase() | translate }} →
+                        {{ fee.value }}{{ fee.amountType === 'PERCENT' ? '%' : ' '}}
+                        @if (fee.ageBucket?.fromAge || fee.ageBucket?.toAge) {
+                          ({{ fee.ageBucket.fromAge }} - {{ fee.ageBucket.toAge }} {{ 'commons.snippets.years' | translate }})
+                        }
+                      </span>
+                    </c-col>
+                  }
+                </c-row>
+              }
+
+            </div>
+          </div>
+        </c-col>
+      }
+    </c-row>
+  } @else {
+    <!-- Empty State -->
+    @if (!isSearchActive) {
+      <app-empty-data
+        imageSrc="assets/images/animations/no-rate-plans.gif"
+        [message]="'units.edit-unit.tabs.rates.rateTable.list.empty-data' | translate">
+      </app-empty-data>
+    } @else {
+      <app-empty-data
+        imageSrc="assets/images/animations/no-result.gif">
+      </app-empty-data>
+    }
+  }
+}
+

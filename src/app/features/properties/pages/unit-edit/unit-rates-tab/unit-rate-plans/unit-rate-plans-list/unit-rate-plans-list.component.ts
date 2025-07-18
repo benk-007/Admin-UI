@@ -26,11 +26,9 @@ import {  UnitRatePlansCuModalComponent} from '../unit-rate-plans-cu-modal/unit-
 import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.model';
 import {NgForOf} from '@angular/common';
 import {IconDirective} from '@coreui/icons-angular';
-import {
-  UnitRateTableCreateModalComponent
-} from '../unit-rate-table-create-modal/unit-rate-table-create-modal.component';
 import {ConfirmModalComponent} from "../../../../../../../shared/components/confirm-modal/confirm-modal.component";
 import {TooltipDirective} from "ngx-bootstrap/tooltip";
+import {UnitRateTableListComponent} from '../unit-rate-table-list/unit-rate-table-list.component';
 
 @Component({
   selector: 'app-unit-rate-plans-list',
@@ -50,7 +48,8 @@ import {TooltipDirective} from "ngx-bootstrap/tooltip";
     AccordionItemComponent,
     AccordionButtonDirective,
     TemplateIdDirective,
-    TooltipDirective
+    TooltipDirective,
+    UnitRateTableListComponent
   ],
   templateUrl: './unit-rate-plans-list.component.html',
   styleUrl: './unit-rate-plans-list.component.scss',
@@ -135,22 +134,6 @@ export class UnitRatePlansListComponent extends ListContentComponent {
     );
   }
 
-
-  openRateTableCreateModal(ratePlanId: string): void {
-    const modalRef = this.modalService.show(UnitRateTableCreateModalComponent, {
-      class: 'modal-lg',
-      initialState: {
-        ratePlanId: ratePlanId,
-        unitId: this.unitId
-      }
-    });
-
-    this.subscriptions.push(
-      (modalRef.content as UnitRateTableCreateModalComponent).actionConfirmed.subscribe(() => {
-        this.refreshListContent();
-      })
-    );
-  }
 
   deletePlan(plan: RatePlanGetModel): void {
     const initialState = {

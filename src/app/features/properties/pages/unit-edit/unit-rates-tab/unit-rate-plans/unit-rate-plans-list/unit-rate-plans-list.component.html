@@ -65,11 +65,9 @@
                         </ng-template>
                         <ng-template cTemplateId="accordionBodyTemplate">
                             <div class="accordion-body">
-                                <c-col [md]="12" class="d-flex justify-content-end mb-3">
-                                    <button cButton size="sm" color="primary" type="button" (click)="openRateTableCreateModal(plan.id)">
-                                        {{ 'units.edit-unit.tabs.rates.ratesPlans.list.cta.add-rate-btn' | translate }}
-                                    </button>
-                                </c-col>
+                                <c-row class="mb-4">
+                                    <app-unit-rate-table-list [ratePlanId]="plan.id"></app-unit-rate-table-list>
+                                </c-row>
                             </div>
                         </ng-template>
                     </c-accordion-item>
