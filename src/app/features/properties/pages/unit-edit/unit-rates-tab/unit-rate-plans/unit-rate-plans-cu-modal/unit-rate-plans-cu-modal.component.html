@@ -1,7 +1,7 @@
 <!-- Modal title -->
 <div class="modal-header justify-content-center align-items-center">
   <h6 class="modal-title">
-    {{ 'units.edit-unit.tabs.rates.ratesPlans.create.title' | translate }}
+    {{ (ratePlanToEdit ? 'units.edit-unit.tabs.rates.ratesPlans.edit.title' : 'units.edit-unit.tabs.rates.ratesPlans.create.title') | translate }}
   </h6>
 </div>
 
@@ -16,11 +16,11 @@
           {{ 'units.edit-unit.tabs.rates.ratesPlans.create.form.name.label' | translate }}
         </label>
         <input cFormControl formControlName="name" id="name" type="text" />
-        <div *ngIf="ratePlanForm.get('name')?.touched && ratePlanForm.get('name')?.invalid" class="text-danger mt-2">
-          <div *ngIf="ratePlanForm.get('name')?.errors?.['required']">
-            {{ 'commons.errors.required' | translate }}
-          </div>
-        </div>
+        @if(ratePlanForm.get('name')?.touched && ratePlanForm.get('name')?.invalid){
+            <c-form-feedback [valid]="false" >
+                {{ 'commons.errors.required' | translate }}
+            </c-form-feedback>
+        }
       </c-col>
     </c-row>
 
@@ -90,11 +90,10 @@
         <button cButton class="ms-1" color="light" size="sm" variant="ghost" (click)="closeModal()">
           {{ 'commons.form.cancel-btn' | translate }}
         </button>
-        <button cButton class="ms-1" color="primary" size="sm" type="submit" [disabled]="!ratePlanForm.valid">
-          {{ 'commons.form.save-btn' | translate }}
+        <button type="submit" cButton color="primary">
+          {{ (ratePlanToEdit ? 'commons.form.save-btn' : 'commons.form.save-btn') | translate }}
         </button>
       </c-col>
     </c-row>
-
   </form>
 </div>

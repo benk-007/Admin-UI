@@ -5,7 +5,12 @@ import {
   RowComponent,
   SpinnerComponent,
   FormControlDirective,
-  InputGroupComponent, InputGroupTextDirective
+  InputGroupComponent,
+  InputGroupTextDirective,
+  AccordionComponent,
+  AccordionItemComponent,
+  AccordionButtonDirective,
+  TemplateIdDirective
 } from '@coreui/angular';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,13 +22,14 @@ import { ListContentComponent } from '../../../../../../../shared/components/lis
 
 import { cilSearch, cilPen, cilTrash, cilSwapVertical, cilSortAscending, cilSortDescending } from '@coreui/icons';
 import { RateApiService } from '../../../../../services/rate-api.service';
-import { UnitRatePlansCreateModalComponent } from '../unit-rate-plans-create-modal/unit-rate-plans-create-modal.component';
+import {  UnitRatePlansCuModalComponent} from '../unit-rate-plans-cu-modal/unit-rate-plans-cu-modal.component';
 import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.model';
 import {NgForOf} from '@angular/common';
 import {IconDirective} from '@coreui/icons-angular';
 import {
   UnitRateTableCreateModalComponent
 } from '../unit-rate-table-create-modal/unit-rate-table-create-modal.component';
+import {ConfirmModalComponent} from "../../../../../../../shared/components/confirm-modal/confirm-modal.component";
 
 @Component({
   selector: 'app-unit-rate-plans-list',
@@ -38,7 +44,12 @@ import {
     InputGroupComponent,
     InputGroupTextDirective,
     SpinnerComponent,
-    EmptyDataComponent],
+    EmptyDataComponent,
+    AccordionComponent,
+    AccordionItemComponent,
+    AccordionButtonDirective,
+    TemplateIdDirective
+  ],
   templateUrl: './unit-rate-plans-list.component.html',
   styleUrl: './unit-rate-plans-list.component.scss',
   providers: [BsModalService]
@@ -57,7 +68,6 @@ export class UnitRatePlansListComponent extends ListContentComponent {
   override listContent: RatePlanGetModel[] = [];
   unitId!: string;
 
-  expandedPlans: Set<string> = new Set();
 
   override listParamValidator = {
     page: /^[1-9]\d*$/,
@@ -106,20 +116,23 @@ export class UnitRatePlansListComponent extends ListContentComponent {
     );
   }
 
-  openCreateModal(): void {
-    const modalRef = this.modalService.show(UnitRatePlansCreateModalComponent, {
+  openRatePlanCuModal(ratePlanToEdit?: RatePlanGetModel): void {
+    const initialState = ratePlanToEdit
+        ? { unitId: this.unitId, ratePlanToEdit }
+        : { unitId: this.unitId };
+
+    const modalRef = this.modalService.show(UnitRatePlansCuModalComponent, {
       class: 'modal-lg',
-      initialState: {
-        unitId: this.unitId
-      }
+      initialState
     });
 
     this.subscriptions.push(
-      (modalRef.content as UnitRatePlansCreateModalComponent).actionConfirmed.subscribe(() => {
-        this.refreshListContent();
-      })
+        (modalRef.content as UnitRatePlansCuModalComponent).actionConfirmed.subscribe(() => {
+          this.refreshListContent();
+        })
     );
   }
+
 
   openRateTableCreateModal(ratePlanId: string): void {
     const modalRef = this.modalService.show(UnitRateTableCreateModalComponent, {
@@ -137,12 +150,39 @@ export class UnitRatePlansListComponent extends ListContentComponent {
     );
   }
 
-  toggleExpanded(id: string): void {
-    if (this.expandedPlans.has(id)) {
-      this.expandedPlans.delete(id);
-    } else {
-      this.expandedPlans.add(id);
-    }
+  deletePlan(plan: RatePlanGetModel): void {
+    const initialState = {
+      title: this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.modal.title'),
+      message: this.translateService.instant(
+          'units.edit-unit.tabs.rates.ratesPlans.delete.modal.message',
+          { name: plan.name }
+      )
+    };
+
+    const confirmModalRef = this.modalService.show(ConfirmModalComponent, { initialState });
+
+    this.subscriptions.push(
+        (confirmModalRef.content as ConfirmModalComponent).actionConfirmed.subscribe(() => {
+          this.rateService.deleteRatePlan(plan.id).subscribe({
+            next: () => {
+              this.refreshListContent();
+              this.toastr.success(
+                  this.translateService.instant(
+                      'units.edit-unit.tabs.rates.ratesPlans.delete.notifications.success.message',
+                      { name: plan.name }
+                  ),
+                  this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.notifications.success.title')
+              );
+            },
+            error: () => {
+              this.toastr.error(
+                  this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.notifications.error.message'),
+                  this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.notifications.error.title')
+              );
+            }
+          });
+        })
+    );
   }
 
 }

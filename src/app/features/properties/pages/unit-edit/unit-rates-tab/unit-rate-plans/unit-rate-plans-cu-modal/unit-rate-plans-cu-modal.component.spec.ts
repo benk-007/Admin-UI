@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {UnitRatePlansCuModalComponent} from './unit-rate-plans-cu-modal.component';
 
-import { UnitRatePlansCreateModalComponent } from './unit-rate-plans-create-modal.component';
 
 describe('UnitRatePlansCreateModalComponent', () => {
-  let component: UnitRatePlansCreateModalComponent;
-  let fixture: ComponentFixture<UnitRatePlansCreateModalComponent>;
+  let component: UnitRatePlansCuModalComponent;
+  let fixture: ComponentFixture<UnitRatePlansCuModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UnitRatePlansCreateModalComponent]
+      imports: [UnitRatePlansCuModalComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UnitRatePlansCreateModalComponent);
+    fixture = TestBed.createComponent(UnitRatePlansCuModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

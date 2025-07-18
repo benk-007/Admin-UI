@@ -1,4 +1,11 @@
 export interface AdditionalGuestFeeModel {
-  feePpPn?: number;
-  guestCount?: number;
+  id?: string;
+  guestCount: number;
+  guestType: 'ADULT' | 'CHILD';
+  amountType: 'FLAT' | 'PERCENT';
+  value: number;
+  ageBucket:{
+    fromAge?: number;
+    toAge?: number;
+  }
 }

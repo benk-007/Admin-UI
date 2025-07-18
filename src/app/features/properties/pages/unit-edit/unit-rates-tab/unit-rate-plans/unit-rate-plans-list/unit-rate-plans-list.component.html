@@ -1,79 +1,83 @@
 <!-- Add Rate Plan Button -->
 <c-col [md]="12" class="d-flex justify-content-end mt-3">
-  <button cButton size="sm" color="secondary" type="button" (click)="openCreateModal()">
-    {{ 'units.edit-unit.tabs.rates.ratesPlans.list.cta.add-plan-btn' | translate }}
-  </button>
+    <button cButton size="sm" color="primary" type="button" (click)="openRatePlanCuModal()">
+        {{ 'units.edit-unit.tabs.rates.ratesPlans.list.cta.add-plan-btn' | translate }}
+    </button>
 </c-col>
 
 <!-- Search Bar -->
 <c-row class="mb-3">
-  <c-col [md]="2">
-    <c-input-group sizing="sm" class="search-input">
+    <c-col [md]="2">
+        <c-input-group sizing="sm" class="search-input">
       <span cInputGroupText>
         <svg [cIcon]="icons.cilSearch"></svg>
       </span>
-      <input
-        id="searchBar"
-        cFormControl
-        (input)="triggerBasicSearch($event)"
-        [placeholder]="'commons.form.search-input.placeholder' | translate" />
-    </c-input-group>
-  </c-col>
+            <input
+                    id="searchBar"
+                    cFormControl
+                    (input)="triggerBasicSearch($event)"
+                    [placeholder]="'commons.form.search-input.placeholder' | translate" />
+        </c-input-group>
+    </c-col>
 </c-row>
 
 <!-- Loading Spinner -->
 @if (!firstCallDone) {
-  <c-row class="d-flex justify-content-center mt-5">
-    <c-spinner color="secondary"/>
-  </c-row>
-  <c-row class="d-flex justify-content-center mt-1">
-    <c-col [md]="4" class="d-flex justify-content-center text-center">
-      {{ 'commons.snippets.loading' | translate }}
-    </c-col>
-  </c-row>
+    <c-row class="d-flex justify-content-center mt-5">
+        <c-spinner color="secondary"/>
+    </c-row>
+    <c-row class="d-flex justify-content-center mt-1">
+        <c-col [md]="4" class="d-flex justify-content-center text-center">
+            {{ 'commons.snippets.loading' | translate }}
+        </c-col>
+    </c-row>
 } @else {
-  <!-- Data Display -->
-  @if (!isListEmpty) {
-    <!-- Main Rate Plan List -->
-  <c-row class="rate-plan-list">
-    @for (plan of listContent; track plan.id) {
-      <c-col [md]="12" class="rate-plan-item mb-3">
-        <!-- Header: Expand/Collapse + Name + Tags -->
-        <div class="rate-plan-header d-flex align-items-center justify-content-between p-2 border rounded">
-          <div class="d-flex align-items-center gap-2">
-            <span class="toggle-icon" (click)="toggleExpanded(plan.id)">
-              {{ expandedPlans.has(plan.id) ? '▼' : '▶' }}
-            </span>
-            <strong>{{ plan.name }}</strong>
-            <span class="badge bg-primary">{{ plan.segment?.name || 'Segment' }}</span>
-            <span class="badge bg-primary">{{ plan.subSegment?.name || 'SubSegment' }}</span>
-          </div>
-        </div>
-
-        <!-- Expanded Content Area (empty for now) -->
-        @if (expandedPlans.has(plan.id)) {
-          <div class="rate-plan-details p-2 border border-top-0">
-            <c-col [md]="12" class="d-flex justify-content-end mb-3">
-              <button cButton size="sm" color="secondary" type="button" (click)="openRateTableCreateModal(plan.id)">
-                {{ 'units.edit-unit.tabs.rates.ratesPlans.list.cta.add-rate-btn' | translate }}
-              </button>
-            </c-col>
-          </div>
-        }
-      </c-col>
-    }
-  </c-row>
-  } @else {
-    <!-- Empty State -->
-    @if (!isSearchActive) {
-      <app-empty-data
-        imageSrc="assets/images/animations/no-rate-plans.gif"
-        [message]="'ratePlans.list.empty-data' | translate">
-      </app-empty-data>
+    <!-- Data Display -->
+    @if (!isListEmpty) {
+        <!-- Main Rate Plan List -->
+        <c-row class="rate-plan-list">
+            @for (plan of listContent; track plan.id) {
+                <c-accordion [alwaysOpen]="true">
+                    <c-accordion-item #item0="cAccordionItem" [visible]="false">
+                        <ng-template cTemplateId="accordionHeaderTemplate">
+                            <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton >
+                                <div class="Info">
+                                    <strong>{{ plan.name }}</strong>
+                                    <span class="badge bg-secondary ms-3">{{ plan.segment?.name || 'Segment' }}</span>
+                                    <span class="badge bg-secondary ms-3">{{ plan.subSegment?.name || 'SubSegment' }}</span>
+                                </div>
+                                <button cButton size="sm" class="btn-secondary-light ms-3" type="button" (click)="openRatePlanCuModal(plan)">
+                                    <svg [cIcon]="icons.cilPen" class="me-1"></svg>
+                                </button>
+                                <button cButton size="sm" type="button" class="btn-danger-light ms-3" (click)="deletePlan(plan)">
+                                    <svg [cIcon]="icons.cilTrash" class="me-1"></svg>
+                                </button>
+                            </button>
+                        </ng-template>
+                        <ng-template cTemplateId="accordionBodyTemplate">
+                            <div class="accordion-body">
+                                <c-col [md]="12" class="d-flex justify-content-end mb-3">
+                                    <button cButton size="sm" color="primary" type="button" (click)="openRateTableCreateModal(plan.id)">
+                                        {{ 'units.edit-unit.tabs.rates.ratesPlans.list.cta.add-rate-btn' | translate }}
+                                    </button>
+                                </c-col>
+                            </div>
+                        </ng-template>
+                    </c-accordion-item>
+                </c-accordion>
+            }
+        </c-row>
     } @else {
-      <app-empty-data
-        imageSrc="assets/images/animations/no-result.gif">
-      </app-empty-data>
+        <!-- Empty State -->
+        @if (!isSearchActive) {
+            <app-empty-data
+                    imageSrc="assets/images/animations/no-rate-plans.gif"
+                    [message]="'units.edit-unit.tabs.rates.ratesPlans.list.empty-data' | translate">
+            </app-empty-data>
+        } @else {
+            <app-empty-data
+                    imageSrc="assets/images/animations/no-result.gif">
+            </app-empty-data>
+        }
     }
-  }
 }

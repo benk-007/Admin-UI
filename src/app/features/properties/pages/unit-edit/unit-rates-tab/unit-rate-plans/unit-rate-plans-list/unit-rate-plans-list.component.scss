@@ -1,4 +1,16 @@
-.toggle-icon {
-  cursor: pointer;
-  font-size: 1rem;
+@use '../../../../../../../../scss/variables' as *;
+
+
+.accordion-button {
+  &:hover {
+    background-color: #f0f8ff;
+  }
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #f0f8ff; // Green background when active
+}
+
+.Info{
+  width: 88%;
 }

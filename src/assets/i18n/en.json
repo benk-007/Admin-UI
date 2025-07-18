@@ -21,6 +21,42 @@
       "description-input": {
         "label": "Description"
       },
+      "nightly-price-input": {
+        "label": "Nightly price",
+        "placeholder": "Nightly Price"
+      },
+      "days-select": {
+        "label": "Days",
+        "placeholder": "Select one or multiple days"
+      },
+      "guest-count-input": {
+        "label": "Guest count",
+        "placeholder": "Guest Count"
+      },
+      "guest-type-select": {
+        "label": "Guest type",
+        "values": {
+          "adult": "Adult",
+          "child": "Child"
+        }
+      },
+      "age-bucket-input": {
+        "label": "Age bucket",
+        "placeholder": {
+          "from": "From",
+          "to": "To"
+        }
+      },
+      "amount-type-select": {
+        "label": "Amount type",
+        "values": {
+          "flat": "Flat",
+          "percent": "Percent"
+        }
+      },
+      "value-input": {
+        "label": "Value"
+      },
       "buttons": {
         "update": "Update",
         "create": "Create",
@@ -398,7 +434,7 @@
         "email-input": {
           "label": "Email address"
         },
-        "submit-btn": "Send",
+        "submit-btn": "Request password reset",
         "errors": {
           "undefined": "Something went wrong at our end, and we are working to fix the problem! "
         },
@@ -694,41 +730,46 @@
             }
           },
           "gallery": {
-            "upload-section": "Upload your image",
-            "upload-btn": "Upload another image",
+            "upload-cover": "Upload your first image",
             "delete-modal": {
-              "title": "Confirm unit image removal",
+              "title": "Confirm image removal",
               "message": "Do you want to delete this image? Please be aware that this action can't be rolled back."
             },
             "notifications": {
               "upload": {
                 "success": {
-                  "title": "Image uploaded",
-                  "message": "Your rental image was uploaded successfully"
+                  "title": "Images uploaded",
+                  "message": "Your images were uploaded successfully"
                 },
                 "error": {
-                  "title": "Image upload error",
-                  "message": "An error occurred when uploading the image. Please try again or contact our support"
+                  "title": "Upload error",
+                  "message": "An error occurred while uploading images"
+                }
+              },
+              "load": {
+                "error": {
+                  "title": "Loading error",
+                  "message": "An error occurred while loading images"
                 }
               },
               "cover": {
                 "success": {
-                  "title": "Image cover updated",
-                  "message": "Your new rental cover image is set successfully"
+                  "title": "Cover updated",
+                  "message": "Image set as cover successfully"
                 },
                 "error": {
-                  "title": "Image cover error",
-                  "message": "An error occurred when setting your cover image. Please try again or contact our support"
+                  "title": "Cover update error",
+                  "message": "An error occurred while setting the image as cover"
                 }
               },
               "delete": {
                 "success": {
                   "title": "Image removed",
-                  "message": "Your rental image was removed successfully"
+                  "message": "Your image was removed successfully"
                 },
                 "error": {
                   "title": "Image removal error",
-                  "message": "An error occurred when removing your rental image. Please try again or contact our support"
+                  "message": "An error occurred while removing the image"
                 }
               }
             }
@@ -1035,6 +1076,91 @@
         },
         "rates": {
           "title": "Rates",
+          "default": {
+            "title": "Default",
+            "sections": {
+              "base-details": {
+                "title": "Base Rate details"
+              },
+              "day-specific-pricing": {
+                "title": "Day Specific Pricing",
+                "hint": "Set rates for specific days. They will override the above rate."
+              },
+              "additional-guest-fee": {
+                "title": "Additional Guest Fee",
+                "hint": "Increase your rates based on the number of guests."
+              }
+            }
+          },
+          "ratesPlans": {
+            "list": {
+              "cta": {
+                "add-plan-btn": "Add Rate Plan",
+                "add-rate-btn": "Add Rate Table"
+              },
+              "empty-data": "No rate plans available"
+            },
+            "create": {
+              "title": "Create Rate Plan",
+              "form": {
+                "name": {
+                  "label": "Name"
+                },
+                "segment": {
+                  "select": {
+                    "label": "Segment"
+                  }
+                },
+                "subSegment": {
+                  "select": {
+                    "label": "Sub-segment"
+                  }
+                },
+                "enabled": {
+                  "label": "Enabled"
+                }
+              },
+              "notifications": {
+                "success": {
+                  "title": "Rate plan created",
+                  "message": "The rate plan has been created successfully."
+                },
+                "error": {
+                  "title": "Creation failed",
+                  "message": "Unable to create the rate plan. Please check the form and try again."
+                }
+              }
+            },
+            "edit": {
+              "title": "Edit Rate Plan",
+              "notifications": {
+                "success": {
+                  "title": "Rate plan updated",
+                  "message": "The rate plan has been updated successfully."
+                },
+                "error": {
+                  "title": "Update failed",
+                  "message": "Unable to update the rate plan. Please try again later."
+                }
+              }
+            },
+            "delete": {
+              "modal": {
+                "title": "Delete Rate Plan",
+                "message": "Are you sure you want to delete the rate plan '{{name}}'?"
+              },
+              "notifications": {
+                "success": {
+                  "title": "Rate Plan Deleted",
+                  "message": "The rate plan '{{name}}' was deleted successfully."
+                },
+                "error": {
+                  "title": "Deletion Failed",
+                  "message": "An error occurred while deleting the rate plan."
+                }
+              }
+            }
+          },
           "hint": "Configure the pricing periods and rules for this unit to control its availability and rates.",
           "settings": {
             "title": "Settings",
@@ -1094,59 +1220,6 @@
               "monthlyLowerThanWeekly": "Monthly price must be higher than weekly price.",
               "child-age-overlap": "Overlapping age ranges for children are not allowed.",
               "invalid-age-range": "End age must be greater than start age."
-            }
-          },
-          "ratesPlans": {
-            "list": {
-              "cta":{
-                "add-plan-btn": "+ Add price plan",
-                "add-rate-btn": "+ Add price table"
-              },
-              "table": {
-                "headers": {
-                  "name": "Name",
-                  "segment": "Segment",
-                  "subSegment": "Subsegment"
-                }
-              },
-              "empty-data": "No rate plans have been defined for this unit yet.",
-              "notifications": {
-                "error": {
-                  "title": "Unable to Load Rate Plans",
-                  "message": "An error occurred while loading rate plans. Please try again later."
-                }
-              }
-            },
-            "create": {
-              "title": "Create Rate Plan",
-              "form": {
-                "name": {
-                  "label": "Rate Plan Name"
-                },
-                "segment": {
-                  "select": {
-                    "label": "Segment"
-                  }
-                },
-                "subSegment": {
-                  "select": {
-                    "label": "Subsegment"
-                  }
-                },
-                "enabled": {
-                  "label": "Status"
-                }
-              },
-              "notifications": {
-                "success": {
-                  "title": "Rate Plan Created",
-                  "message": "The rate plan has been successfully created."
-                },
-                "error": {
-                  "title": "Creation Failed",
-                  "message": "An error occurred while creating the rate plan."
-                }
-              }
             }
           },
           "ratesTable": {

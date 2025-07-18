@@ -1,6 +1,8 @@
 import {
   Component,
-  EventEmitter, Inject,
+  EventEmitter,
+  Inject,
+  Input,
   OnDestroy,
   OnInit,
   Output
@@ -16,6 +18,7 @@ import {
   ColComponent,
   FormControlDirective,
   FormDirective,
+  FormFeedbackComponent,
   FormLabelDirective,
   RowComponent
 } from '@coreui/angular';
@@ -25,10 +28,10 @@ import {
   NgSelectComponent
 } from '@ng-select/ng-select';
 import {RateApiService} from '../../../../../services/rate-api.service';
-
+import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.model';
 
 @Component({
-  selector: 'app-unit-rate-plans-create-modal',
+  selector: 'app-unit-rate-plans-cu-modal',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -43,17 +46,17 @@ import {RateApiService} from '../../../../../services/rate-api.service';
     NgSelectComponent,
     NgLabelTemplateDirective,
     NgOptionTemplateDirective,
+    FormFeedbackComponent
   ],
-  templateUrl: './unit-rate-plans-create-modal.component.html',
-  styleUrl: './unit-rate-plans-create-modal.component.scss'
+  templateUrl: './unit-rate-plans-cu-modal.component.html',
+  styleUrl: './unit-rate-plans-cu-modal.component.scss'
 })
-export class UnitRatePlansCreateModalComponent implements OnInit, OnDestroy {
-
+export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
+  @Input() unitId!: string;
+  @Input() ratePlanToEdit?: RatePlanGetModel;
   @Output() actionConfirmed = new EventEmitter<void>();
+
   ratePlanForm: FormGroup;
-  unitId!: string;
-
-
   segments = [
     {uuid: 'seg1', name: 'Segment 1'},
     {uuid: 'seg2', name: 'Segment 2'},
@@ -70,7 +73,7 @@ export class UnitRatePlansCreateModalComponent implements OnInit, OnDestroy {
     private readonly rateService: RateApiService,
     private readonly modalRef: BsModalRef,
     private readonly translateService: TranslateService,
-    private readonly toastrService: ToastrService,
+    private readonly toastrService: ToastrService
   ) {
     this.ratePlanForm = this.fb.group({
       name: [null, [Validators.required]],
@@ -81,8 +84,15 @@ export class UnitRatePlansCreateModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    if (this.ratePlanToEdit) {
+      this.ratePlanForm.patchValue({
+        name: this.ratePlanToEdit.name,
+        segment: this.ratePlanToEdit.segment,
+        subSegment: this.ratePlanToEdit.subSegment,
+        enabled: this.ratePlanToEdit.enabled
+      });
+    }
   }
-
 
   submit(): void {
     if (this.ratePlanForm.invalid) {
@@ -94,7 +104,6 @@ export class UnitRatePlansCreateModalComponent implements OnInit, OnDestroy {
     }
 
     const formValue = this.ratePlanForm.value;
-
     const payload = {
       name: formValue.name,
       segment: formValue.segment ? {
@@ -109,28 +118,49 @@ export class UnitRatePlansCreateModalComponent implements OnInit, OnDestroy {
       unit: { uuid: this.unitId }
     };
 
-    console.log("payload to be sent", payload);
-
-    this.subscriptions.push(
-      this.rateService.createRatePlan(payload).subscribe({
-        next: () => {
-          this.actionConfirmed.emit();
-          this.closeModal();
-          this.toastrService.success(
-            this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.success.message'),
-            this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.success.title')
-          );
-        },
-        error: (err) => {
-          console.error('Error creating rate plan:', err);
-          this.toastrService.error(
-            this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
-            this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
-          );
-        }
-      })
-    );
+    if (this.ratePlanToEdit) {
+      // Update
+      this.subscriptions.push(
+        this.rateService.updateRatePlan(this.ratePlanToEdit.id, payload).subscribe({
+          next: () => {
+            this.actionConfirmed.emit();
+            this.closeModal();
+            this.toastrService.success(
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.edit.notifications.success.message'),
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.edit.notifications.success.title')
+            );
+          },
+          error: (err) => {
+            this.toastrService.error(
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.edit.notifications.error.message'),
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.edit.notifications.error.title')
+            );
+          }
+        })
+      );
+    } else {
+      // Create
+      this.subscriptions.push(
+        this.rateService.createRatePlan(payload).subscribe({
+          next: () => {
+            this.actionConfirmed.emit();
+            this.closeModal();
+            this.toastrService.success(
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.success.message'),
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.success.title')
+            );
+          },
+          error: (err) => {
+            this.toastrService.error(
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
+            );
+          }
+        })
+      );
+    }
   }
+
 
   closeModal(): void {
     this.modalRef.hide();
