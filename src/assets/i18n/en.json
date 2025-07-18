@@ -12,6 +12,7 @@
       "email": "Enter a valid email address",
       "no-numbers": "Numbers are not allowed",
       "strictly-positive": "The value must be strictly positive.",
+      "positive": "The value must be positive.",
       "min-max-stay": "Maximum stay must be greater than or equal to minimum stay.",
       "invalidDateRange": "The 'From Date' must be earlier than the 'Until Date'.",
       "session-expired": "Your session has expired. Please sign in again to continue!"
@@ -19,6 +20,42 @@
     "form": {
       "description-input": {
         "label": "Description"
+      },
+      "nightly-price-input": {
+        "label": "Nightly price",
+        "placeholder": "Nightly Price"
+      },
+      "days-select": {
+        "label": "Days",
+        "placeholder": "Select one or multiple days"
+      },
+      "guest-count-input": {
+        "label": "Guest count",
+        "placeholder": "Guest Count"
+      },
+      "guest-type-select": {
+        "label": "Guest type",
+        "values": {
+          "adult": "Adult",
+          "child": "Child"
+        }
+      },
+      "age-bucket-input": {
+        "label": "Age bucket",
+        "placeholder": {
+          "from": "From",
+          "to": "To"
+        }
+      },
+      "amount-type-select": {
+        "label": "Amount type",
+        "values": {
+          "flat": "Flat",
+          "percent": "Percent"
+        }
+      },
+      "value-input": {
+        "label": "Value"
       },
       "buttons": {
         "update": "Update",
@@ -1039,19 +1076,63 @@
         },
         "rates": {
           "title": "Rates",
+          "default": {
+            "title": "Default",
+            "sections": {
+              "base-details": {
+                "title": "Base Rate details"
+              },
+              "day-specific-pricing": {
+                "title": "Day Specific Pricing",
+                "hint": "Set rates for specific days. They will override the above rate."
+              },
+              "additional-guest-fee": {
+                "title": "Additional Guest Fee",
+                "hint": "Increase your rates based on the number of guests."
+              }
+            }
+          },
+          "price-plans": {
+          },
           "hint": "Configure the pricing periods and rules for this unit to control its availability and rates.",
           "settings": {
             "title": "Settings",
             "BaseRate": "Rental Base Rate Details",
             "GuestFee": "Additional Guest Fee",
             "nightly": "Nightly",
-            "weekendNight": "Weekend Night",
-            "weekly": "Weekly",
-            "monthly": "Monthly",
             "minStay": "Minimum Stay (nights)",
             "maxStay": "Maximum Stay (nights)",
-            "feePPPN": "Additional Guest Fee (per person per night)",
+            "daySpecificPricing": {
+              "title": "Day Specific Pricing"
+            },
+            "ApplyToDays": "Weekdays",
+            "days": {
+              "MONDAY": "Monday",
+              "TUESDAY": "Tuesday",
+              "WEDNESDAY": "Wednesday",
+              "THURSDAY": "Thursday",
+              "FRIDAY": "Friday",
+              "SATURDAY": "Saturday",
+              "SUNDAY": "Sunday"
+            },
             "guestCount": "Guest Count",
+            "type": "Guest Type",
+            "amountType": "Amount Type",
+            "ageFrom": "Age From",
+            "ageTo": "Age To",
+            "add": "Add Fee",
+            "value": "Value",
+            "enums": {
+              "guestType": {
+                "adult": "Adult",
+                "child": "Child"
+              },
+              "amountType": {
+                "flat": "Flat",
+                "percent": "Percent"
+              }
+            },
+            "additionalGuestFee": "Additional Guest Fee",
             "notifications": {
               "success": {
                 "title": "Rates updated",
@@ -1069,7 +1150,9 @@
             "errors": {
               "weeklyLowerThanNightly": "Weekly price must be higher than nightly price.",
               "monthlyLowerThanNightly": "Monthly price must be higher than nightly price.",
-              "monthlyLowerThanWeekly": "Monthly price must be higher than weekly price."
+              "monthlyLowerThanWeekly": "Monthly price must be higher than weekly price.",
+              "child-age-overlap": "Overlapping age ranges for children are not allowed.",
+              "invalid-age-range": "End age must be greater than start age."
             }
           },
           "ratesTable": {
