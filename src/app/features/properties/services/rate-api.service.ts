@@ -100,7 +100,7 @@ export class RateApiService {
     );
   }
 
-  /*getRateTablesByRatePlan(
+  getRateTablesByRatePlan(
     ratePlanId: string,
     page: number,
     size: number,
@@ -124,7 +124,7 @@ export class RateApiService {
       `${environment.apiBaseUrl}${environment.RateTable}?ratePlanUuid=${ratePlanId}`,
       { params }
     );
-  }*/
+  }
 
   updateRateTable(rateTableId: string, payload: RateTablePostModel) {
     return this.httpClient.patch<RateTablePostModel>(
@@ -133,124 +133,10 @@ export class RateApiService {
     );
   }
 
-
-  getRateTablesByRatePlan(
-    ratePlanId: string,
-    page: number,
-    size: number,
-    sort: string,
-    sortDirection: string,
-    search: string
-  ): Observable<PageModel<RateTableGetModel>> {
-    const mockData: PageModel<RateTableGetModel> = {
-      content: [
-        {
-          id: 'table-001',
-          name: 'Standard Table A',
-          startDate: '2025-06-01',
-          endDate: '2025-09-01',
-          type: 'STANDARD',
-          nightly: 120,
-          minStay: 2,
-          maxStay: 10,
-          daySpecificRates: [
-            { nightly: 110, days: ['FRIDAY', 'SATURDAY'] },
-            { nightly: 150, days: ['SUNDAY'] },
-            { nightly: 100, days: ['SUNDAY'] },
-            { nightly: 110, days: ['FRIDAY', 'SATURDAY'] },
-            { nightly: 150, days: ['SUNDAY'] },
-            { nightly: 100, days: ['SUNDAY'] }
-          ],
-          additionalGuestFees: [
-            {
-              guestCount: 1,
-              guestType: 'ADULT',
-              amountType: 'FLAT',
-              value: 20,
-              ageBucket: {}
-            },
-            {
-              guestCount: 1,
-              guestType: 'CHILD',
-              amountType: 'PERCENT',
-              value: 0,
-              ageBucket: { fromAge: 0, toAge: 4 }
-            },
-            {
-              guestCount: 2,
-              guestType: 'CHILD',
-              amountType: 'PERCENT',
-              value: 15,
-              ageBucket: { fromAge: 5, toAge: 12 }
-            },
-            {
-              guestCount: 2,
-              guestType: 'CHILD',
-              amountType: 'PERCENT',
-              value: 15,
-              ageBucket: { fromAge: 13, toAge: 18 }
-            }
-          ],
-          audit: {
-            createdBy: 'admin',
-            createdAt: new Date(),
-            modifiedBy: 'admin',
-            modifiedAt: new Date()
-          },
-          ratePlan: { uuid: ratePlanId }
-        },
-        {
-          id: 'table-002',
-          name: 'Dynamic Table B',
-          startDate: '2025-12-15',
-          endDate: '2026-01-10',
-          type: 'DYNAMIC',
-          lowRate: 100,
-          lowestOccupancy: 1,
-          maxRate: 300,
-          maxOccupancy: 4,
-          minStay: 3,
-          maxStay: 14,
-          daySpecificRates: [],
-          additionalGuestFees: [],
-          audit: {
-            createdBy: 'manager',
-            createdAt: new Date(),
-            modifiedBy: 'manager',
-            modifiedAt: new Date()
-          },
-          ratePlan: { uuid: ratePlanId }
-        }
-      ],
-      totalElements: 2,
-      totalPages: 1,
-      size: size,
-      number: page,
-      pageable: {
-        sort: {
-          sorted: !!sort,
-          unsorted: !sort,
-          empty: !sort
-        },
-        offset: page * size,
-        pageNumber: page,
-        pageSize: size,
-        paged: true,
-        unpaged: false
-      },
-      last: true,
-      first: true,
-      numberOfElements: 2,
-      sort: {
-        sorted: !!sort,
-        unsorted: !sort,
-        empty: !sort
-      },
-      empty: false
-    };
-
-    return of(mockData);
+  deleteRateTable(rateTableId: string): Observable<void> {
+    return this.httpClient.delete<void>(
+      `${environment.apiBaseUrl}${environment.RateTable}/${rateTableId}`
+    );
   }
-
 
 }

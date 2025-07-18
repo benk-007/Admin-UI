@@ -19,6 +19,7 @@ import {IconDirective} from '@coreui/icons-angular';
 import {cilPen, cilSearch, cilSortAscending, cilSortDescending, cilSwapVertical, cilTrash} from '@coreui/icons';
 import {UnitRateTableCuModalComponent} from '../unit-rate-table-cu-modal/unit-rate-table-create-modal.component';
 import {EmptyDataComponent} from '../../../../../../../shared/components/empty-data/empty-data.component';
+import {ConfirmModalComponent} from '../../../../../../../shared/components/confirm-modal/confirm-modal.component';
 
 
 @Component({
@@ -103,6 +104,43 @@ export class UnitRateTableListComponent extends ListContentComponent {
       })
     );
   }
+
+  deleteRateTable(table: RateTableGetModel): void {
+    const initialState = {
+      title: this.translateService.instant('units.edit-unit.tabs.rates.rateTable.delete.modal.title'),
+      message: this.translateService.instant(
+        'units.edit-unit.tabs.rates.rateTable.delete.modal.message',
+        { name: table.name }
+      )
+    };
+
+    const confirmModalRef = this.modalService.show(ConfirmModalComponent, { initialState });
+
+    this.subscriptions.push(
+      (confirmModalRef.content as ConfirmModalComponent).actionConfirmed.subscribe(() => {
+        this.rateService.deleteRateTable(table.id).subscribe({
+          next: () => {
+            this.refreshListContent();
+            this.toastr.success(
+              this.translateService.instant(
+                'units.edit-unit.tabs.rates.rateTable.delete.notifications.success.message',
+                { name: table.name }
+              ),
+              this.translateService.instant('units.edit-unit.tabs.rates.rateTable.delete.notifications.success.title')
+            );
+          },
+          error: () => {
+            this.toastr.error(
+              this.translateService.instant('units.edit-unit.tabs.rates.rateTable.delete.notifications.error.message'),
+              this.translateService.instant('units.edit-unit.tabs.rates.rateTable.delete.notifications.error.title')
+            );
+          }
+        });
+      })
+    );
+  }
+
+
 
 
 }

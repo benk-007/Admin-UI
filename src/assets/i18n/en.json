@@ -1263,6 +1263,22 @@
                 "success": "Rate table updated successfully.",
                 "error": "Failed to update rate table."
               }
+            },
+            "delete": {
+              "modal": {
+                "title": "Delete Rate Table",
+                "message": "Are you sure you want to delete the rate table \"{{name}}\"?"
+              },
+              "notifications": {
+                "success": {
+                  "title": "Deleted Successfully",
+                  "message": "Rate table \"{{name}}\" was deleted."
+                },
+                "error": {
+                  "title": "Deletion Failed",
+                  "message": "An error occurred while deleting the rate table."
+                }
+              }
             }
           }
         },

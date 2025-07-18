@@ -51,7 +51,7 @@
                 <button cButton size="sm" class="btn-secondary-light ms-3" type="button" (click)="openRateTableCuModal(ratePlanId, rate)">
                   <svg [cIcon]="icons.cilPen" class="me-1"></svg>
                 </button>
-                <button cButton size="sm" type="button" class="btn-danger-light ms-3">
+                <button cButton size="sm" type="button" class="btn-danger-light ms-3" (click)="deleteRateTable(rate)" >
                   <svg [cIcon]="icons.cilTrash" class="me-1"></svg>
                 </button>
               </div>
