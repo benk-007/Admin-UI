@@ -3,247 +3,269 @@
   <form [formGroup]="ratesForm" (ngSubmit)="onSubmit()" cForm>
 
     <!-- Base Pricing Section -->
-    <c-row>
-      <c-col [md]="1"></c-col>
-      <c-col [md]="11">
-        <h6 class="section-title underline mb-3 mt-4">
-          {{ 'units.edit-unit.tabs.rates.settings.BaseRate' | translate }}
-        </h6>
-      </c-col>
-    </c-row>
+    <ng-container>
+      <!--Title-->
+      <h6 class="section-title underline mb-3 mt-4">
+        {{ 'units.edit-unit.tabs.rates.settings.BaseRate' | translate }}
+      </h6>
+      <c-row>
+        <!--Form-->
+        <c-col [md]="6">
+          <c-row>
+            <c-col [md]="4">
+              <label cLabel class="required"
+                     for="nightly">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
+              <input cFormControl formControlName="nightly" id="nightly" type="number" step="50"/>
+              @if (ratesForm.get('nightly')?.touched && ratesForm.get('nightly')?.invalid) {
+                @if (ratesForm.get('nightly')?.errors?.['required']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+                @if (ratesForm.get('nightly')?.errors?.['min']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}
+                  </c-form-feedback>
+                }
+              }
+            </c-col>
 
-    <c-row class="mb-3 pb-4 border-bottom">
-      <c-col [md]="1"></c-col>
-      <c-col [md]="4" sm="12">
-        <label cLabel class="required" for="nightly">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
-        <input cFormControl formControlName="nightly" id="nightly" type="number" step="50" />
-        <div *ngIf="ratesForm.get('nightly')?.touched && ratesForm.get('nightly')?.invalid" class="text-danger mt-2">
-          <div *ngIf="ratesForm.get('nightly')?.errors?.['required']">
-            {{ 'commons.errors.required' | translate }}
-          </div>
-          <div *ngIf="ratesForm.get('nightly')?.errors?.['min']">
-            {{ 'commons.errors.strictly-positive' | translate }}
-          </div>
-        </div>
-      </c-col>
+            <c-col [md]="4">
+              <label cLabel class="required"
+                     for="minStay">{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}</label>
+              <input cFormControl formControlName="minStay" id="minStay" type="number" min="1"/>
+              @if (ratesForm.get('minStay')?.touched && ratesForm.get('minStay')?.invalid) {
+                @if (ratesForm.get('minStay')?.errors?.['required']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+                @if (ratesForm.get('minStay')?.errors?.['min']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}
+                  </c-form-feedback>
+                }
+              }
+            </c-col>
 
-      <c-col [md]="3" sm="12">
-        <label cLabel class="required" for="minStay">{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}</label>
-        <input cFormControl formControlName="minStay" id="minStay" type="number" min="1" />
-        <div *ngIf="ratesForm.get('minStay')?.touched && ratesForm.get('minStay')?.invalid" class="text-danger mt-2">
-          <div *ngIf="ratesForm.get('minStay')?.errors?.['required']">
-            {{ 'commons.errors.required' | translate }}
-          </div>
-          <div *ngIf="ratesForm.get('minStay')?.errors?.['min']">
-            {{ 'commons.errors.strictly-positive' | translate }}
-          </div>
-        </div>
-      </c-col>
+            <c-col [md]="4">
+              <label cLabel for="maxStay">{{ 'units.edit-unit.tabs.rates.settings.maxStay' | translate }}</label>
+              <input cFormControl formControlName="maxStay" id="maxStay" type="number" min="1"/>
+              @if (ratesForm.get('maxStay')?.touched && ratesForm.get('maxStay')?.invalid) {
+                @if (ratesForm.errors?.['maxLowerThanMin']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.min-max-stay'| translate }}</c-form-feedback>
+                }
+              }
+            </c-col>
 
-      <c-col [md]="3" sm="12">
-        <label cLabel for="maxStay">{{ 'units.edit-unit.tabs.rates.settings.maxStay' | translate }}</label>
-        <input cFormControl formControlName="maxStay" id="maxStay" type="number" min="1" />
-        <div *ngIf="ratesForm.errors?.['maxLowerThanMin']" class="text-danger mt-2">
-          {{ 'commons.errors.min-max-stay'| translate }}
-        </div>
-      </c-col>
-    </c-row>
+          </c-row>
 
-    <!-- Day Specific Pricing -->
-    <div class="d-flex mb-3 mt-4">
-      <c-col [md]="1">
-        <button type="button" class="btn btn-sm btn-primary rounded-circle" (click)="addDaySpecificPricing()">
-          +
-        </button>
-      </c-col>
-      <c-col [md]="11">
-        <h6 class="section-title underline mb-0">
-          {{ 'units.edit-unit.tabs.rates.settings.daySpecificPricing.title' | translate }}
-        </h6>
-      </c-col>
-    </div>
+        </c-col>
+        <!--Save button-->
+        <c-col [md]="6" class="d-flex justify-content-end">
+          <button cButton color="primary" type="submit" class="btn-without-label" [disabled]="!ratesForm.valid">
+            {{ 'commons.form.save-btn' | translate }}
+          </button>
+        </c-col>
+      </c-row>
+    </ng-container>
 
-    <div formArrayName="daySpecificRates" class="border-bottom">
-      <div *ngFor="let group of daySpecificRates.controls; let i = index" [formGroupName]="i">
-        <c-row class="mb-3 pb-3">
+    <!--Day Specific Pricing Section-->
+    <ng-container>
+      <!--Title-->
+      <h6 class="section-title underline mb-0 mt-4">
+        <span
+          class="me-2"> {{ 'units.edit-unit.tabs.rates.default.sections.day-specific-pricing.title' | translate }}</span>
+        <span class="text-primary add-btn" (click)="addDaySpecificPricing()">
+          <i class="bi bi-plus-circle-fill"></i>
+        </span>
+      </h6>
+      <div id="daySpecificHelpBlock" class="form-text mb-3">
+        {{ 'units.edit-unit.tabs.rates.default.sections.day-specific-pricing.hint'|translate }}
+      </div>
 
-          <c-col md="1" class="btn-remove">
-            <button cButton size="sm" type="button" class="btn-danger-light" (click)="removeDaySpecificPricing(i)">
-              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
-            </button>
-          </c-col>
+      <!--Form-->
+      <ng-container formArrayName="daySpecificRates">
+        @for (group of daySpecificRates.controls; track group; let i = $index) {
+          <c-row class="mb-3" [formGroupName]="i">
+            <c-col md="2">
+              <input cFormControl type="number" formControlName="nightly" min="0" step="50"
+                     [placeholder]="'commons.form.nightly-price-input.placeholder'|translate"/>
+              @if (group.get('nightly')?.touched && group.get('nightly')?.invalid) {
+                @if (group.get('nightly')?.errors?.['required']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+                @if (group.get('nightly')?.errors?.['min']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}
+                  </c-form-feedback>
+                }
+              }
+            </c-col>
 
-          <c-col md="4">
-            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
-            <input cFormControl type="number" formControlName="nightly" min="0" step="50" />
-            <div *ngIf="group.get('nightly')?.touched && group.get('nightly')?.invalid" class="text-danger mt-2">
-              <div *ngIf="group.get('nightly')?.errors?.['required']">
-                {{ 'commons.errors.required' | translate }}
-              </div>
-              <div *ngIf="group.get('nightly')?.errors?.['min']">
-                {{ 'commons.errors.strictly-positive' | translate }}
-              </div>
-            </div>
-          </c-col>
-
-          <c-col md="3">
-            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ApplyToDays' | translate }}</label>
-            <ng-select formControlName="days"
-                       [items]="daysOfWeekOptions"
-                       [multiple]="true"
-                       bindValue="value"
-                       (add)="onDaySelect($event, i)"
-                       (remove)="onDayRemove($event, i)"
-                       [closeOnSelect]="false"
-                       class="ng-select-sm">
-              <ng-template ng-option-tmp let-item="item">
+            <c-col md="4">
+              <ng-select formControlName="days"
+                         [items]="daysOfWeekOptions"
+                         [multiple]="true"
+                         bindValue="value"
+                         [placeholder]="'commons.form.days-select.placeholder'|translate"
+                         (add)="onDaySelect($event, i)"
+                         (remove)="onDayRemove($event, i)"
+                         [closeOnSelect]="false"
+                         class="ng-select-sm">
+                <ng-template ng-option-tmp let-item="item">
                 <span [ngClass]="getDayClass(item.value, i)">
                   {{ ('units.edit-unit.tabs.rates.settings.days.' + item.value) | translate }}
                 </span>
-              </ng-template>
-            </ng-select>
-            <div *ngIf="group.get('days')?.touched && group.get('days')?.invalid" class="text-danger mt-2">
-              <div *ngIf="group.get('days')?.errors?.['required']">
-                {{ 'commons.errors.required' | translate }}
-              </div>
-            </div>
-          </c-col>
-        </c-row>
+                </ng-template>
+              </ng-select>
+              @if (group.get('days')?.touched && group.get('days')?.invalid) {
+                @if (group.get('days')?.errors?.['required']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+              }
+            </c-col>
+
+            <c-col>
+              <button cButton type="button" class="btn-danger-light" (click)="removeDaySpecificPricing(i)">
+                <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+              </button>
+            </c-col>
+          </c-row>
+        }
+      </ng-container>
+    </ng-container>
+
+    <!--Additional Guest Fee Section-->
+    <ng-container>
+      <!--Title-->
+      <h6 class="section-title underline mb-0 mt-4">
+        <span
+          class="me-2"> {{ 'units.edit-unit.tabs.rates.default.sections.additional-guest-fee.title' | translate }}</span>
+        <span class="text-primary add-btn" (click)="addAdditionalGuestFee()">
+          <i class="bi bi-plus-circle-fill"></i>
+        </span>
+      </h6>
+      <div id="daySpecificHelpBlock" class="form-text mb-3">
+        {{ 'units.edit-unit.tabs.rates.default.sections.additional-guest-fee.hint'|translate }}
       </div>
-    </div>
 
-    <!-- Additional Guest Fee -->
-    <div class="d-flex mb-3 mt-4">
-      <c-col [md]="1">
-        <button type="button" class="btn btn-sm btn-primary rounded-circle" (click)="addAdditionalGuestFee()">
-          +
-        </button>
-      </c-col>
-      <c-col [md]="11">
-        <h6 class="section-title underline mb-0">
-          {{ 'units.edit-unit.tabs.rates.settings.additionalGuestFee' | translate }}
-        </h6>
-      </c-col>
-    </div>
+      <!--Form-->
+      <ng-container formArrayName="additionalGuestFees">
+        @for (feeGroup of additionalGuestFees.controls; track feeGroup; let i = $index) {
+          <c-row class="mb-3" [formGroupName]="i">
 
-    <div formArrayName="additionalGuestFees">
-      <div *ngFor="let feeGroup of additionalGuestFees.controls; let i = index" [formGroupName]="i">
-        <c-row class="mb-3 pb-3">
+            <!--GuestCount input-->
+            <c-col [md]="2">
+              <label cLabel [for]="'guestCount'+i"
+                     class="required">{{ 'commons.form.guest-count-input.placeholder'|translate }}</label>
+              <input cFormControl [id]="'guestCount'+i" type="number" formControlName="guestCount"/>
+              @if (feeGroup.get('guestCount')?.touched && feeGroup.get('guestCount')?.invalid) {
+                @if (feeGroup.get('guestCount')?.errors?.['required']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+                @if (feeGroup.get('guestCount')?.errors?.['min']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}
+                  </c-form-feedback>
+                }
+              }
+            </c-col>
 
-          <c-col [md]="1" class="btn-remove">
-            <button cButton size="sm" type="button" class="btn-danger-light" (click)="removeAdditionalGuestFee(i)">
-              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
-            </button>
-          </c-col>
-
-          <c-col [md]="2">
-            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.guestCount' | translate }}</label>
-            <input cFormControl type="number" formControlName="guestCount" min="1" />
-            <div *ngIf="feeGroup.get('guestCount')?.touched && feeGroup.get('guestCount')?.invalid" class="text-danger mt-2">
-              <div *ngIf="feeGroup.get('guestCount')?.errors?.['required']">
-                {{ 'commons.errors.required' | translate }}
-              </div>
-              <div *ngIf="feeGroup.get('guestCount')?.errors?.['min']">
-                {{ 'commons.errors.strictly-positive' | translate }}
-              </div>
-            </div>
-          </c-col>
-
-          <c-col [md]="2">
-            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.type' | translate }}</label>
-            <div cFormControl>
-              <select formControlName="guestType" class="form-select">
+            <!--GuestType input-->
+            <c-col [md]="2">
+              <label cLabel [for]="'guestType'+i"
+                     class="required">{{ 'commons.form.guest-type-select.label'|translate }}</label>
+              <select cSelect [id]="'guestType'+i" formControlName="guestType">
                 <option value="ADULT" [disabled]="hasAdult(i)">
-                  {{ 'units.edit-unit.tabs.rates.settings.enums.guestType.adult' | translate }}
+                  {{ 'commons.form.guest-type-select.values.adult'|translate }}
                 </option>
                 <option value="CHILD">
-                  {{ 'units.edit-unit.tabs.rates.settings.enums.guestType.child' | translate }}
+                  {{ 'commons.form.guest-type-select.values.child'|translate | translate }}
                 </option>
               </select>
-            </div>
-            <div *ngIf="feeGroup.get('guestType')?.touched && feeGroup.get('guestType')?.invalid" class="text-danger mt-2">
-              <div *ngIf="feeGroup.get('guestType')?.errors?.['required']">
-                {{ 'commons.errors.required' | translate }}
-              </div>
-            </div>
-          </c-col>
+              @if (feeGroup.get('guestType')?.touched && feeGroup.get('guestType')?.invalid) {
+                @if (feeGroup.get('guestType')?.errors?.['required']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+              }
+            </c-col>
 
-          <!-- ageBucket fields shown only when guestType === 'CHILD' -->
-          <c-col [md]="2" *ngIf="feeGroup.get('guestType')?.value === 'CHILD'" [formGroupName]="'ageBucket'">
-            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageFrom' | translate }}</label>
-            <input cFormControl type="number" formControlName="fromAge" min="0" />
-            <div *ngIf="feeGroup.get('ageBucket.fromAge')?.touched && feeGroup.get('ageBucket.fromAge')?.invalid" class="text-danger mt-2">
-              <div *ngIf="feeGroup.get('ageBucket.fromAge')?.errors?.['required']">
-                {{ 'commons.errors.required' | translate }}
-              </div>
-              <div *ngIf="feeGroup.get('ageBucket.fromAge')?.errors?.['min']">
-                {{ 'commons.errors.positive' | translate }}
-              </div>
-            </div>
-          </c-col>
+            <!--AgeBucket inputs-->
+            @if (feeGroup.get('guestType')?.value === 'CHILD') {
+              <c-col [md]="2" [formGroupName]="'ageBucket'">
+                <label cLabel [for]="'ageBucket'+i"
+                       class="required">{{ 'commons.form.age-bucket-input.label' | translate }}</label>
+                <c-input-group>
+                  <input cFormControl [id]="'ageBucket'+i" type="number" formControlName="fromAge" min="0"
+                         [placeholder]="'commons.form.age-bucket-input.placeholder.from'|translate"/>
 
-          <c-col [md]="2" *ngIf="feeGroup.get('guestType')?.value === 'CHILD'" [formGroupName]="'ageBucket'">
-            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.ageTo' | translate }}</label>
-            <input cFormControl type="number" formControlName="toAge" min="1" />
-            <div *ngIf="feeGroup.get('ageBucket.toAge')?.touched && feeGroup.get('ageBucket.toAge')?.invalid" class="text-danger mt-2">
-              <div *ngIf="feeGroup.get('ageBucket.toAge')?.errors?.['required']">
-                {{ 'commons.errors.required' | translate }}
-              </div>
-              <div *ngIf="feeGroup.get('ageBucket.toAge')?.errors?.['min']">
-                {{ 'commons.errors.strictly-positive' | translate }}
-              </div>
-            </div>
-            <div *ngIf="feeGroup.get('ageBucket')?.errors?.['invalidAgeRange']" class="text-danger mt-2">
-              {{ 'units.edit-unit.tabs.rates.settings.errors.invalid-age-range' | translate }}
-            </div>
-          </c-col>
+                  <span cInputGroupText><i class="bi bi-arrow-right"></i></span>
+                  <input cFormControl type="number" formControlName="toAge" min="1"
+                         [placeholder]="'commons.form.age-bucket-input.placeholder.to'|translate"/>
+                  @if ((feeGroup.get('ageBucket.fromAge')?.touched &&
+                    feeGroup.get('ageBucket.fromAge')?.invalid) ||
+                  (feeGroup.get('ageBucket.toAge')?.touched && feeGroup.get('ageBucket.toAge')?.invalid)) {
+                    @if (feeGroup.get('ageBucket.fromAge')?.errors?.['required'] ||
+                    feeGroup.get('ageBucket.toAge')?.errors?.['required']) {
+                      <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                    }
+                    @if (feeGroup.get('ageBucket.fromAge')?.errors?.['min'] ||
+                    feeGroup.get('ageBucket.toAge')?.errors?.['min']) {
+                      <c-form-feedback [valid]="false">{{ 'commons.errors.positive' | translate }}</c-form-feedback>
+                    }
+                  }
+                  @if (feeGroup.get('ageBucket')?.errors?.['invalidAgeRange']) {
+                    <c-form-feedback [valid]="false">
+                      {{ 'units.edit-unit.tabs.rates.settings.errors.invalid-age-range' | translate }}
+                    </c-form-feedback>
+                  }
+                </c-input-group>
+              </c-col>
+            }
 
-          <c-col [md]="2">
-            <label cLabel class="required">
-              {{ 'units.edit-unit.tabs.rates.settings.amountType' | translate }}
-            </label>
-            <div cFormControl>
-              <select formControlName="amountType" class="form-select">
-                <option value="FLAT">{{ 'units.edit-unit.tabs.rates.settings.enums.amountType.flat' | translate }}</option>
-                <option value="PERCENT">{{ 'units.edit-unit.tabs.rates.settings.enums.amountType.percent' | translate }}</option>
+            <!--AmountType input-->
+            <c-col [md]="1">
+              <label cLabel [for]="'amountType'+i" class="required">
+                {{ 'commons.form.amount-type-select.label' | translate }}
+              </label>
+              <select cSelect [id]="'amountType'+i" formControlName="amountType">
+                <option value="FLAT">{{ 'commons.form.amount-type-select.values.flat'|translate }}</option>
+                <option value="PERCENT">
+                  {{ 'commons.form.amount-type-select.values.percent' | translate }}
+                </option>
               </select>
-            </div>
-            <div *ngIf="feeGroup.get('amountType')?.touched && feeGroup.get('amountType')?.invalid" class="text-danger mt-2">
-              <div *ngIf="feeGroup.get('amountType')?.errors?.['required']">
-                {{ 'commons.errors.required' | translate }}
-              </div>
-            </div>
-          </c-col>
+              @if (feeGroup.get('amountType')?.touched && feeGroup.get('amountType')?.invalid) {
+                @if (feeGroup.get('amountType')?.errors?.['required']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+              }
+            </c-col>
 
+            <!--Value input-->
+            <c-col [md]="1">
+              <label cLabel [for]="'value'+i" class="required">
+                {{ 'commons.form.value-input.label' | translate }}
+              </label>
+              <input [id]="'value'+i" cFormControl type="number" formControlName="value" min="0"/>
+              @if (feeGroup.get('value')?.touched && feeGroup.get('value')?.invalid) {
+                @if (feeGroup.get('value')?.errors?.['required']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+                @if (feeGroup.get('value')?.errors?.['min']) {
+                  <c-form-feedback [valid]="false">{{ 'commons.errors.positive' | translate }}</c-form-feedback>
+                }
+              }
+            </c-col>
 
-          <c-col [md]="1">
-            <label cLabel class="required">{{ 'units.edit-unit.tabs.rates.settings.value' | translate }}</label>
-            <input cFormControl type="number" formControlName="value" min="0" />
-            <div *ngIf="feeGroup.get('value')?.touched && feeGroup.get('value')?.invalid" class="text-danger mt-2">
-              <div *ngIf="feeGroup.get('value')?.errors?.['required']">
-                {{ 'commons.errors.required' | translate }}
-              </div>
-              <div *ngIf="feeGroup.get('value')?.errors?.['min']">
-                {{ 'commons.errors.positive' | translate }}
-              </div>
-            </div>
-          </c-col>
-        </c-row>
-      </div>
-    </div>
-    <div *ngIf="additionalGuestFees.errors?.['childAgeOverlap']" class="text-danger mt-2">
-      {{ 'units.edit-unit.tabs.rates.settings.errors.child-age-overlap' | translate }}
-    </div>
+            <!--Remove button-->
+            <c-col>
+              <button cButton type="button" class="btn-without-label btn-danger-light" (click)="removeAdditionalGuestFee(i)">
+                <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+              </button>
+            </c-col>
 
+          </c-row>
+        }
+      </ng-container>
+      @if(additionalGuestFees.errors?.['childAgeOverlap']){
+        <c-form-feedback [valid]="false">
+          {{ 'units.edit-unit.tabs.rates.settings.errors.child-age-overlap' | translate }}
+        </c-form-feedback>
+      }
+    </ng-container>
 
-
-    <!-- Footer -->
-    <c-row class="mt-4 mb-4">
-      <c-col class="d-flex justify-content-end">
-        <button cButton color="primary" type="submit" [disabled]="!ratesForm.valid">
-          {{ 'commons.form.save-btn' | translate }}
-        </button>
-      </c-col>
-    </c-row>
   </form>
 </div>

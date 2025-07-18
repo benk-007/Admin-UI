@@ -1,9 +1,20 @@
-.rounded-circle{
+.btn-without-label {
+  margin-top: 29px;
+}
+
+span.add-btn {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.rounded-circle {
   width: 30px;
   height: 30px;
   border: none;
   color: white;
 }
+
 .btn-remove {
   margin-top: 35px;
 }
@@ -11,6 +22,7 @@
 .text-muted {
   opacity: 0.5;
 }
+
 .cursor-not-allowed {
   cursor: not-allowed;
 }

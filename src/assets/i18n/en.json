@@ -21,6 +21,42 @@
       "description-input": {
         "label": "Description"
       },
+      "nightly-price-input": {
+        "label": "Nightly price",
+        "placeholder": "Nightly Price"
+      },
+      "days-select": {
+        "label": "Days",
+        "placeholder": "Select one or multiple days"
+      },
+      "guest-count-input": {
+        "label": "Guest count",
+        "placeholder": "Guest Count"
+      },
+      "guest-type-select": {
+        "label": "Guest type",
+        "values": {
+          "adult": "Adult",
+          "child": "Child"
+        }
+      },
+      "age-bucket-input": {
+        "label": "Age bucket",
+        "placeholder": {
+          "from": "From",
+          "to": "To"
+        }
+      },
+      "amount-type-select": {
+        "label": "Amount type",
+        "values": {
+          "flat": "Flat",
+          "percent": "Percent"
+        }
+      },
+      "value-input": {
+        "label": "Value"
+      },
       "buttons": {
         "update": "Update",
         "create": "Create",
@@ -1035,6 +1071,24 @@
         },
         "rates": {
           "title": "Rates",
+          "default": {
+            "title": "Default",
+            "sections": {
+              "base-details": {
+                "title": "Base Rate details"
+              },
+              "day-specific-pricing": {
+                "title": "Day Specific Pricing",
+                "hint": "Set rates for specific days. They will override the above rate."
+              },
+              "additional-guest-fee": {
+                "title": "Additional Guest Fee",
+                "hint": "Increase your rates based on the number of guests."
+              }
+            }
+          },
+          "price-plans": {
+          },
           "hint": "Configure the pricing periods and rules for this unit to control its availability and rates.",
           "settings": {
             "title": "Settings",

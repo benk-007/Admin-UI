@@ -4,8 +4,8 @@ import {
   ColComponent,
   FormControlDirective,
   FormDirective,
-  FormFeedbackComponent,
-  FormLabelDirective,
+  FormFeedbackComponent, FormFloatingDirective,
+  FormLabelDirective, FormSelectDirective, InputGroupComponent, InputGroupTextDirective,
   RowComponent
 } from '@coreui/angular';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import {RateApiService} from '../../../../services/rate-api.service';
 import {IconDirective} from '@coreui/icons-angular';
-import {cilTrash} from '@coreui/icons';
+import {cilPlus, cilTrash} from '@coreui/icons';
 import {NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
 import {JsonPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {noChildAgeOverlapValidator} from '../../../../validators/no-age-overlap.validator';
@@ -41,13 +41,18 @@ import {ageRangeValidator} from '../../../../validators/ageBucket.validator';
     NgOptionTemplateDirective,
     NgIf,
     NgClass,
-    JsonPipe
+    JsonPipe,
+    FormFeedbackComponent,
+    FormFloatingDirective,
+    FormSelectDirective,
+    InputGroupComponent,
+    InputGroupTextDirective
   ],
   templateUrl: './unit-default-rate.component.html',
   styleUrl: './unit-default-rate.component.scss'
 })
 export class UnitDefaultRateComponent implements OnInit, OnDestroy {
-  icons = {cilTrash};
+  icons = {cilTrash, cilPlus};
   unitId!: string;
   ratesForm: FormGroup;
   private readonly subscriptions: Subscription[] = [];
@@ -216,8 +221,8 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
         'ageBucket',
         this.fb.group(
           {
-            fromAge: [null, [Validators.required, Validators.min(0)]],
-            toAge: [null, [Validators.required, Validators.min(1)]]
+            fromAge: [0, [Validators.required, Validators.min(0)]],
+            toAge: [1, [Validators.required, Validators.min(1)]]
           },
           { validators: ageRangeValidator() }
         )
@@ -230,8 +235,8 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
         (feeGroup as FormGroup).addControl(
           'ageBucket',
           this.fb.group({
-            fromAge: [null, [Validators.required, Validators.min(0)]],
-            toAge: [null, [Validators.required, Validators.min(1)]]
+            fromAge: [0, [Validators.required, Validators.min(0)]],
+            toAge: [1, [Validators.required, Validators.min(1)]]
           }, { validators: ageRangeValidator() })
         );
       } else if (type === 'ADULT' && feeGroup.get('ageBucket')) {
