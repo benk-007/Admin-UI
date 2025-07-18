@@ -35,16 +35,25 @@
     <!-- Data Display -->
     @if (!isListEmpty) {
         <!-- Main Rate Plan List -->
-        <c-row class="rate-plan-list">
+        <c-row class="rate-plan-list mb-3">
             @for (plan of listContent; track plan.id) {
                 <c-accordion [alwaysOpen]="true">
                     <c-accordion-item #item0="cAccordionItem" [visible]="false">
                         <ng-template cTemplateId="accordionHeaderTemplate">
                             <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton >
                                 <div class="Info">
-                                    <strong>{{ plan.name }}</strong>
-                                    <span class="badge bg-secondary ms-3">{{ plan.segment?.name || 'Segment' }}</span>
-                                    <span class="badge bg-secondary ms-3">{{ plan.subSegment?.name || 'SubSegment' }}</span>
+                                    <strong class="me-1">{{ plan.name }}</strong>
+                                    @if (!plan.enabled) {
+                                        <i class="bi bi-patch-minus-fill text-danger" [adaptivePosition]="true"
+                                           [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.disabled' | translate">
+                                        </i>
+                                    } @else {
+                                        <i class="bi bi-patch-check-fill text-success" [adaptivePosition]="true"
+                                           [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.enabled' | translate">
+                                        </i>
+                                    }
+                                    <span class="badge bg-primary ms-3 fw-normal">{{ plan.segment?.name }}</span>
+                                    <span class="badge bg-primary ms-3 fw-normal">{{ plan.subSegment?.name }}</span>
                                 </div>
                                 <button cButton size="sm" class="btn-secondary-light ms-3" type="button" (click)="openRatePlanCuModal(plan)">
                                     <svg [cIcon]="icons.cilPen" class="me-1"></svg>

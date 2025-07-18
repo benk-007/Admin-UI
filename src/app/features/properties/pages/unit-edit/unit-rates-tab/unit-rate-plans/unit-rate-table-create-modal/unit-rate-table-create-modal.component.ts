@@ -18,7 +18,7 @@ import {
   FormLabelDirective, FormSelectDirective, InputGroupComponent, InputGroupTextDirective,
   RowComponent
 } from '@coreui/angular';
-import {NgClass, NgForOf, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
+import {NgClass, NgSwitch, NgSwitchCase} from '@angular/common';
 import {NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
 
 @Component({
@@ -40,7 +40,6 @@ import {NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select
     FormCheckLabelDirective,
     FormDirective,
     NgSwitch,
-    NgIf,
     NgSwitchCase,
     FormFeedbackComponent,
     FormSelectDirective,
@@ -80,7 +79,7 @@ export class UnitRateTableCreateModalComponent implements OnInit, OnDestroy {
       name: [null, Validators.required],
       startDate: [null, Validators.required],
       endDate: [null, Validators.required],
-      type: ['standard', Validators.required],
+      type: ['STANDARD', Validators.required],
       nightly: [null, Validators.min(1)],
       lowRate: [null, Validators.min(1)],
       lowestOccupancy: [null, Validators.min(1)],
@@ -97,7 +96,7 @@ export class UnitRateTableCreateModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.rateTableForm.get('type')?.valueChanges.subscribe(type => {
-      if (type === 'standard') {
+      if (type === 'STANDARD') {
         this.rateTableForm.get('nightly')?.setValidators([Validators.required, Validators.min(1)]);
         this.rateTableForm.get('lowRate')?.clearValidators();
         this.rateTableForm.get('lowestOccupancy')?.clearValidators();
@@ -119,12 +118,14 @@ export class UnitRateTableCreateModalComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.rateTableForm.invalid) return;
+    if (this.rateTableForm.invalid) {
+      this.rateTableForm.markAllAsTouched();
+      return;
+    }
 
-    const value = structuredClone(this.rateTableForm.value);
+    const raw = structuredClone(this.rateTableForm.value);
 
-    // Remove `ageBucket` if guestType is ADULT
-    value.additionalGuestFees = value.additionalGuestFees.map((fee: any) => {
+    raw.additionalGuestFees = raw.additionalGuestFees.map((fee: any) => {
       if (fee.guestType === 'ADULT') {
         delete fee.ageBucket;
       }
@@ -132,14 +133,27 @@ export class UnitRateTableCreateModalComponent implements OnInit, OnDestroy {
     });
 
     const payload = {
-      ...value,
+      ...raw,
       ratePlan: { uuid: this.ratePlanId }
     };
 
-    console.log('Submitting rate table:', payload);
-
-    this.modalRef.hide();
+    this.rateApiService.createRateTable(payload).subscribe({
+      next: () => {
+        this.toastrService.success(
+            this.translateService.instant('units.edit-unit.tabs.rates.rateTable.create.notifications.success')
+        );
+        this.actionConfirmed.emit();
+        this.modalRef.hide();
+      },
+      error: (err: any) => {
+        console.error('Rate table creation failed:', err);
+        this.toastrService.error(
+            this.translateService.instant('units.edit-unit.tabs.rates.rateTable.create.notifications.error')
+        );
+      }
+    });
   }
+
 
   addDaySpecificPricing(): void {
     this.daySpecificRates.push(

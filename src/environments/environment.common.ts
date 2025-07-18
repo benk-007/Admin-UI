@@ -38,6 +38,8 @@ export const commonProperties = {
   unitBaseRateById: PRICING_SERVICE + 'default-rates',
   // Rate plans
   RatePlan: PRICING_SERVICE + 'rate-plans',
+  // Rate plans
+  RateTable: PRICING_SERVICE + 'rate-tables',
 
 
   /*===========Guest Service===========*/

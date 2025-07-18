@@ -1098,7 +1098,11 @@
                 "add-plan-btn": "Add Rate Plan",
                 "add-rate-btn": "Add Rate Table"
               },
-              "empty-data": "No rate plans available"
+              "empty-data": "No rate plans available",
+              "status": {
+                "enabled": "Rate plan is enabled",
+                "disabled": "Rate plan is disabled"
+              }
             },
             "create": {
               "title": "Create Rate Plan",
@@ -1222,8 +1226,27 @@
               "invalid-age-range": "End age must be greater than start age."
             }
           },
-          "ratesTable": {
-            "title": "Rates table"
+          "rateTable": {
+            "create": {
+              "title": "Create Rate Table",
+              "form": {
+                "name": "Name",
+                "startDate": "Start Date",
+                "endDate": "End Date",
+                "type": {
+                  "standard": "Standard",
+                  "dynamic": "Dynamic"
+                },
+                "lowRate": "Low Rate",
+                "lowestOccupancy": "Lowest Occupancy",
+                "maxRate": "Max Rate",
+                "maxOccupancy": "Max Occupancy"
+              },
+              "notifications": {
+                "success": "Rate table created successfully.",
+                "error": "Failed to create rate table."
+              }
+            }
           }
         },
         "sub-units": {

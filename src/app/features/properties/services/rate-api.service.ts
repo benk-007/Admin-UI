@@ -6,6 +6,7 @@ import {RatePlanPostModel} from '../models/rate/post/rate-plan-post.model';
 import {RatePlanGetModel} from '../models/rate/get/rate-plan-get.model';
 import {PageModel} from '../../../shared/models/pageable/page.model';
 import {Observable, of} from 'rxjs';
+import {RateTablePostModel} from '../models/rate/post/rate-table-post.model';
 
 
 @Injectable({
@@ -15,6 +16,8 @@ export class RateApiService {
 
   constructor(private httpClient: HttpClient) {
   }
+
+  /*===========Default Rate===========*/
 
   getDefaultRate(unitId: string) {
     return this.httpClient.get<DefaultRateModel>(
@@ -39,6 +42,8 @@ export class RateApiService {
     );
   }
 
+  /*===========Rate Plan===========*/
+
   createRatePlan(payload: RatePlanPostModel) {
     return this.httpClient.post<RatePlanPostModel>(
       environment.apiBaseUrl.concat(environment.RatePlan),
@@ -57,6 +62,10 @@ export class RateApiService {
     let params = new HttpParams()
       .set('size', size.toString())
       .set('page', page.toString());
+
+    if (sort) {
+      params = params.set('sort', `${sort},${sortDirection}`);
+    }
 
     if (search) {
       params = params.set('search', search);
@@ -80,4 +89,14 @@ export class RateApiService {
       `${environment.apiBaseUrl}${environment.RatePlan}/${ratePlanId}`
     );
   }
+
+  /*===========Rate Table===========*/
+
+  createRateTable(payload: RateTablePostModel) {
+    return this.httpClient.post<RateTablePostModel>(
+      environment.apiBaseUrl.concat(environment.RateTable),
+      payload
+    );
+  }
+
 }

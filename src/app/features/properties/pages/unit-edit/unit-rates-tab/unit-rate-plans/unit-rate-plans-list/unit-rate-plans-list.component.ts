@@ -30,6 +30,7 @@ import {
   UnitRateTableCreateModalComponent
 } from '../unit-rate-table-create-modal/unit-rate-table-create-modal.component';
 import {ConfirmModalComponent} from "../../../../../../../shared/components/confirm-modal/confirm-modal.component";
+import {TooltipDirective} from "ngx-bootstrap/tooltip";
 
 @Component({
   selector: 'app-unit-rate-plans-list',
@@ -48,7 +49,8 @@ import {ConfirmModalComponent} from "../../../../../../../shared/components/conf
     AccordionComponent,
     AccordionItemComponent,
     AccordionButtonDirective,
-    TemplateIdDirective
+    TemplateIdDirective,
+    TooltipDirective
   ],
   templateUrl: './unit-rate-plans-list.component.html',
   styleUrl: './unit-rate-plans-list.component.scss',
@@ -90,9 +92,9 @@ export class UnitRatePlansListComponent extends ListContentComponent {
   override ngOnInit(): void {
     this.unitId = this.route.parent?.parent?.parent?.snapshot.params['unitId'];
     super.ngOnInit();
-    this.sort = 'modifiedAt';
-    this.sortDirection = 'desc';
-    this.size = 10;
+    this.sort = 'CreatedAt';
+    this.sortDirection = 'Asc';
+    this.size = 50;
     this.subscribeToQueryParam();
   }
 
