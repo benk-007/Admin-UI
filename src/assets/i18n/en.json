@@ -1099,7 +1099,8 @@
           "ratesPlans": {
             "list": {
               "cta":{
-                "add-btn": "+ Add price plan"
+                "add-plan-btn": "+ Add price plan",
+                "add-rate-btn": "+ Add price table"
               },
               "table": {
                 "headers": {

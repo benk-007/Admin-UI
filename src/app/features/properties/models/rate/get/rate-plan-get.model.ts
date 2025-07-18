@@ -1,16 +1,19 @@
+import {AuditGetModel} from '../../../../../shared/models/audit-get.model';
+
 export interface RatePlanGetModel {
   id: string;
   name: string;
   segment?: {
-    id: string;
+    uuid: string;
     name: string;
   };
   subSegment?: {
-    id: string;
+    uuid: string;
     name: string;
   };
   enabled: boolean;
   unit: {
     uuid: string;
   };
+  audit: AuditGetModel;
 }

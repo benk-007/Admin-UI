@@ -21,6 +21,9 @@ import { UnitRatePlansCreateModalComponent } from '../unit-rate-plans-create-mod
 import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.model';
 import {NgForOf} from '@angular/common';
 import {IconDirective} from '@coreui/icons-angular';
+import {
+  UnitRateTableCreateModalComponent
+} from '../unit-rate-table-create-modal/unit-rate-table-create-modal.component';
 
 @Component({
   selector: 'app-unit-rate-plans-list',
@@ -35,9 +38,7 @@ import {IconDirective} from '@coreui/icons-angular';
     InputGroupComponent,
     InputGroupTextDirective,
     SpinnerComponent,
-    EmptyDataComponent,
-    NgForOf,
-  ],
+    EmptyDataComponent],
   templateUrl: './unit-rate-plans-list.component.html',
   styleUrl: './unit-rate-plans-list.component.scss',
   providers: [BsModalService]
@@ -115,6 +116,22 @@ export class UnitRatePlansListComponent extends ListContentComponent {
 
     this.subscriptions.push(
       (modalRef.content as UnitRatePlansCreateModalComponent).actionConfirmed.subscribe(() => {
+        this.refreshListContent();
+      })
+    );
+  }
+
+  openRateTableCreateModal(ratePlanId: string): void {
+    const modalRef = this.modalService.show(UnitRateTableCreateModalComponent, {
+      class: 'modal-lg',
+      initialState: {
+        ratePlanId: ratePlanId,
+        unitId: this.unitId
+      }
+    });
+
+    this.subscriptions.push(
+      (modalRef.content as UnitRateTableCreateModalComponent).actionConfirmed.subscribe(() => {
         this.refreshListContent();
       })
     );

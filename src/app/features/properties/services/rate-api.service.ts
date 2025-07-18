@@ -59,15 +59,21 @@ export class RateApiService {
           name: 'Standard Rate Plan',
           enabled: true,
           segment: {
-            id: 'seg-001',
+            uuid: 'seg-001',
             name: 'Segment A'
           },
           subSegment: {
-            id: 'sub-001',
+            uuid: 'sub-001',
             name: 'Subsegment A1'
           },
           unit: {
             uuid: unitId
+          },
+          audit: {
+            createdAt: new Date('2024-06-01T10:00:00Z'),
+            createdBy: 'Admin',
+            modifiedAt: new Date('2024-06-10T15:30:00Z'),
+            modifiedBy: 'Admin'
           }
         },
         {
@@ -75,15 +81,21 @@ export class RateApiService {
           name: 'Flexible Rate Plan',
           enabled: false,
           segment: {
-            id: 'seg-002',
+            uuid: 'seg-002',
             name: 'Segment B'
           },
           subSegment: {
-            id: 'sub-002',
+            uuid: 'sub-002',
             name: 'Subsegment B1'
           },
           unit: {
             uuid: unitId
+          },
+          audit: {
+            createdAt: new Date('2024-06-05T12:00:00Z'),
+            createdBy: 'Manager',
+            modifiedAt: new Date('2024-06-15T18:45:00Z'),
+            modifiedBy: 'Manager'
           }
         }
       ],
