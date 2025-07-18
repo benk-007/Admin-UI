@@ -27,33 +27,30 @@
               }
           </c-col>
 
-          <c-col [md]="4">
-              <label cLabel class="required" for="startDate">
-                  {{ 'units.edit-unit.tabs.rates.rateTable.create.form.startDate' | translate }}
-              </label>
-              <input cFormControl formControlName="startDate" id="startDate" type="date" />
-              @if (rateTableForm.get('startDate')?.touched && rateTableForm.get('startDate')?.invalid) {
-                  @if (rateTableForm.get('startDate')?.errors?.['required']) {
-                      <c-form-feedback [valid]="false">
-                          {{ 'commons.errors.required' | translate }}
-                      </c-form-feedback>
-                  }
+        <c-col [md]="4" class="form-group mb-3">
+          <div *ngIf="!isNavigating">
+            <label cLabel class="required" for="dateRange">
+              {{ 'units.edit-unit.tabs.rates.rateTable.create.form.dateRange' | translate }}
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              ngxDaterangepickerBootstrap
+              [locale]="{ applyLabel: 'ok', format: 'YYYY-MM-DD' }"
+              [formControl]="dateRangeControl"
+              autocomplete="off"
+              id="dateRange"
+            />
+            @if (rateTableForm.get('dateRange')?.touched && rateTableForm.get('dateRange')?.invalid) {
+              @if (rateTableForm.get('dateRange')?.errors?.['required']) {
+                <c-form-feedback [valid]="false">
+                  {{ 'commons.errors.required' | translate }}
+                </c-form-feedback>
               }
-          </c-col>
+            }
+          </div>
+        </c-col>
 
-          <c-col [md]="4">
-              <label cLabel class="required" for="endDate">
-                  {{ 'units.edit-unit.tabs.rates.rateTable.create.form.endDate' | translate }}
-              </label>
-              <input cFormControl formControlName="endDate" id="endDate" type="date" />
-              @if (rateTableForm.get('endDate')?.touched && rateTableForm.get('endDate')?.invalid) {
-                  @if (rateTableForm.get('endDate')?.errors?.['required']) {
-                      <c-form-feedback [valid]="false">
-                          {{ 'commons.errors.required' | translate }}
-                      </c-form-feedback>
-                  }
-              }
-          </c-col>
       </c-row>
 
       <!-- Type Toggle -->

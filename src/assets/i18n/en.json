@@ -1243,6 +1243,7 @@
                 "name": "Name",
                 "startDate": "Start Date",
                 "endDate": "End Date",
+                "dateRange": "Date Range",
                 "type": {
                   "standard": "Standard",
                   "dynamic": "Dynamic"

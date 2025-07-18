@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {UnitRateTableCuModalComponent} from './unit-rate-table-create-modal.component';
+import {UnitRateTableCuModalComponent} from './unit-rate-table-cu-modal.component';
 
 
 describe('UnitRateTableCreateModalComponent', () => {

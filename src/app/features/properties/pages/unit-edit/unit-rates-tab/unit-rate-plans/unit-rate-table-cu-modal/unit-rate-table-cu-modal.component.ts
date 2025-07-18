@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -18,9 +18,11 @@ import {
   FormLabelDirective, FormSelectDirective, InputGroupComponent, InputGroupTextDirective,
   RowComponent
 } from '@coreui/angular';
-import {NgClass, NgSwitch, NgSwitchCase} from '@angular/common';
+import {NgClass, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
 import {RateTableGetModel} from '../../../../../models/rate/get/rate-table.get.model';
+import {NgxDaterangepickerBootstrapDirective} from 'ngx-daterangepicker-bootstrap';
+import dayjs from 'dayjs';
 
 @Component({
   selector: 'app-unit-rate-table-create-modal',
@@ -46,6 +48,8 @@ import {RateTableGetModel} from '../../../../../models/rate/get/rate-table.get.m
     FormSelectDirective,
     InputGroupComponent,
     InputGroupTextDirective,
+    NgxDaterangepickerBootstrapDirective,
+    NgIf
   ],
   templateUrl: './unit-rate-table-cu-modal.component.html',
   styleUrl: './unit-rate-table-cu-modal.component.scss'
@@ -59,6 +63,8 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
   icons = { cilTrash };
   rateTableForm: FormGroup;
   subscriptions: Subscription[] = [];
+
+  isNavigating = false;
 
   daysOfWeekOptions = [
     { label: 'Monday', value: 'MONDAY' },
@@ -79,8 +85,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
   ) {
     this.rateTableForm = this.fb.group({
       name: [null, Validators.required],
-      startDate: [null, Validators.required],
-      endDate: [null, Validators.required],
+      dateRange: [null, Validators.required],
       type: ['STANDARD', Validators.required],
       nightly: [null, Validators.min(1)],
       lowRate: [null, Validators.min(1)],
@@ -121,8 +126,10 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
     if (this.rateTableToEdit) {
       this.rateTableForm.patchValue({
         name: this.rateTableToEdit.name,
-        startDate: this.rateTableToEdit.startDate,
-        endDate: this.rateTableToEdit.endDate,
+        dateRange: {
+          startDate: this.rateTableToEdit.startDate,
+          endDate: this.rateTableToEdit.endDate
+        },
         type: this.rateTableToEdit.type,
         nightly: this.rateTableToEdit.nightly,
         lowRate: this.rateTableToEdit.lowRate,
@@ -174,7 +181,12 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const raw = structuredClone(this.rateTableForm.value);
+    const raw = { ...this.rateTableForm.value };
+
+    raw.startDate = raw.dateRange?.startDate ? dayjs(raw.dateRange.startDate).format('YYYY-MM-DD') : null;
+    raw.endDate = raw.dateRange?.endDate ? dayjs(raw.dateRange.endDate).format('YYYY-MM-DD') : null;
+
+    delete raw.dateRange;
 
     raw.additionalGuestFees = raw.additionalGuestFees.map((fee: any) => {
       if (fee.guestType === 'ADULT') {
@@ -187,6 +199,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       ...raw,
       ratePlan: { uuid: this.ratePlanId }
     };
+
 
     let request$;
 
@@ -215,6 +228,10 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
         this.toastrService.error(this.translateService.instant(errorKey));
       }
     });
+  }
+
+  get dateRangeControl(): FormControl {
+    return this.rateTableForm.get('dateRange') as FormControl;
   }
 
 
@@ -330,6 +347,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.isNavigating = true;
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

@@ -17,7 +17,7 @@ import {
 } from '@coreui/angular';
 import {IconDirective} from '@coreui/icons-angular';
 import {cilPen, cilSearch, cilSortAscending, cilSortDescending, cilSwapVertical, cilTrash} from '@coreui/icons';
-import {UnitRateTableCuModalComponent} from '../unit-rate-table-cu-modal/unit-rate-table-create-modal.component';
+import {UnitRateTableCuModalComponent} from '../unit-rate-table-cu-modal/unit-rate-table-cu-modal.component';
 import {EmptyDataComponent} from '../../../../../../../shared/components/empty-data/empty-data.component';
 import {ConfirmModalComponent} from '../../../../../../../shared/components/confirm-modal/confirm-modal.component';
 
