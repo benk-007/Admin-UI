@@ -238,6 +238,16 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       },
       error: (err: any) => {
         console.error('Rate table save failed:', err);
+
+        const validationError = err?.error?.errors?.startDate?.find(
+          (e: any) => e.code === 'ValidRateTableDates'
+        );
+
+        if (validationError) {
+          this.toastrService.error(validationError.message);
+          return;
+        }
+
         const errorKey = this.rateTableToEdit
           ? 'units.edit-unit.tabs.rates.rateTable.edit.notifications.error'
           : 'units.edit-unit.tabs.rates.rateTable.create.notifications.error';
