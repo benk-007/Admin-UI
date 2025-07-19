@@ -13,19 +13,20 @@ import {
   FormControlDirective,
   InputGroupComponent,
   InputGroupTextDirective,
-  RowComponent, SpinnerComponent
+  RowComponent, SpinnerComponent, TableDirective
 } from '@coreui/angular';
 import {IconDirective} from '@coreui/icons-angular';
 import {cilPen, cilSearch, cilSortAscending, cilSortDescending, cilSwapVertical, cilTrash} from '@coreui/icons';
 import {UnitRateTableCuModalComponent} from '../unit-rate-table-cu-modal/unit-rate-table-cu-modal.component';
 import {EmptyDataComponent} from '../../../../../../../shared/components/empty-data/empty-data.component';
 import {ConfirmModalComponent} from '../../../../../../../shared/components/confirm-modal/confirm-modal.component';
+import {SelectableTableDirective} from '../../../../../../../shared/directives/selectable-table.directive';
 
 
 @Component({
   selector: 'app-unit-rate-table-list',
   standalone: true,
-  imports: [TranslatePipe, ColComponent, FormControlDirective, IconDirective, InputGroupComponent, InputGroupTextDirective, RowComponent, ButtonDirective, EmptyDataComponent, SpinnerComponent],
+  imports: [TranslatePipe, ColComponent, FormControlDirective, IconDirective, InputGroupComponent, InputGroupTextDirective, RowComponent, ButtonDirective, EmptyDataComponent, SpinnerComponent, TableDirective, SelectableTableDirective],
   templateUrl: './unit-rate-table-list.component.html',
   styleUrl: './unit-rate-table-list.component.scss',
   providers: [BsModalService]
@@ -67,9 +68,24 @@ export class UnitRateTableListComponent extends ListContentComponent {
     this.sortDirection = 'asc';
     this.size = 50;
     this.subscribeToQueryParam();
+    console.log('UnitRateTableListComponent: ngOnInit finished. Initial ratePlanId:', this.ratePlanId);
   }
 
   override retrieveListContent(params: any): void {
+    console.log('UnitRateTableListComponent: retrieveListContent called.');
+    console.log('  Parameters received by retrieveListContent:', params);
+    console.log('  Current this.search:', this.search);
+
+    if (!this.ratePlanId) {
+      console.error('UnitRateTableListComponent: retrieveListContent ABORTED! ratePlanId is UNDEFINED or NULL.');
+      // Ensure loading state is handled if aborting
+      this.firstCallDone = true;
+      this.isListEmpty = true;
+      return; // Stop execution if ratePlanId is missing
+    }
+    console.log('  ratePlanId is:', this.ratePlanId);
+
+
     super.retrieveListContent(params);
 
     this.subscriptions.push(
@@ -141,6 +157,5 @@ export class UnitRateTableListComponent extends ListContentComponent {
   }
 
 
-
-
+  protected readonly console = console;
 }

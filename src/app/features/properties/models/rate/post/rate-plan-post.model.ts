@@ -5,10 +5,6 @@ export interface RatePlanPostModel {
     uuid: string;
     name: string;
   } | null;
-  subSegment?: {
-    uuid: string;
-    name: string;
-  } | null;
   unit: {
     uuid: string;
   };

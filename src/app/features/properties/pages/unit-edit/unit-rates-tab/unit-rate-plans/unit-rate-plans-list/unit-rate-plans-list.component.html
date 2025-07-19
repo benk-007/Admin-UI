@@ -53,12 +53,11 @@
                                         </i>
                                     }
                                     <span class="badge bg-primary ms-3 fw-normal">{{ plan.segment?.name }}</span>
-                                    <span class="badge bg-primary ms-3 fw-normal">{{ plan.subSegment?.name }}</span>
                                 </div>
-                                <button cButton size="sm" class="btn-secondary-light ms-3" type="button" (click)="openRatePlanCuModal(plan)">
+                                <button cButton size="sm" class="btn-secondary-light ms-3" type="button" (click)="openRatePlanCuModal(plan); $event.stopPropagation()">
                                     <svg [cIcon]="icons.cilPen" class="me-1"></svg>
                                 </button>
-                                <button cButton size="sm" type="button" class="btn-danger-light ms-3" (click)="deletePlan(plan)">
+                                <button cButton size="sm" type="button" class="btn-danger-light ms-3" (click)="deletePlan(plan); $event.stopPropagation()">
                                     <svg [cIcon]="icons.cilTrash" class="me-1"></svg>
                                 </button>
                             </button>

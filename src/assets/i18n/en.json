@@ -1229,6 +1229,11 @@
           },
           "rateTable": {
             "list": {
+              "name": "Name",
+              "category": "Category",
+              "duration": "Rate period",
+              "nightly": "Nightly",
+              "minStay": "Minimum Stay (nights)",
               "empty-data": "No rate tables found.",
               "notifications": {
                 "error": {

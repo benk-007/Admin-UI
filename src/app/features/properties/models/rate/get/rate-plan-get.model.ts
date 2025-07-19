@@ -7,10 +7,6 @@ export interface RatePlanGetModel {
     uuid: string;
     name: string;
   };
-  subSegment?: {
-    uuid: string;
-    name: string;
-  };
   enabled: boolean;
   unit: {
     uuid: string;

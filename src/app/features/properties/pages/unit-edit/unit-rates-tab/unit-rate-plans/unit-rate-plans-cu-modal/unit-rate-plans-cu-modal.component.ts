@@ -61,10 +61,6 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
     {uuid: 'seg1', name: 'Segment 1'},
     {uuid: 'seg2', name: 'Segment 2'},
   ];
-  subSegments = [
-    {uuid: 'sub1', name: 'Subsegment A'},
-    {uuid: 'sub2', name: 'Subsegment B'},
-  ];
 
   private readonly subscriptions: Subscription[] = [];
 
@@ -78,7 +74,6 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
     this.ratePlanForm = this.fb.group({
       name: [null, [Validators.required]],
       segment: [null],
-      subSegment: [null],
       enabled: [false, [Validators.required]]
     });
   }
@@ -88,7 +83,6 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
       this.ratePlanForm.patchValue({
         name: this.ratePlanToEdit.name,
         segment: this.ratePlanToEdit.segment,
-        subSegment: this.ratePlanToEdit.subSegment,
         enabled: this.ratePlanToEdit.enabled
       });
     }
@@ -109,10 +103,6 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
       segment: formValue.segment ? {
         uuid: formValue.segment.uuid,
         name: formValue.segment.name
-      } : null,
-      subSegment: formValue.subSegment ? {
-        uuid: formValue.subSegment.uuid,
-        name: formValue.subSegment.name
       } : null,
       enabled: formValue.enabled,
       unit: { uuid: this.unitId }

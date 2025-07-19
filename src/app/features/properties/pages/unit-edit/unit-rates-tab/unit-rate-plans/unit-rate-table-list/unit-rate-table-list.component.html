@@ -35,107 +35,43 @@
   <!-- Rate Table List -->
   @if (!isListEmpty) {
     <c-row class="gy-3">
-      @for (rate of listContent; track rate) {
-        <c-col [md]="12">
-          <div class="border rounded shadow-sm ">
-            <!-- Header: Table Name | Type | Duration -->
-            <div class="p-3 border d-flex align-items-center">
-              <strong class="ms-3">{{ rate.name }}</strong>
-              <span class="badge ms-3 fw-normal">
-                {{rate.type | translate }}
-              </span>
-              <span class="badge ms-3 fw-normal">
-                {{ rate.startDate }} → {{ rate.endDate }}
-              </span>
-              <div class="ms-auto">
-                <button cButton size="sm" class="btn-secondary-light ms-3" type="button" (click)="openRateTableCuModal(ratePlanId, rate)">
-                  <svg [cIcon]="icons.cilPen" class="me-1"></svg>
-                </button>
-                <button cButton size="sm" type="button" class="btn-danger-light ms-3" (click)="deleteRateTable(rate)" >
-                  <svg [cIcon]="icons.cilTrash" class="me-1"></svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- Body: details -->
-            <div class="body">
-              <c-row class="px-3 mt-3">
-                @if (rate.type === 'STANDARD') {
-                  <c-col [md]="4" class="mb-3">
-                    <strong>{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}:</strong>
-                    <span>{{ rate.nightly }}</span>
-                  </c-col>
-                } @else {
-                  <c-col [md]="4" class="mb-3">
-                    <strong>{{ 'units.edit-unit.tabs.rates.rateTable.create.form.lowRate' | translate }}:</strong>
-                    <span>{{ rate.lowRate }}</span>
-                  </c-col>
-                  <c-col [md]="4" class="mb-3">
-                    <strong>{{ 'units.edit-unit.tabs.rates.rateTable.create.form.lowestOccupancy' | translate }}:</strong>
-                    <span>{{ rate.lowestOccupancy }}</span>
-                  </c-col>
-                  <c-col [md]="4" class="mb-3">
-                    <strong>{{ 'units.edit-unit.tabs.rates.rateTable.create.form.maxRate' | translate }}:</strong>
-                    <span>{{ rate.maxRate }}</span>
-                  </c-col>
-                  <c-col [md]="4" class="mb-3">
-                    <strong>{{ 'units.edit-unit.tabs.rates.rateTable.create.form.maxOccupancy' | translate }}:</strong>
-                    <span>{{ rate.maxOccupancy }}</span>
-                  </c-col>
-                }
-
-                <c-col [md]="4" class="mb-3">
-                  <strong>{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}:</strong>
-                  <span>{{ rate.minStay }}</span>
-                </c-col>
-                <c-col [md]="4" class="mb-3">
-                  <strong>{{ 'units.edit-unit.tabs.rates.settings.maxStay' | translate }}:</strong>
-                  <span>{{ rate.maxStay || '-' }}</span>
-                </c-col>
-              </c-row>
-
-              <!-- Day Specific Rates -->
-              @if (rate.daySpecificRates?.length) {
-                <c-row class="px-3">
-                  <h6 class="section-title underline mb-3">
-                    <strong>{{ 'units.edit-unit.tabs.rates.settings.daySpecificPricing.title' | translate }}:</strong>
-                  </h6>
-                  @for (dsr of rate.daySpecificRates; track dsr) {
-                    <c-col [md]="4" class="mb-2 pb-2">
-                      <span>
-                        <strong>{{ dsr.days.join(', ') }}:</strong>
-                        {{ dsr.nightly }}
-                      </span>
-                    </c-col>
-                  }
-                </c-row>
-              }
-
-              <!-- Additional Guest Fees -->
-              @if (rate.additionalGuestFees?.length) {
-                <c-row class="px-3 pb-2">
-                  <h6 class="section-title underline mb-3">
-                    <strong>{{ 'units.edit-unit.tabs.rates.settings.additionalGuestFee' | translate }}:</strong>
-                  </h6>
-                  @for (fee of rate.additionalGuestFees; track fee) {
-                    <c-col [md]="4" class="mb-2">
-                      <span>
-                        {{ fee.guestCount }}x
-                        {{ 'units.edit-unit.tabs.rates.settings.enums.guestType.' + fee.guestType.toLowerCase() | translate }} →
-                        {{ fee.value }}{{ fee.amountType === 'PERCENT' ? '%' : ' '}}
-                        @if (fee.ageBucket?.fromAge || fee.ageBucket?.toAge) {
-                          ({{ fee.ageBucket.fromAge }} - {{ fee.ageBucket.toAge }} {{ 'commons.snippets.years' | translate }})
-                        }
-                      </span>
-                    </c-col>
-                  }
-                </c-row>
-              }
-
-            </div>
-          </div>
-        </c-col>
-      }
+      <div class="table-responsive">
+        <table cTable hover appSelectableTable [responsive]="true">
+          <thead>
+          <tr>
+            <th>{{ 'units.edit-unit.tabs.rates.rateTable.list.name' | translate }}</th>
+            <th>{{ 'units.edit-unit.tabs.rates.rateTable.list.category' | translate }}</th>
+            <th>{{ 'units.edit-unit.tabs.rates.rateTable.list.duration' | translate }}</th>
+            <th>{{ 'units.edit-unit.tabs.rates.rateTable.list.nightly' | translate }}</th>
+            <th>{{ 'units.edit-unit.tabs.rates.rateTable.list.minStay' | translate }}</th>
+            <th>{{ 'guests.list.table.header.actions' | translate }}</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (rate of listContent; track rate) {
+              <tr>
+                <td><span class="me-1">{{ rate.name }}</span></td>
+                <td><span class="badge fw-normal">{{rate.type | translate }}</span></td>
+                <td>
+                  <div class="badge fw-normal bg-primary">
+                    <span>{{ rate.startDate }} → {{ rate.endDate }}</span>
+                  </div>
+                </td>
+                <td><span>{{rate.nightly}}</span></td>
+                <td><span>{{rate.minStay}}</span></td>
+                <td>
+                  <button cButton size="sm" class="btn-secondary-light" type="button" (click)="openRateTableCuModal(ratePlanId, rate)">
+                    <svg [cIcon]="icons.cilPen" class="me-1"></svg>
+                  </button>
+                  <button cButton size="sm" type="button" class="btn-danger-light" (click)="deleteRateTable(rate)" >
+                    <svg [cIcon]="icons.cilTrash" class="me-1"></svg>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     </c-row>
   } @else {
     <!-- Empty State -->

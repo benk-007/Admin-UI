@@ -123,7 +123,6 @@ export class UnitRatePlansListComponent extends ListContentComponent {
         : { unitId: this.unitId };
 
     const modalRef = this.modalService.show(UnitRatePlansCuModalComponent, {
-      class: 'modal-lg',
       initialState
     });
 

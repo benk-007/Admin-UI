@@ -195,10 +195,27 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       return fee;
     });
 
-    const payload = {
-      ...raw,
+    const payload: any = {
+      name: raw.name,
+      startDate: raw.startDate,
+      endDate: raw.endDate,
+      type: raw.type,
+      minStay: raw.minStay,
+      maxStay: raw.maxStay,
+      daySpecificRates: raw.daySpecificRates,
+      additionalGuestFees: raw.additionalGuestFees,
       ratePlan: { uuid: this.ratePlanId }
     };
+
+    if (raw.type === 'STANDARD') {
+      payload.nightly = raw.nightly;
+    } else if (raw.type === 'DYNAMIC') {
+      payload.lowRate = raw.lowRate;
+      payload.lowestOccupancy = raw.lowestOccupancy;
+      payload.maxRate = raw.maxRate;
+      payload.maxOccupancy = raw.maxOccupancy;
+    }
+
 
 
     let request$;
