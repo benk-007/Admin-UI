@@ -1,30 +1,26 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {
-  ButtonDirective,
-  ColComponent,
-  RowComponent,
-  SpinnerComponent,
-  FormControlDirective,
-  InputGroupComponent,
-  InputGroupTextDirective,
+  AccordionButtonDirective,
   AccordionComponent,
   AccordionItemComponent,
-  AccordionButtonDirective,
+  ButtonDirective,
+  ColComponent, FormControlDirective, InputGroupComponent, InputGroupTextDirective,
+  RowComponent,
+  SpinnerComponent,
   TemplateIdDirective
 } from '@coreui/angular';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BsModalService} from 'ngx-bootstrap/modal';
+import {ToastrService} from 'ngx-toastr';
 
-import { EmptyDataComponent } from '../../../../../../../shared/components/empty-data/empty-data.component';
-import { ListContentComponent } from '../../../../../../../shared/components/list-content/list-content.component';
+import {EmptyDataComponent} from '../../../../../../../shared/components/empty-data/empty-data.component';
+import {ListContentComponent} from '../../../../../../../shared/components/list-content/list-content.component';
 
-import { cilSearch, cilPen, cilTrash, cilSwapVertical, cilSortAscending, cilSortDescending } from '@coreui/icons';
-import { RateApiService } from '../../../../../services/rate-api.service';
-import {  UnitRatePlansCuModalComponent} from '../unit-rate-plans-cu-modal/unit-rate-plans-cu-modal.component';
+import {cilPen, cilSearch, cilSortAscending, cilSortDescending, cilSwapVertical, cilTrash} from '@coreui/icons';
+import {RateApiService} from '../../../../../services/rate-api.service';
+import {UnitRatePlansCuModalComponent} from '../unit-rate-plans-cu-modal/unit-rate-plans-cu-modal.component';
 import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.model';
-import {NgForOf} from '@angular/common';
 import {IconDirective} from '@coreui/icons-angular';
 import {ConfirmModalComponent} from "../../../../../../../shared/components/confirm-modal/confirm-modal.component";
 import {TooltipDirective} from "ngx-bootstrap/tooltip";
@@ -38,10 +34,7 @@ import {UnitRateTableListComponent} from '../unit-rate-table-list/unit-rate-tabl
     ColComponent,
     RowComponent,
     TranslatePipe,
-    FormControlDirective,
     IconDirective,
-    InputGroupComponent,
-    InputGroupTextDirective,
     SpinnerComponent,
     EmptyDataComponent,
     AccordionComponent,
@@ -49,7 +42,10 @@ import {UnitRateTableListComponent} from '../unit-rate-table-list/unit-rate-tabl
     AccordionButtonDirective,
     TemplateIdDirective,
     TooltipDirective,
-    UnitRateTableListComponent
+    UnitRateTableListComponent,
+    FormControlDirective,
+    InputGroupComponent,
+    InputGroupTextDirective
   ],
   templateUrl: './unit-rate-plans-list.component.html',
   styleUrl: './unit-rate-plans-list.component.scss',
@@ -119,17 +115,17 @@ export class UnitRatePlansListComponent extends ListContentComponent {
 
   openRatePlanCuModal(ratePlanToEdit?: RatePlanGetModel): void {
     const initialState = ratePlanToEdit
-        ? { unitId: this.unitId, ratePlanToEdit }
-        : { unitId: this.unitId };
+      ? {unitId: this.unitId, ratePlanToEdit}
+      : {unitId: this.unitId};
 
     const modalRef = this.modalService.show(UnitRatePlansCuModalComponent, {
       initialState
     });
 
     this.subscriptions.push(
-        (modalRef.content as UnitRatePlansCuModalComponent).actionConfirmed.subscribe(() => {
-          this.refreshListContent();
-        })
+      (modalRef.content as UnitRatePlansCuModalComponent).actionConfirmed.subscribe(() => {
+        this.refreshListContent();
+      })
     );
   }
 
@@ -138,34 +134,34 @@ export class UnitRatePlansListComponent extends ListContentComponent {
     const initialState = {
       title: this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.modal.title'),
       message: this.translateService.instant(
-          'units.edit-unit.tabs.rates.ratesPlans.delete.modal.message',
-          { name: plan.name }
+        'units.edit-unit.tabs.rates.ratesPlans.delete.modal.message',
+        {name: plan.name}
       )
     };
 
-    const confirmModalRef = this.modalService.show(ConfirmModalComponent, { initialState });
+    const confirmModalRef = this.modalService.show(ConfirmModalComponent, {initialState});
 
     this.subscriptions.push(
-        (confirmModalRef.content as ConfirmModalComponent).actionConfirmed.subscribe(() => {
-          this.rateService.deleteRatePlan(plan.id).subscribe({
-            next: () => {
-              this.refreshListContent();
-              this.toastr.success(
-                  this.translateService.instant(
-                      'units.edit-unit.tabs.rates.ratesPlans.delete.notifications.success.message',
-                      { name: plan.name }
-                  ),
-                  this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.notifications.success.title')
-              );
-            },
-            error: () => {
-              this.toastr.error(
-                  this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.notifications.error.message'),
-                  this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.notifications.error.title')
-              );
-            }
-          });
-        })
+      (confirmModalRef.content as ConfirmModalComponent).actionConfirmed.subscribe(() => {
+        this.rateService.deleteRatePlan(plan.id).subscribe({
+          next: () => {
+            this.refreshListContent();
+            this.toastr.success(
+              this.translateService.instant(
+                'units.edit-unit.tabs.rates.ratesPlans.delete.notifications.success.message',
+                {name: plan.name}
+              ),
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.notifications.success.title')
+            );
+          },
+          error: () => {
+            this.toastr.error(
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.notifications.error.message'),
+              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.delete.notifications.error.title')
+            );
+          }
+        });
+      })
     );
   }
 

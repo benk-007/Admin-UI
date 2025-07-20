@@ -12,6 +12,18 @@ button.btn {
     }
   }
 
+  &.btn-primary-light{
+    background-color: $primary-10;
+    border-color: $primary-10;
+    color: $primary;
+
+    &:hover {
+      background-color: $primary;
+      border-color: $primary;
+      color: white;
+    }
+  }
+
   &.btn-secondary-light {
     background-color: $secondary-10;
     border-color: $secondary-10;

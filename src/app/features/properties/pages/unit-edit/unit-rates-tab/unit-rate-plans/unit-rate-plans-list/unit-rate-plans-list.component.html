@@ -1,89 +1,86 @@
-<!-- Add Rate Plan Button -->
-<c-col [md]="12" class="d-flex justify-content-end mt-3">
-    <button cButton size="sm" color="primary" type="button" (click)="openRatePlanCuModal()">
-        {{ 'units.edit-unit.tabs.rates.ratesPlans.list.cta.add-plan-btn' | translate }}
-    </button>
-</c-col>
+<c-row class="mb-3 mt-3">
+  <c-col [md]="2">
+    <c-input-group sizing="sm" class="search-input">
+        <span cInputGroupText>
+          <svg [cIcon]="icons.cilSearch"></svg>
+        </span>
+      <input id="searchBar" cFormControl (input)="triggerBasicSearch($event)"
+             [placeholder]="'commons.form.search-input.placeholder'|translate"/>
+    </c-input-group>
+  </c-col>
 
-<!-- Search Bar -->
-<c-row class="mb-3">
-    <c-col [md]="2">
-        <c-input-group sizing="sm" class="search-input">
-      <span cInputGroupText>
-        <svg [cIcon]="icons.cilSearch"></svg>
-      </span>
-            <input
-                    id="searchBar"
-                    cFormControl
-                    (input)="triggerBasicSearch($event)"
-                    [placeholder]="'commons.form.search-input.placeholder' | translate" />
-        </c-input-group>
-    </c-col>
+  <c-col class="d-flex justify-content-end">
+    <button cButton size="sm" color="primary" type="button" (click)="openRatePlanCuModal()">
+      {{ 'units.edit-unit.tabs.rates.ratesPlans.list.cta.add-plan-btn' | translate }}
+    </button>
+  </c-col>
 </c-row>
 
 <!-- Loading Spinner -->
 @if (!firstCallDone) {
-    <c-row class="d-flex justify-content-center mt-5">
-        <c-spinner color="secondary"/>
-    </c-row>
-    <c-row class="d-flex justify-content-center mt-1">
-        <c-col [md]="4" class="d-flex justify-content-center text-center">
-            {{ 'commons.snippets.loading' | translate }}
-        </c-col>
-    </c-row>
+  <c-row class="d-flex justify-content-center mt-5">
+    <c-spinner color="secondary"/>
+  </c-row>
+  <c-row class="d-flex justify-content-center mt-1">
+    <c-col [md]="4" class="d-flex justify-content-center text-center">
+      {{ 'commons.snippets.loading' | translate }}
+    </c-col>
+  </c-row>
 } @else {
-    <!-- Data Display -->
-    @if (!isListEmpty) {
-        <!-- Main Rate Plan List -->
-        <c-row class="rate-plan-list mb-3">
-            @for (plan of listContent; track plan.id) {
-                <c-accordion [alwaysOpen]="true">
-                    <c-accordion-item #item0="cAccordionItem" [visible]="false">
-                        <ng-template cTemplateId="accordionHeaderTemplate">
-                            <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton >
-                                <div class="Info">
-                                    <strong class="me-1">{{ plan.name }}</strong>
-                                    @if (!plan.enabled) {
-                                        <i class="bi bi-patch-minus-fill text-danger" [adaptivePosition]="true"
-                                           [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.disabled' | translate">
-                                        </i>
-                                    } @else {
-                                        <i class="bi bi-patch-check-fill text-success" [adaptivePosition]="true"
-                                           [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.enabled' | translate">
-                                        </i>
-                                    }
-                                    <span class="badge bg-primary ms-3 fw-normal">{{ plan.segment?.name }}</span>
-                                </div>
-                                <button cButton size="sm" class="btn-secondary-light ms-3" type="button" (click)="openRatePlanCuModal(plan); $event.stopPropagation()">
-                                    <svg [cIcon]="icons.cilPen" class="me-1"></svg>
-                                </button>
-                                <button cButton size="sm" type="button" class="btn-danger-light ms-3" (click)="deletePlan(plan); $event.stopPropagation()">
-                                    <svg [cIcon]="icons.cilTrash" class="me-1"></svg>
-                                </button>
-                            </button>
-                        </ng-template>
-                        <ng-template cTemplateId="accordionBodyTemplate">
-                            <div class="accordion-body">
-                                <c-row class="mb-4">
-                                    <app-unit-rate-table-list [ratePlanId]="plan.id"></app-unit-rate-table-list>
-                                </c-row>
-                            </div>
-                        </ng-template>
-                    </c-accordion-item>
-                </c-accordion>
-            }
-        </c-row>
+  <!-- Data Display -->
+  @if (!isListEmpty) {
+    <!-- Main Rate Plan List -->
+    <c-row class="rate-plan-list mb-3">
+      @for (plan of listContent; track plan.id) {
+        <c-accordion [alwaysOpen]="true">
+          <c-accordion-item #item0="cAccordionItem" [visible]="false">
+            <ng-template cTemplateId="accordionHeaderTemplate">
+              <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton>
+                <div class="Info">
+                  <strong class="me-1">{{ plan.name }}</strong>
+                  @if (!plan.enabled) {
+                    <i class="bi bi-patch-minus-fill text-danger" [adaptivePosition]="true"
+                       [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.disabled' | translate">
+                    </i>
+                  } @else {
+                    <i class="bi bi-patch-check-fill text-success" [adaptivePosition]="true"
+                       [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.enabled' | translate">
+                    </i>
+                  }
+                  <span class="badge bg-primary ms-3 fw-normal">{{ plan.segment?.name }}</span>
+                </div>
+                <button cButton size="sm" class="btn-secondary-light ms-3" type="button"
+                        (click)="openRatePlanCuModal(plan); $event.stopPropagation()">
+                  <svg [cIcon]="icons.cilPen" class="me-1"></svg>
+                </button>
+                <button cButton size="sm" type="button" class="btn-danger-light ms-3"
+                        (click)="deletePlan(plan); $event.stopPropagation()">
+                  <svg [cIcon]="icons.cilTrash" class="me-1"></svg>
+                </button>
+              </button>
+            </ng-template>
+            <ng-template cTemplateId="accordionBodyTemplate">
+              <div class="accordion-body">
+                <c-row class="mb-4">
+                  <app-unit-rate-table-list [ratePlanId]="plan.id"></app-unit-rate-table-list>
+                </c-row>
+              </div>
+            </ng-template>
+          </c-accordion-item>
+        </c-accordion>
+      }
+    </c-row>
+  } @else {
+    <!-- Empty State -->
+    @if (!isSearchActive) {
+      <app-empty-data
+        imageSrc="assets/images/animations/no-rate-plans.gif"
+        [message]="'units.edit-unit.tabs.rates.ratesPlans.list.empty-data' | translate">
+      </app-empty-data>
     } @else {
-        <!-- Empty State -->
-        @if (!isSearchActive) {
-            <app-empty-data
-                    imageSrc="assets/images/animations/no-rate-plans.gif"
-                    [message]="'units.edit-unit.tabs.rates.ratesPlans.list.empty-data' | translate">
-            </app-empty-data>
-        } @else {
-            <app-empty-data
-                    imageSrc="assets/images/animations/no-result.gif">
-            </app-empty-data>
-        }
+      <app-empty-data
+        imageSrc="assets/images/animations/no-result.gif">
+      </app-empty-data>
     }
+  }
 }
