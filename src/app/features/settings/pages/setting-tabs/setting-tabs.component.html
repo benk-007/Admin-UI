@@ -1,0 +1,31 @@
+<app-page-title [title]="'Settings'"></app-page-title>
+
+<c-row>
+
+  <!--Settings navigation-->
+  <c-col [md]="2">
+    <ul cListGroup>
+      <li cListGroupItem>
+        {{ 'settings.general.title'|translate }}
+      </li>
+      <li cListGroupItem routerLinkActive="active">
+        <a cNavLink class=" active" routerLink="/settings/crm">
+          {{ 'settings.crm.title'|translate }}</a>
+      </li>
+      <li cListGroupItem>
+        Pricing
+      </li>
+      <li cListGroupItem>
+        Security
+      </li>
+      <li cListGroupItem>
+        Channel Manager
+      </li>
+    </ul>
+  </c-col>
+
+  <c-col [md]="10">
+    <router-outlet></router-outlet>
+  </c-col>
+
+</c-row>

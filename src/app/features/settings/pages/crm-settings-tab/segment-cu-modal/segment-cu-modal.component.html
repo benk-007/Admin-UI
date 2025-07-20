@@ -1,0 +1,64 @@
+<!--Modal title-->
+<div class="modal-header justify-content-center align-items-center">
+  <h6 class="modal-title">
+    {{ 'crm.segment.cu-modal.title.create'|translate }}
+  </h6>
+</div>
+
+<!--Modal body-->
+<div class="modal-body">
+
+  <form (submit)="submit()" [formGroup]="segmentForm" cForm>
+
+    {{ segmentForm.value|json }}
+
+    <c-row class="mb-3">
+      <c-col [md]="12">
+        <label cLabel class="required"
+               for="name">{{ 'commons.form.name-input.label' | translate }}</label>
+        <input cFormControl formControlName="name" id="name" type="text"/>
+        @if (segmentForm.get('name')?.touched && segmentForm.get('name')?.invalid) {
+          @if (segmentForm.get('name')?.errors?.['required']) {
+            <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+          }
+        }
+      </c-col>
+    </c-row>
+
+    <c-row class="mb-3">
+      <c-col [md]="12">
+        <label cLabel for="parent">{{ 'crm.segment.cu-modal.form.parent-input.label' | translate }}</label>
+        <app-segment-select formControlName="parent" [withParent]="false"></app-segment-select>
+      </c-col>
+    </c-row>
+
+    <c-row class="mb-3">
+      <c-col [md]="12">
+        <label cLabel for="description">{{ 'commons.form.description-input.label' | translate }}</label>
+        <textarea cFormControl formControlName="description" id="description" rows="3"></textarea>
+      </c-col>
+    </c-row>
+
+    <c-row class="mb-3">
+      <c-col [md]="12">
+        <c-form-check [switch]="true">
+          <input cFormCheckInput type="checkbox" formControlName="enabled"/>
+          <label cFormCheckLabel>{{ 'commons.form.enabled-check.label'|translate }}</label>
+        </c-form-check>
+      </c-col>
+    </c-row>
+
+    <!--Modal footer-->
+    <c-row class="mt-4">
+      <c-col class="d-flex justify-content-end">
+        <button cButton color="light" size="sm" variant="ghost" (click)="closeModal()">
+          {{ 'commons.form.cancel-btn'|translate }}
+        </button>
+        <button cButton class="ms-3" color="primary" size="sm" type="submit" [disabled]="!segmentForm.valid">
+          {{ 'commons.form.save-btn'|translate }}
+        </button>
+      </c-col>
+    </c-row>
+  </form>
+
+</div>

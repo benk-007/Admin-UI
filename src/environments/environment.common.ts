@@ -3,7 +3,7 @@ export const UNIT_SERVICE = 'unitMgtApi/';
 export const GUEST_SERVICE = 'guestMgtApi/';
 export const MEDIA_SERVICE = 'mediaMgtApi/';
 export const PRICING_SERVICE = 'rateMgtApi/'
-
+export const CRM_SERVICE = 'guestMgtApi/';
 export const commonProperties = {
   /*===========UAA Service===========*/
   // authentication resource
@@ -56,5 +56,9 @@ export const commonProperties = {
 
   /*===========MEDIA Service===========*/
   mediaById: MEDIA_SERVICE + 'medias/:mediaId',
+
+  /*===========CRM Service===========*/
+  segmentList: CRM_SERVICE + 'segments',
+  segmentById: CRM_SERVICE + 'segments/:segmentId'
 
 }

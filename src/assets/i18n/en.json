@@ -1,23 +1,9 @@
 {
   "commons": {
-    "labels": {
-      "of": "Of"
-    },
-    "boolean": {
-      "true": "yes",
-      "false": "no"
-    },
-    "errors": {
-      "required": "This field is required",
-      "email": "Enter a valid email address",
-      "no-numbers": "Numbers are not allowed",
-      "strictly-positive": "The value must be strictly positive.",
-      "positive": "The value must be positive.",
-      "min-max-stay": "Maximum stay must be greater than or equal to minimum stay.",
-      "invalidDateRange": "The 'From Date' must be earlier than the 'Until Date'.",
-      "session-expired": "Your session has expired. Please sign in again to continue!"
-    },
     "form": {
+      "name-input": {
+        "label": "Name"
+      },
       "description-input": {
         "label": "Description"
       },
@@ -57,6 +43,9 @@
       "value-input": {
         "label": "Value"
       },
+      "enabled-check": {
+        "label": "Enabled"
+      },
       "buttons": {
         "update": "Update",
         "create": "Create",
@@ -79,6 +68,33 @@
       "save-btn": "Save",
       "update-btn": "Update",
       "cancel-btn": "Cancel"
+    },
+    "table": {
+      "header": {
+        "name": "Name",
+        "description": "Description",
+        "actions": "Actions"
+      },
+      "body": {
+        "n-a": "N/A"
+      }
+    },
+    "labels": {
+      "of": "Of"
+    },
+    "boolean": {
+      "true": "yes",
+      "false": "no"
+    },
+    "errors": {
+      "required": "This field is required",
+      "email": "Enter a valid email address",
+      "no-numbers": "Numbers are not allowed",
+      "strictly-positive": "The value must be strictly positive.",
+      "positive": "The value must be positive.",
+      "min-max-stay": "Maximum stay must be greater than or equal to minimum stay.",
+      "invalidDateRange": "The 'From Date' must be earlier than the 'Until Date'.",
+      "session-expired": "Your session has expired. Please sign in again to continue!"
     },
     "snippets": {
       "audit": {
@@ -1187,7 +1203,56 @@
       }
     }
   },
+  "crm": {
+    "segment": {
+      "list-page": {
+        "table": {
+          "header": {
+            "name": "Name",
+            "parent": "Parent",
+            "description": "Description",
+            "status": "Status"
+          }
+        },
+        "messages": {
+          "empty-data": "<span class=\"text-primary font-weight-bold\">Segments</span> help you categorize your contacts and tailor your campaigns and prices. Click <span class=\"text-primary font-italic\">'Add Segment'</span> to get started!"
+        }
+      },
+      "cu-modal": {
+        "title": {
+          "create": "Add Segment",
+          "update": "Edit Segment"
+        },
+        "form": {
+          "parent-input": {
+            "label": "Parent"
+          }
+        }
+      }
+    }
+  },
   "settings": {
+    "general": {
+      "title": "General"
+    },
+    "crm": {
+      "title": "CRM",
+      "sections": {
+        "segments": {
+          "title": "Segments",
+          "list": {
+            "table": {
+              "header": {
+                "name": "Name",
+                "parent": "Parent",
+                "description": "Description",
+                "status": "Status"
+              }
+            }
+          }
+        }
+      }
+    },
     "user-settings": {
       "list-users": {
         "title": "Account users",

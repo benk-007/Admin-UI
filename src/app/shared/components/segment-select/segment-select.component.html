@@ -1,0 +1,22 @@
+<ng-select class="custom"
+           (change)="valueChanged($event)"
+           (scrollToEnd)="onScrollToEnd()"
+           (search)="searchUnits($event)"
+           [(ngModel)]="selectedSegments"
+           [multiple]="multiple"
+           [disabled]="disable"
+           [items]="segmentSearchList"
+           [placeholder]="'Select segments ...'"
+           [typeahead]="$segmentSearch"
+           [virtualScroll]="true">
+  <ng-template let-item="item" ng-label-tmp>
+    <span>{{ item.name }}</span>
+  </ng-template>
+
+  <ng-template let-item="item" ng-option-tmp>
+      <span class="d-flex flex-column">
+        <span class="fw-bold">{{ item.name }}</span>
+        <small class="text-muted">{{ item.subtitle }}</small>
+      </span>
+  </ng-template>
+</ng-select>
