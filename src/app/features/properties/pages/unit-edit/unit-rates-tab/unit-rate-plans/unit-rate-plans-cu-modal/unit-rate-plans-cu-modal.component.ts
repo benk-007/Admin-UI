@@ -75,7 +75,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   ) {
     this.ratePlanForm = this.fb.group({
       name: [null, [Validators.required]],
-      segment: [[], [Validators.required]],
+      segment: [[]],
       enabled: [false, [Validators.required]]
     });
   }
