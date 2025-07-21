@@ -126,10 +126,16 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
             );
           },
           error: (err) => {
-            this.toastrService.error(
-              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.edit.notifications.error.message'),
-              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.edit.notifications.error.title')
-            );
+            const detail = err?.error?.detail;
+
+            if (err.status === 409 && detail) {
+              this.toastrService.error(detail, this.translateService.instant('commons.errors.conflict'));
+            } else {
+              this.toastrService.error(
+                this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
+                this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
+              );
+            }
           }
         })
       );
@@ -146,10 +152,16 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
             );
           },
           error: (err) => {
-            this.toastrService.error(
-              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
-              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
-            );
+            const detail = err?.error?.detail;
+
+            if (err.status === 409 && detail) {
+              this.toastrService.error(detail, this.translateService.instant('commons.errors.conflict'));
+            } else {
+              this.toastrService.error(
+                this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
+                this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
+              );
+            }
           }
         })
       );
