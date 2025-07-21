@@ -31,6 +31,7 @@ export class SegmentSelectComponent implements OnInit, OnDestroy, ControlValueAc
   @Input() disable = false;
   @Input() allowMultiUnit = false;  // Nouveau paramètre pour permettre les MULTI_UNIT si nécessaire
   @Output() updatedUnits = new EventEmitter<SegmentItemGetModel[] | null>();
+  @Input() showEnabledOnly: boolean = false;
 
   segmentSearchList: SegmentItemGetModel[] = [];
   selectedSegments: SegmentItemGetModel[] | null = null;
@@ -71,11 +72,25 @@ export class SegmentSelectComponent implements OnInit, OnDestroy, ControlValueAc
       sortDirection: 'asc',
       search: searchValue,
     };
+
+    let advancedSearchFiler: any = {};
+
     if (this.withParent != undefined) {
-      let advancedSearchFiler = {
+      advancedSearchFiler = {
+        ...advancedSearchFiler,
         withParent: this.withParent
-      }
-      pageFilter = {...pageFilter, advancedSearchFormValue: advancedSearchFiler}
+      };
+    }
+
+    if (this.showEnabledOnly) {
+      advancedSearchFiler = {
+        ...advancedSearchFiler,
+        enabled: true
+      };
+    }
+
+    if (Object.keys(advancedSearchFiler).length > 0) {
+      pageFilter = {...pageFilter, advancedSearchFormValue: advancedSearchFiler};
     }
 
     this.subscriptions.push(
@@ -154,20 +169,18 @@ export class SegmentSelectComponent implements OnInit, OnDestroy, ControlValueAc
     }
   }
 
-  removeItem(itemToRemove: SegmentItemGetModel): void {
-    if (this.selectedSegments) {
-      this.selectedSegments = this.selectedSegments.filter(
-        item => item.id !== itemToRemove.id
-      );
-      this.onChange(this.selectedSegments);
-      this.updatedUnits.emit(this.selectedSegments);
+  compareSegments(item1: SegmentItemGetModel, item2: any): boolean {
+    if (!item1 || !item2) {
+      return false;
     }
-  }
-
-  onRemoveMouseDown(event: MouseEvent, item: any): void {
-    event.stopPropagation();
-    event.preventDefault();
-    this.removeItem(item);
+    const item1Identifier = item1.id;
+    if (item2.id !== undefined) {
+      return item1Identifier === item2.id;
+    }
+    if (item2.uuid !== undefined) {
+      return item1Identifier === item2.uuid;
+    }
+    return false;
   }
 
 

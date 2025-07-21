@@ -32,7 +32,7 @@
         <label cLabel for="segment">
           {{ 'units.edit-unit.tabs.rates.ratesPlans.create.form.segment.select.label' | translate }}
         </label>
-        <app-segment-select formControlName="segment" [multiple]="true"></app-segment-select>
+        <app-segment-select formControlName="segment" [multiple]="true" [showEnabledOnly]="true"></app-segment-select>
       </c-col>
     </c-row>
 

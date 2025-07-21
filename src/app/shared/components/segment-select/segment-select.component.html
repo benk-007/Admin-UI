@@ -8,15 +8,11 @@
            [items]="segmentSearchList"
            [placeholder]="'Select segments ...'"
            [typeahead]="$segmentSearch"
-           [virtualScroll]="true">
-  <ng-template ng-label-tmp let-item="item">
+           [virtualScroll]="true"
+           [compareWith]="compareSegments">
+  <ng-template ng-label-tmp let-item="item" let-clear="clear">
     <span>{{ item.name }}</span>
-    <span
-      class="btn btn-sm ms-2 p-0"
-      (mousedown)="onRemoveMouseDown($event, item)"
-    >
-      ×
-    </span>
+    <span class="ng-value-icon right ms-1" (click)="clear(item)" aria-hidden="true">x</span>
   </ng-template>
 
   <ng-template let-item="item" ng-option-tmp>

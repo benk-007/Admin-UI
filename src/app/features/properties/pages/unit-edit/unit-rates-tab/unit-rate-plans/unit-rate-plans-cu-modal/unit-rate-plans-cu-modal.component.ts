@@ -103,8 +103,12 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
     const payload = {
       name: formValue.name,
       segment: Array.isArray(formValue.segment)
-        ? formValue.segment.map((s: any) => ({ uuid: s.id, name: s.name }))
+        ? formValue.segment.map((s: any) => ({
+          uuid: s.uuid ?? s.id,
+          name: s.name
+        }))
         : [],
+
       enabled: formValue.enabled,
       unit: { uuid: this.unitId }
     };

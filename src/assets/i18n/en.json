@@ -1130,6 +1130,12 @@
               "status": {
                 "enabled": "Rate plan is enabled",
                 "disabled": "Rate plan is disabled"
+              },
+              "notifications": {
+                "error": {
+                  "title": "Failed to load rate plans",
+                  "message": "An error occurred while fetching rate plans. Please try again."
+                }
               }
             },
             "create": {
