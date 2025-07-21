@@ -154,6 +154,23 @@ export class SegmentSelectComponent implements OnInit, OnDestroy, ControlValueAc
     }
   }
 
+  removeItem(itemToRemove: SegmentItemGetModel): void {
+    if (this.selectedSegments) {
+      this.selectedSegments = this.selectedSegments.filter(
+        item => item.id !== itemToRemove.id
+      );
+      this.onChange(this.selectedSegments);
+      this.updatedUnits.emit(this.selectedSegments);
+    }
+  }
+
+  onRemoveMouseDown(event: MouseEvent, item: any): void {
+    event.stopPropagation();
+    event.preventDefault();
+    this.removeItem(item);
+  }
+
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }

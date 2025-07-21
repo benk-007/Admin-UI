@@ -9,8 +9,14 @@
            [placeholder]="'Select segments ...'"
            [typeahead]="$segmentSearch"
            [virtualScroll]="true">
-  <ng-template let-item="item" ng-label-tmp>
+  <ng-template ng-label-tmp let-item="item">
     <span>{{ item.name }}</span>
+    <span
+      class="btn btn-sm ms-2 p-0"
+      (mousedown)="onRemoveMouseDown($event, item)"
+    >
+      ×
+    </span>
   </ng-template>
 
   <ng-template let-item="item" ng-option-tmp>

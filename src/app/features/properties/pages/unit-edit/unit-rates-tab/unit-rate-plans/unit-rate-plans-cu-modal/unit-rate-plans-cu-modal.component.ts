@@ -29,6 +29,7 @@ import {
 } from '@ng-select/ng-select';
 import {RateApiService} from '../../../../../services/rate-api.service';
 import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.model';
+import {SegmentSelectComponent} from '../../../../../../../shared/components/segment-select/segment-select.component';
 
 @Component({
   selector: 'app-unit-rate-plans-cu-modal',
@@ -46,7 +47,8 @@ import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.mod
     NgSelectComponent,
     NgLabelTemplateDirective,
     NgOptionTemplateDirective,
-    FormFeedbackComponent
+    FormFeedbackComponent,
+    SegmentSelectComponent
   ],
   templateUrl: './unit-rate-plans-cu-modal.component.html',
   styleUrl: './unit-rate-plans-cu-modal.component.scss'
@@ -73,7 +75,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   ) {
     this.ratePlanForm = this.fb.group({
       name: [null, [Validators.required]],
-      segment: [null],
+      segment: [[], [Validators.required]],
       enabled: [false, [Validators.required]]
     });
   }
@@ -82,7 +84,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
     if (this.ratePlanToEdit) {
       this.ratePlanForm.patchValue({
         name: this.ratePlanToEdit.name,
-        segment: this.ratePlanToEdit.segment,
+        segment: this.ratePlanToEdit.segment ?? [],
         enabled: this.ratePlanToEdit.enabled
       });
     }
@@ -100,10 +102,9 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
     const formValue = this.ratePlanForm.value;
     const payload = {
       name: formValue.name,
-      segment: formValue.segment ? {
-        uuid: formValue.segment.uuid,
-        name: formValue.segment.name
-      } : null,
+      segment: Array.isArray(formValue.segment)
+        ? formValue.segment.map((s: any) => ({ uuid: s.id, name: s.name }))
+        : [],
       enabled: formValue.enabled,
       unit: { uuid: this.unitId }
     };
