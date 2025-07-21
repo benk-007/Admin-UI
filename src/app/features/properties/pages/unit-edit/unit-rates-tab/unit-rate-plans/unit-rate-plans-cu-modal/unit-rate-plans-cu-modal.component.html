@@ -1,0 +1,76 @@
+<!-- Modal title -->
+<div class="modal-header justify-content-center align-items-center">
+  <h6 class="modal-title">
+    {{ (ratePlanToEdit ? 'units.edit-unit.tabs.rates.ratesPlans.edit.title' : 'units.edit-unit.tabs.rates.ratesPlans.create.title') | translate }}
+  </h6>
+</div>
+
+<!-- Modal body -->
+<div class="modal-body">
+  <form (submit)="submit()" [formGroup]="ratePlanForm" cForm>
+
+    <c-row>
+      <!-- Name (Required) -->
+      <c-col [md]="6" sm="12" class="mb-3">
+        <label cLabel class="required me-2" for="name">
+          {{ 'units.edit-unit.tabs.rates.ratesPlans.create.form.name.label' | translate }}
+        </label>
+        <input cFormControl formControlName="name" id="name" type="text" />
+        @if(ratePlanForm.get('name')?.touched && ratePlanForm.get('name')?.invalid){
+            <c-form-feedback [valid]="false" >
+                {{ 'commons.errors.required' | translate }}
+            </c-form-feedback>
+        }
+      </c-col>
+
+      <!-- Segment -->
+      <c-col [md]="6" sm="12" class="mb-3">
+        <label cLabel for="segment">
+          {{ 'units.edit-unit.tabs.rates.ratesPlans.create.form.segment.select.label' | translate }}
+        </label>
+        <ng-select
+          id="segment"
+          [items]="segments"
+          bindLabel="name"
+          formControlName="segment"
+          [searchable]="true">
+          <ng-template ng-label-tmp let-item="item">
+            <span>{{ item.name }}</span>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item">
+            <span>{{ item.name }}</span>
+          </ng-template>
+        </ng-select>
+      </c-col>
+    </c-row>
+
+    <c-row [md]="6"  class="mb-3">
+      <!-- Enabled (Required) -->
+      <c-col [md]="6" sm="12" class="mb-3 d-flex align-items-center">
+        <label cLabel class="required me-2 mb-0" for="enabled">
+          {{ 'units.edit-unit.tabs.rates.ratesPlans.create.form.enabled.label' | translate }}
+        </label>
+        <div class="form-check form-switch ms-2 mt-1">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="enabled"
+            role="switch"
+            formControlName="enabled" />
+        </div>
+      </c-col>
+    </c-row>
+
+    <!-- Modal footer -->
+    <c-row class="mt-3">
+      <c-col class="d-flex justify-content-end">
+        <button cButton class="ms-1" color="light" size="sm" variant="ghost" (click)="closeModal()">
+          {{ 'commons.form.cancel-btn' | translate }}
+        </button>
+        <button type="submit" cButton color="primary">
+          {{ (ratePlanToEdit ? 'commons.form.save-btn' : 'commons.form.save-btn') | translate }}
+        </button>
+      </c-col>
+    </c-row>
+  </form>
+</div>

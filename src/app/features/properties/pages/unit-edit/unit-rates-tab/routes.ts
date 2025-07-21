@@ -21,7 +21,7 @@ export const routes: Routes = [
       },
       {
         path: 'plans',
-        loadComponent: () => import('./unit-rate-plans/unit-rate-plans.component').then(m => m.UnitRatePlansComponent),
+        loadComponent: () => import('./unit-rate-plans/unit-rate-plans-list/unit-rate-plans-list.component').then(m => m.UnitRatePlansListComponent),
         data: {
           title: 'Plans'
         }

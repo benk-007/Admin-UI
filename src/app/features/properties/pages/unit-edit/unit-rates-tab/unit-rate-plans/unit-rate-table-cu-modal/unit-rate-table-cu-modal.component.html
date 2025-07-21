@@ -1,0 +1,451 @@
+<!-- Modal title -->
+<div class="modal-header justify-content-center align-items-center">
+  <h6 class="modal-title">
+    {{ rateTableToEdit ?
+    ('units.edit-unit.tabs.rates.rateTable.edit.title' | translate) :
+    ('units.edit-unit.tabs.rates.rateTable.create.title' | translate) }}
+  </h6>
+</div>
+
+
+<!-- Modal Body -->
+<div class="modal-body">
+  <form [formGroup]="rateTableForm" (ngSubmit)="onSubmit()" cForm>
+      <!-- Name, Start Date, End Date -->
+      <c-row class="mb-4">
+          <c-col [md]="4">
+              <label cLabel class="required" for="name">
+                  {{ 'units.edit-unit.tabs.rates.rateTable.create.form.name' | translate }}
+              </label>
+              <input cFormControl formControlName="name" id="name" type="text" />
+              @if (rateTableForm.get('name')?.touched && rateTableForm.get('name')?.invalid) {
+                  @if (rateTableForm.get('name')?.errors?.['required']) {
+                      <c-form-feedback [valid]="false">
+                          {{ 'commons.errors.required' | translate }}
+                      </c-form-feedback>
+                  }
+              }
+          </c-col>
+
+        <c-col [md]="4" class="form-group mb-3">
+          <div *ngIf="!isNavigating">
+            <label cLabel class="required" for="dateRange">
+              {{ 'units.edit-unit.tabs.rates.rateTable.create.form.dateRange' | translate }}
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              ngxDaterangepickerBootstrap
+              [locale]="{ applyLabel: 'ok', format: 'YYYY-MM-DD' }"
+              [formControl]="dateRangeControl"
+              autocomplete="off"
+              id="dateRange"
+            />
+            @if (rateTableForm.get('dateRange')?.touched && rateTableForm.get('dateRange')?.invalid) {
+              @if (rateTableForm.get('dateRange')?.errors?.['required']) {
+                <c-form-feedback [valid]="false">
+                  {{ 'commons.errors.required' | translate }}
+                </c-form-feedback>
+              }
+            }
+          </div>
+        </c-col>
+
+      </c-row>
+
+      <!-- Type Toggle -->
+      <c-row class="mb-4">
+          <c-col class="d-flex justify-content-center">
+            <c-button-group>
+              <input class="btn-check" formControlName="type" id="standard-radio" type="radio" value="STANDARD" />
+              <label cButton cFormCheckLabel color="secondary" for="standard-radio" variant="outline">
+                {{ 'units.edit-unit.tabs.rates.rateTable.create.form.type.standard' | translate }}
+              </label>
+
+              <input class="btn-check" formControlName="type" id="dynamic-radio" type="radio" value="DYNAMIC" />
+              <label cButton cFormCheckLabel color="secondary" for="dynamic-radio" variant="outline">
+                {{ 'units.edit-unit.tabs.rates.rateTable.create.form.type.dynamic' | translate }}
+              </label>
+            </c-button-group>
+          </c-col>
+      </c-row>
+
+    <!-- Conditional Fields -->
+      <ng-container [ngSwitch]="rateTableForm.get('type')?.value">
+          <ng-container *ngSwitchCase="'STANDARD'">
+              <c-row class="mb-3">
+                  <c-col [md]="4">
+                      <label cLabel class="required" for="nightly">{{ 'units.edit-unit.tabs.rates.settings.nightly' | translate }}</label>
+                      <input cFormControl formControlName="nightly" id="nightly" type="number" min="0" step="50" />
+                      @if (rateTableForm.get('nightly')?.touched && rateTableForm.get('nightly')?.invalid) {
+                          @if (rateTableForm.get('nightly')?.errors?.['required']) {
+                              <c-form-feedback [valid]="false">
+                                  {{ 'commons.errors.required' | translate }}
+                              </c-form-feedback>
+                          }
+                          @if (rateTableForm.get('nightly')?.errors?.['min']) {
+                              <c-form-feedback [valid]="false">
+                                  {{ 'commons.errors.strictly-positive' | translate }}
+                              </c-form-feedback>
+                          }
+                      }
+                  </c-col>
+                  <c-col [md]="4">
+                      <label cLabel class="required" for="minStay">{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}</label>
+                      <input cFormControl formControlName="minStay" id="minStay" type="number" min="1" />
+                      @if (rateTableForm.get('minStay')?.touched && rateTableForm.get('minStay')?.invalid) {
+                          @if (rateTableForm.get('minStay')?.errors?.['required']) {
+                              <c-form-feedback [valid]="false">
+                                  {{ 'commons.errors.required' | translate }}
+                              </c-form-feedback>
+                          }
+                          @if (rateTableForm.get('minStay')?.errors?.['min']) {
+                              <c-form-feedback [valid]="false">
+                                  {{ 'commons.errors.strictly-positive' | translate }}
+                              </c-form-feedback>
+                          }
+                      }
+                  </c-col>
+                  <c-col [md]="4">
+                      <label cLabel for="maxStay">{{ 'units.edit-unit.tabs.rates.settings.maxStay' | translate }}</label>
+                      <input cFormControl formControlName="maxStay" id="maxStay" type="number" min="1" />
+                      @if (rateTableForm.get('maxStay')?.touched && rateTableForm.get('maxStay')?.invalid) {
+                          @if (rateTableForm.get('maxStay')?.errors?.['min']) {
+                              <c-form-feedback [valid]="false">
+                                  {{ 'commons.errors.strictly-positive' | translate }}
+                              </c-form-feedback>
+                          }
+                      }
+                      @if (rateTableForm.errors?.['maxLowerThanMin']) {
+                          <c-form-feedback [valid]="false">
+                              {{ 'commons.errors.min-max-stay' | translate }}
+                          </c-form-feedback>
+                      }
+                  </c-col>
+              </c-row>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'DYNAMIC'">
+              <c-row class="mb-3">
+                  <!-- Low Rate -->
+                  <c-col [md]="4">
+                      <label cLabel class="required" for="lowRate">
+                          {{ 'units.edit-unit.tabs.rates.rateTable.create.form.lowRate' | translate }}
+                      </label>
+                      <input cFormControl formControlName="lowRate" id="lowRate" min="1" type="number" />
+                      @if (rateTableForm.get('lowRate')?.touched && rateTableForm.get('lowRate')?.invalid) {
+                          @if (rateTableForm.get('lowRate')?.errors?.['required']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                          }
+                          @if (rateTableForm.get('lowRate')?.errors?.['min']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
+                          }
+                      }
+                  </c-col>
+
+                  <!-- Lowest Occupancy -->
+                  <c-col [md]="4">
+                      <label cLabel class="required" for="lowestOccupancy">
+                          {{ 'units.edit-unit.tabs.rates.rateTable.create.form.lowestOccupancy' | translate }}
+                      </label>
+                      <input cFormControl formControlName="lowestOccupancy" id="lowestOccupancy" min="1" type="number" />
+                      @if (rateTableForm.get('lowestOccupancy')?.touched && rateTableForm.get('lowestOccupancy')?.invalid) {
+                          @if (rateTableForm.get('lowestOccupancy')?.errors?.['required']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                          }
+                          @if (rateTableForm.get('lowestOccupancy')?.errors?.['min']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
+                          }
+                      }
+                  </c-col>
+
+                  <!-- Max Rate -->
+                  <c-col [md]="4">
+                      <label cLabel class="required" for="maxRate">
+                          {{ 'units.edit-unit.tabs.rates.rateTable.create.form.maxRate' | translate }}
+                      </label>
+                      <input cFormControl formControlName="maxRate" id="maxRate" min="1" type="number" />
+                      @if (rateTableForm.get('maxRate')?.touched && rateTableForm.get('maxRate')?.invalid) {
+                          @if (rateTableForm.get('maxRate')?.errors?.['required']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                          }
+                          @if (rateTableForm.get('maxRate')?.errors?.['min']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
+                          }
+                      }
+                  </c-col>
+              </c-row>
+
+              <c-row class="mb-4">
+                  <!-- Max Occupancy -->
+                  <c-col [md]="4">
+                      <label cLabel class="required" for="maxOccupancy">
+                          {{ 'units.edit-unit.tabs.rates.rateTable.create.form.maxOccupancy' | translate }}
+                      </label>
+                      <input cFormControl formControlName="maxOccupancy" id="maxOccupancy" min="1" type="number" />
+                      @if (rateTableForm.get('maxOccupancy')?.touched && rateTableForm.get('maxOccupancy')?.invalid) {
+                          @if (rateTableForm.get('maxOccupancy')?.errors?.['required']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                          }
+                          @if (rateTableForm.get('maxOccupancy')?.errors?.['min']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
+                          }
+                      }
+                  </c-col>
+
+                  <!-- Min Stay -->
+                  <c-col [md]="4">
+                      <label cLabel class="required" for="minStay">
+                          {{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}
+                      </label>
+                      <input cFormControl formControlName="minStay" id="minStay" type="number" min="1" />
+                      @if (rateTableForm.get('minStay')?.touched && rateTableForm.get('minStay')?.invalid) {
+                          @if (rateTableForm.get('minStay')?.errors?.['required']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                          }
+                          @if (rateTableForm.get('minStay')?.errors?.['min']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
+                          }
+                      }
+                  </c-col>
+
+                  <!-- Max Stay -->
+                  <c-col [md]="4">
+                      <label cLabel for="maxStay">
+                          {{ 'units.edit-unit.tabs.rates.settings.maxStay' | translate }}
+                      </label>
+                      <input cFormControl formControlName="maxStay" id="maxStay" type="number" min="1" />
+                      @if (rateTableForm.get('maxStay')?.touched && rateTableForm.get('maxStay')?.invalid) {
+                          @if (rateTableForm.get('maxStay')?.errors?.['min']) {
+                              <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
+                          }
+                      }
+                      @if (rateTableForm.errors?.['maxLowerThanMin']) {
+                          <c-form-feedback [valid]="false">{{ 'commons.errors.min-max-stay' | translate }}</c-form-feedback>
+                      }
+                  </c-col>
+              </c-row>
+          </ng-container>
+
+      </ng-container>
+
+
+    <!-- Day Specific Pricing -->
+    <ng-container>
+        <!--Title-->
+        <h6 class="section-title underline mb-0 mt-4">
+            <span class="me-2"> {{ 'units.edit-unit.tabs.rates.default.sections.day-specific-pricing.title' | translate }}</span>
+            <span class="text-primary add-btn" (click)="addDaySpecificPricing()">
+                  <i class="bi bi-plus-circle-fill"></i>
+              </span>
+        </h6>
+        <div id="daySpecificHelpBlock" class="form-text mb-3">
+            {{ 'units.edit-unit.tabs.rates.default.sections.day-specific-pricing.hint'|translate }}
+        </div>
+
+          <!--Form-->
+          <ng-container formArrayName="daySpecificRates">
+              @for (group of daySpecificRates.controls; track group; let i = $index) {
+                  <c-row class="mb-3" [formGroupName]="i">
+                      <c-col md="4">
+                          <input cFormControl type="number" formControlName="nightly" min="0" step="50"
+                                 [placeholder]="'commons.form.nightly-price-input.placeholder'|translate"/>
+                          @if (group.get('nightly')?.touched && group.get('nightly')?.invalid) {
+                              @if (group.get('nightly')?.errors?.['required']) {
+                                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                              }
+                              @if (group.get('nightly')?.errors?.['min']) {
+                                  <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}
+                                  </c-form-feedback>
+                              }
+                          }
+                      </c-col>
+
+                      <c-col md="4">
+                          <ng-select formControlName="days"
+                                     [items]="daysOfWeekOptions"
+                                     [multiple]="true"
+                                     bindValue="value"
+                                     [placeholder]="'commons.form.days-select.placeholder'|translate"
+                                     (add)="onDaySelect($event, i)"
+                                     (remove)="onDayRemove($event, i)"
+                                     [closeOnSelect]="false"
+                                     class="ng-select-sm">
+                              <ng-template ng-option-tmp let-item="item">
+                                <span [ngClass]="getDayClass(item.value, i)">
+                                  {{ ('units.edit-unit.tabs.rates.settings.days.' + item.value) | translate }}
+                                </span>
+                              </ng-template>
+                          </ng-select>
+                          @if (group.get('days')?.touched && group.get('days')?.invalid) {
+                              @if (group.get('days')?.errors?.['required']) {
+                                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                              }
+                          }
+                      </c-col>
+
+                      <c-col>
+                          <button cButton type="button" class="btn-danger-light" (click)="removeDaySpecificPricing(i)">
+                              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                          </button>
+                      </c-col>
+                  </c-row>
+              }
+          </ng-container>
+      </ng-container>
+
+      <!--Additional Guest Fee Section-->
+      <ng-container>
+          <!--Title-->
+          <h6 class="section-title underline mb-0 mt-4">
+        <span
+                class="me-2"> {{ 'units.edit-unit.tabs.rates.default.sections.additional-guest-fee.title' | translate }}</span>
+              <span class="text-primary add-btn" (click)="addAdditionalGuestFee()">
+          <i class="bi bi-plus-circle-fill"></i>
+        </span>
+          </h6>
+          <div id="daySpecificHelpBlock" class="form-text mb-3">
+              {{ 'units.edit-unit.tabs.rates.default.sections.additional-guest-fee.hint'|translate }}
+          </div>
+
+          <!--Form-->
+          <ng-container formArrayName="additionalGuestFees">
+              @for (feeGroup of additionalGuestFees.controls; track feeGroup; let i = $index) {
+                  <c-row class="mb-3" [formGroupName]="i">
+
+                      <!--GuestCount input-->
+                      <c-col [md]="2">
+                          <label cLabel [for]="'guestCount'+i"
+                                 class="required">{{ 'commons.form.guest-count-input.placeholder'|translate }}</label>
+                          <input cFormControl [id]="'guestCount'+i" type="number" formControlName="guestCount"/>
+                          @if (feeGroup.get('guestCount')?.touched && feeGroup.get('guestCount')?.invalid) {
+                              @if (feeGroup.get('guestCount')?.errors?.['required']) {
+                                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                              }
+                              @if (feeGroup.get('guestCount')?.errors?.['min']) {
+                                  <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}
+                                  </c-form-feedback>
+                              }
+                          }
+                      </c-col>
+
+                      <!--GuestType input-->
+                      <c-col [md]="2">
+                          <label cLabel [for]="'guestType'+i"
+                                 class="required">{{ 'commons.form.guest-type-select.label'|translate }}</label>
+                          <select cSelect [id]="'guestType'+i" formControlName="guestType">
+                              <option value="ADULT" [disabled]="hasAdult(i)">
+                                  {{ 'commons.form.guest-type-select.values.adult'|translate }}
+                              </option>
+                              <option value="CHILD">
+                                  {{ 'commons.form.guest-type-select.values.child'|translate | translate }}
+                              </option>
+                          </select>
+                          @if (feeGroup.get('guestType')?.touched && feeGroup.get('guestType')?.invalid) {
+                              @if (feeGroup.get('guestType')?.errors?.['required']) {
+                                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                              }
+                          }
+                      </c-col>
+
+                      <!--AgeBucket inputs-->
+                      @if (feeGroup.get('guestType')?.value === 'CHILD') {
+                          <c-col [md]="3" [formGroupName]="'ageBucket'">
+                              <label cLabel [for]="'ageBucket'+i"
+                                     class="required">{{ 'commons.form.age-bucket-input.label' | translate }}</label>
+                              <c-input-group>
+                                  <input cFormControl [id]="'ageBucket'+i" type="number" formControlName="fromAge" min="0"
+                                         [placeholder]="'commons.form.age-bucket-input.placeholder.from'|translate"/>
+
+                                  <span cInputGroupText><i class="bi bi-arrow-right"></i></span>
+                                  <input cFormControl type="number" formControlName="toAge" min="1"
+                                         [placeholder]="'commons.form.age-bucket-input.placeholder.to'|translate"/>
+                                  @if ((feeGroup.get('ageBucket.fromAge')?.touched &&
+                                      feeGroup.get('ageBucket.fromAge')?.invalid) ||
+                                  (feeGroup.get('ageBucket.toAge')?.touched && feeGroup.get('ageBucket.toAge')?.invalid)) {
+                                      @if (feeGroup.get('ageBucket.fromAge')?.errors?.['required'] ||
+                                      feeGroup.get('ageBucket.toAge')?.errors?.['required']) {
+                                          <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                                      }
+                                      @if (feeGroup.get('ageBucket.fromAge')?.errors?.['min'] ||
+                                      feeGroup.get('ageBucket.toAge')?.errors?.['min']) {
+                                          <c-form-feedback [valid]="false">{{ 'commons.errors.positive' | translate }}</c-form-feedback>
+                                      }
+                                  }
+                                  @if (feeGroup.get('ageBucket')?.errors?.['invalidAgeRange']) {
+                                      <c-form-feedback [valid]="false">
+                                          {{ 'units.edit-unit.tabs.rates.settings.errors.invalid-age-range' | translate }}
+                                      </c-form-feedback>
+                                  }
+                              </c-input-group>
+                          </c-col>
+                      }
+
+                      <!--AmountType input-->
+                      <c-col [md]="2">
+                          <label cLabel [for]="'amountType'+i" class="required">
+                              {{ 'commons.form.amount-type-select.label' | translate }}
+                          </label>
+                          <select cSelect [id]="'amountType'+i" formControlName="amountType">
+                              <option value="FLAT">{{ 'commons.form.amount-type-select.values.flat'|translate }}</option>
+                              <option value="PERCENT">
+                                  {{ 'commons.form.amount-type-select.values.percent' | translate }}
+                              </option>
+                          </select>
+                          @if (feeGroup.get('amountType')?.touched && feeGroup.get('amountType')?.invalid) {
+                              @if (feeGroup.get('amountType')?.errors?.['required']) {
+                                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                              }
+                          }
+                      </c-col>
+
+                      <!--Value input-->
+                      <c-col [md]="2">
+                          <label cLabel [for]="'value'+i" class="required">
+                              {{ 'commons.form.value-input.label' | translate }}
+                          </label>
+                          <input [id]="'value'+i" cFormControl type="number" formControlName="value" min="0"/>
+                          @if (feeGroup.get('value')?.touched && feeGroup.get('value')?.invalid) {
+                              @if (feeGroup.get('value')?.errors?.['required']) {
+                                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                              }
+                              @if (feeGroup.get('value')?.errors?.['min']) {
+                                  <c-form-feedback [valid]="false">{{ 'commons.errors.positive' | translate }}</c-form-feedback>
+                              }
+                          }
+                      </c-col>
+
+                      <!--Remove button-->
+                      <c-col [md]="1">
+                          <button cButton type="button" class="btn-without-label btn-danger-light btn-remove" (click)="removeAdditionalGuestFee(i)">
+                              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                          </button>
+                      </c-col>
+
+                  </c-row>
+              }
+          </ng-container>
+          @if(additionalGuestFees.errors?.['childAgeOverlap']){
+              <c-form-feedback [valid]="false">
+                  {{ 'units.edit-unit.tabs.rates.settings.errors.child-age-overlap' | translate }}
+              </c-form-feedback>
+          }
+      </ng-container>
+
+
+
+      <!-- Footer -->
+    <c-row class="mt-4 mb-4">
+      <c-col class="d-flex justify-content-end">
+        <button cButton class="ms-1" color="light" size="sm" variant="ghost" (click)="closeModal()">
+          {{ 'commons.form.cancel-btn' | translate }}
+        </button>
+        <button cButton color="primary" type="submit" [disabled]="!rateTableForm.valid">
+          {{ rateTableToEdit ?
+          ('commons.form.update-btn' | translate) :
+          ('commons.form.save-btn' | translate) }}
+        </button>
+      </c-col>
+    </c-row>
+  </form>
+</div>

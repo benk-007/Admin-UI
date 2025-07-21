@@ -91,7 +91,6 @@
       "email": "Enter a valid email address",
       "no-numbers": "Numbers are not allowed",
       "strictly-positive": "The value must be strictly positive.",
-      "positive": "The value must be positive.",
       "min-max-stay": "Maximum stay must be greater than or equal to minimum stay.",
       "invalidDateRange": "The 'From Date' must be earlier than the 'Until Date'.",
       "session-expired": "Your session has expired. Please sign in again to continue!"
@@ -102,7 +101,8 @@
         "by": "By"
       },
       "no-result": "No results match your search. Please try adjusting your keywords or filters.",
-      "loading": "Loading"
+      "loading": "Loading",
+      "years": "years"
     },
     "countries": {
       "AD": "Andorra",
@@ -1108,6 +1108,82 @@
               }
             }
           },
+          "rate-plans": {
+
+          },
+          "ratesPlans": {
+            "list": {
+              "cta": {
+                "add-plan-btn": "Add Rate Plan",
+                "add-rate-btn": "Add Rate Table"
+              },
+              "empty-data": "No rate plans available",
+              "status": {
+                "enabled": "Rate plan is enabled",
+                "disabled": "Rate plan is disabled"
+              }
+            },
+            "create": {
+              "title": "Create Rate Plan",
+              "form": {
+                "name": {
+                  "label": "Name"
+                },
+                "segment": {
+                  "select": {
+                    "label": "Segment"
+                  }
+                },
+                "subSegment": {
+                  "select": {
+                    "label": "Sub-segment"
+                  }
+                },
+                "enabled": {
+                  "label": "Enabled"
+                }
+              },
+              "notifications": {
+                "success": {
+                  "title": "Rate plan created",
+                  "message": "The rate plan has been created successfully."
+                },
+                "error": {
+                  "title": "Creation failed",
+                  "message": "Unable to create the rate plan. Please check the form and try again."
+                }
+              }
+            },
+            "edit": {
+              "title": "Edit Rate Plan",
+              "notifications": {
+                "success": {
+                  "title": "Rate plan updated",
+                  "message": "The rate plan has been updated successfully."
+                },
+                "error": {
+                  "title": "Update failed",
+                  "message": "Unable to update the rate plan. Please try again later."
+                }
+              }
+            },
+            "delete": {
+              "modal": {
+                "title": "Delete Rate Plan",
+                "message": "Are you sure you want to delete the rate plan '{{name}}'?"
+              },
+              "notifications": {
+                "success": {
+                  "title": "Rate Plan Deleted",
+                  "message": "The rate plan '{{name}}' was deleted successfully."
+                },
+                "error": {
+                  "title": "Deletion Failed",
+                  "message": "An error occurred while deleting the rate plan."
+                }
+              }
+            }
+          },
           "price-plans": {
           },
           "hint": "Configure the pricing periods and rules for this unit to control its availability and rates.",
@@ -1171,8 +1247,65 @@
               "invalid-age-range": "End age must be greater than start age."
             }
           },
-          "ratesTable": {
-            "title": "Rates table"
+          "rateTable": {
+            "list": {
+              "name": "Name",
+              "category": "Category",
+              "duration": "Rate period",
+              "nightly": "Nightly",
+              "minStay": "Minimum Stay (nights)",
+              "empty-data": "No rate tables found.",
+              "notifications": {
+                "error": {
+                  "title": "Failed to load rate tables",
+                  "message": "An error occurred while fetching rate tables. Please try again."
+                }
+              }
+            },
+            "create": {
+              "title": "Create Rate Table",
+              "form": {
+                "name": "Name",
+                "startDate": "Start Date",
+                "endDate": "End Date",
+                "dateRange": "Date Range",
+                "type": {
+                  "standard": "Standard",
+                  "dynamic": "Dynamic"
+                },
+                "lowRate": "Low Rate",
+                "lowestOccupancy": "Lowest Occupancy",
+                "maxRate": "Max Rate",
+                "maxOccupancy": "Max Occupancy"
+              },
+              "notifications": {
+                "success": "Rate table created successfully.",
+                "error": "Failed to create rate table."
+              }
+            },
+            "edit": {
+              "title": "Edit Rate Table",
+              "notifications": {
+                "success": "Rate table updated successfully.",
+                "error": "Failed to update rate table."
+              }
+            },
+            "delete": {
+              "modal": {
+                "title": "Delete Rate Table",
+                "message": "Are you sure you want to delete the rate table \"{{name}}\"?"
+              },
+              "notifications": {
+                "success": {
+                  "title": "Deleted Successfully",
+                  "message": "Rate table \"{{name}}\" was deleted."
+                },
+                "error": {
+                  "title": "Deletion Failed",
+                  "message": "An error occurred while deleting the rate table."
+                }
+              }
+            }
           }
         },
         "sub-units": {

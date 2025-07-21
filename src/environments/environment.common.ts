@@ -4,6 +4,7 @@ export const GUEST_SERVICE = 'guestMgtApi/';
 export const MEDIA_SERVICE = 'mediaMgtApi/';
 export const PRICING_SERVICE = 'rateMgtApi/'
 export const CRM_SERVICE = 'guestMgtApi/';
+
 export const commonProperties = {
   /*===========UAA Service===========*/
   // authentication resource
@@ -36,9 +37,11 @@ export const commonProperties = {
   /*===========Rates===========*/
   // Default resource
   unitBaseRateById: PRICING_SERVICE + 'default-rates',
-  // Tables resource
-  rateList: UNIT_SERVICE + 'rates-tables',
-  rateById: UNIT_SERVICE + 'rates-tables/:ratesTableId',
+  // Rate plans
+  RatePlan: PRICING_SERVICE + 'rate-plans',
+  // Rate plans
+  RateTable: PRICING_SERVICE + 'rate-tables',
+
 
   /*===========Guest Service===========*/
   // Guest resource
