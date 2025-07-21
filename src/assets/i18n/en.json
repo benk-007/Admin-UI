@@ -46,6 +46,16 @@
       "enabled-check": {
         "label": "Enabled"
       },
+      "segment-select": {
+        "multi": {
+          "label": "Segment(s)",
+          "placeholder": "Select one or multiple segments ..."
+        },
+        "single": {
+          "label": "Segment",
+          "placeholder": "Select a segment"
+        }
+      },
       "buttons": {
         "update": "Update",
         "create": "Create",
@@ -1109,7 +1119,6 @@
             }
           },
           "rate-plans": {
-
           },
           "ratesPlans": {
             "list": {
