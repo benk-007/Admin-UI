@@ -35,18 +35,18 @@
       <!--Range date input-->
       <c-col [md]="4">
         <div *ngIf="!isNavigating">
-        <label cLabel class="required" for="dateRange">
-          {{ 'commons.form.date-range-input.label' | translate }}
-        </label>
-        <input id="dateRange" class="form-control" ngxDaterangepickerBootstrap [formControl]="dateRangeControl"
-               type="text" autocomplete="off" [locale]="{ applyLabel: 'ok', format: 'YYYY-MM-DD' }"/>
-        @if (rateTableForm.get('dateRange')?.touched && rateTableForm.get('dateRange')?.invalid) {
-          @if (rateTableForm.get('dateRange')?.errors?.['required']) {
-            <c-form-feedback [valid]="false">
-              {{ 'commons.errors.required' | translate }}
-            </c-form-feedback>
+          <label cLabel class="required" for="dateRange">
+            {{ 'commons.form.date-range-input.label' | translate }}
+          </label>
+          <input id="dateRange" class="form-control" ngxDaterangepickerBootstrap [formControl]="dateRangeControl"
+                 type="text" autocomplete="off" [locale]="{ applyLabel: 'ok', format: 'YYYY-MM-DD' }"/>
+          @if (rateTableForm.get('dateRange')?.touched && rateTableForm.get('dateRange')?.invalid) {
+            @if (rateTableForm.get('dateRange')?.errors?.['required']) {
+              <c-form-feedback [valid]="false">
+                {{ 'commons.errors.required' | translate }}
+              </c-form-feedback>
+            }
           }
-        }
         </div>
       </c-col>
 
@@ -439,15 +439,11 @@
     <!-- Footer -->
     <c-row class="mt-4 mb-4">
       <c-col class="d-flex justify-content-end">
-        <button cButton class="ms-1" color="light" size="sm" variant="ghost" (click)="closeModal()">
-          {{ 'commons.form.cancel-btn' | translate }}
+        <button cButton class="me-2" color="light" size="sm" variant="ghost" (click)="closeModal()">
+          {{ 'commons.form.buttons.cancel' | translate }}
         </button>
-        <button cButton color="primary" type="submit" [disabled]="!rateTableForm.valid">
-          {{
-            rateTableToEdit ?
-              ('commons.form.update-btn' | translate) :
-              ('commons.form.save-btn' | translate)
-          }}
+        <button cButton color="primary" size="sm" type="submit" [disabled]="!rateTableForm.valid">
+          {{ ('commons.form.buttons.' + (rateTableToEdit ? 'update' : 'create'))|translate }}
         </button>
       </c-col>
     </c-row>
