@@ -1,16 +1,16 @@
 @use '../../../../../../../../scss/variables' as *;
 
 
-/*.accordion-button {
-  &:hover {
-    background-color: #f0f8ff;
+.accordion-button {
+  padding: 10px 4px !important;
+
+  &:not(.collapsed) {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    span{
+      font-weight: 500;
+      color: $secondary;
+    }
   }
 }
 
-.accordion-button:not(.collapsed) {
-  background-color: #f0f8ff; // Green background when active
-}
-
-.Info{
-  width: 88%;
-}*/

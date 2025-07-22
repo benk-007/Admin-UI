@@ -103,7 +103,8 @@
       "strictly-positive": "The value must be strictly positive.",
       "min-max-stay": "Maximum stay must be greater than or equal to minimum stay.",
       "invalidDateRange": "The 'From Date' must be earlier than the 'Until Date'.",
-      "session-expired": "Your session has expired. Please sign in again to continue!"
+      "session-expired": "Your session has expired. Please sign in again to continue!",
+      "conflict": "Conflict Detected"
     },
     "snippets": {
       "audit": {
@@ -1130,6 +1131,12 @@
               "status": {
                 "enabled": "Rate plan is enabled",
                 "disabled": "Rate plan is disabled"
+              },
+              "notifications": {
+                "error": {
+                  "title": "Failed to load rate plans",
+                  "message": "An error occurred while fetching rate plans. Please try again."
+                }
               }
             },
             "create": {

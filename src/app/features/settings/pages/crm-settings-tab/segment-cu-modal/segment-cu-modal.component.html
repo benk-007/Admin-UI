@@ -10,8 +10,6 @@
 
   <form (submit)="submit()" [formGroup]="segmentForm" cForm>
 
-    {{ segmentForm.value|json }}
-
     <c-row class="mb-3">
       <c-col [md]="12">
         <label cLabel class="required"
@@ -42,8 +40,8 @@
     <c-row class="mb-3">
       <c-col [md]="12">
         <c-form-check [switch]="true">
-          <input cFormCheckInput type="checkbox" formControlName="enabled"/>
-          <label cFormCheckLabel>{{ 'commons.form.enabled-check.label'|translate }}</label>
+          <input id="enabled" cFormCheckInput type="checkbox" formControlName="enabled"/>
+          <label cFormCheckLabel for="enabled">{{ 'commons.form.enabled-check.label'|translate }}</label>
         </c-form-check>
       </c-col>
     </c-row>

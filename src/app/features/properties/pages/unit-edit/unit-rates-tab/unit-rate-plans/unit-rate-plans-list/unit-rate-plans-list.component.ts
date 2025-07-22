@@ -4,7 +4,10 @@ import {
   AccordionComponent,
   AccordionItemComponent,
   ButtonDirective,
-  ColComponent, FormControlDirective, InputGroupComponent, InputGroupTextDirective,
+  ColComponent,
+  FormControlDirective,
+  InputGroupComponent,
+  InputGroupTextDirective,
   RowComponent,
   SpinnerComponent,
   TemplateIdDirective
@@ -23,8 +26,10 @@ import {UnitRatePlansCuModalComponent} from '../unit-rate-plans-cu-modal/unit-ra
 import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.model';
 import {IconDirective} from '@coreui/icons-angular';
 import {ConfirmModalComponent} from "../../../../../../../shared/components/confirm-modal/confirm-modal.component";
-import {TooltipDirective} from "ngx-bootstrap/tooltip";
+import {TooltipDirective} from 'ngx-bootstrap/tooltip';
 import {UnitRateTableListComponent} from '../unit-rate-table-list/unit-rate-table-list.component';
+import {BadgeComponent} from '../../../../../../../shared/components/badge/badge.component';
+import {TitleCasePipe} from '@angular/common';
 
 @Component({
   selector: 'app-unit-rate-plans-list',
@@ -39,19 +44,22 @@ import {UnitRateTableListComponent} from '../unit-rate-table-list/unit-rate-tabl
     EmptyDataComponent,
     AccordionComponent,
     AccordionItemComponent,
-    AccordionButtonDirective,
     TemplateIdDirective,
-    TooltipDirective,
-    UnitRateTableListComponent,
     FormControlDirective,
     InputGroupComponent,
-    InputGroupTextDirective
+    InputGroupTextDirective,
+    AccordionButtonDirective,
+    TooltipDirective,
+    UnitRateTableListComponent,
+    BadgeComponent,
+    TitleCasePipe
   ],
   templateUrl: './unit-rate-plans-list.component.html',
   styleUrl: './unit-rate-plans-list.component.scss',
   providers: [BsModalService]
 })
 export class UnitRatePlansListComponent extends ListContentComponent {
+  openedRatePlan: number | null = null;
 
   icons = {
     cilSearch,
@@ -165,4 +173,11 @@ export class UnitRatePlansListComponent extends ListContentComponent {
     );
   }
 
+  setOpenedRatePlan(i: number) {
+    if (this.openedRatePlan == i) {
+      this.openedRatePlan = null;
+    } else {
+      this.openedRatePlan = i;
+    }
+  }
 }

@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -22,13 +14,9 @@ import {
   FormLabelDirective,
   RowComponent
 } from '@coreui/angular';
-import {
-  NgLabelTemplateDirective,
-  NgOptionTemplateDirective,
-  NgSelectComponent
-} from '@ng-select/ng-select';
 import {RateApiService} from '../../../../../services/rate-api.service';
 import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.model';
+import {SegmentSelectComponent} from '../../../../../../../shared/components/segment-select/segment-select.component';
 
 @Component({
   selector: 'app-unit-rate-plans-cu-modal',
@@ -43,10 +31,8 @@ import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.mod
     FormLabelDirective,
     TranslatePipe,
     CommonModule,
-    NgSelectComponent,
-    NgLabelTemplateDirective,
-    NgOptionTemplateDirective,
-    FormFeedbackComponent
+    FormFeedbackComponent,
+    SegmentSelectComponent
   ],
   templateUrl: './unit-rate-plans-cu-modal.component.html',
   styleUrl: './unit-rate-plans-cu-modal.component.scss'
@@ -57,10 +43,6 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   @Output() actionConfirmed = new EventEmitter<void>();
 
   ratePlanForm: FormGroup;
-  segments = [
-    {uuid: 'seg1', name: 'Segment 1'},
-    {uuid: 'seg2', name: 'Segment 2'},
-  ];
 
   private readonly subscriptions: Subscription[] = [];
 
@@ -73,7 +55,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   ) {
     this.ratePlanForm = this.fb.group({
       name: [null, [Validators.required]],
-      segment: [null],
+      segments: [[]],
       enabled: [false, [Validators.required]]
     });
   }
@@ -82,7 +64,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
     if (this.ratePlanToEdit) {
       this.ratePlanForm.patchValue({
         name: this.ratePlanToEdit.name,
-        segment: this.ratePlanToEdit.segment,
+        segments: this.ratePlanToEdit.segments ?? [],
         enabled: this.ratePlanToEdit.enabled
       });
     }
@@ -100,12 +82,15 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
     const formValue = this.ratePlanForm.value;
     const payload = {
       name: formValue.name,
-      segment: formValue.segment ? {
-        uuid: formValue.segment.uuid,
-        name: formValue.segment.name
-      } : null,
+      segments: Array.isArray(formValue.segments)
+        ? formValue.segments.map((s: any) => ({
+          uuid: s.uuid ?? s.id,
+          name: s.name
+        }))
+        : [],
+
       enabled: formValue.enabled,
-      unit: { uuid: this.unitId }
+      unit: {id: this.unitId}
     };
 
     if (this.ratePlanToEdit) {
@@ -121,10 +106,16 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
             );
           },
           error: (err) => {
-            this.toastrService.error(
-              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.edit.notifications.error.message'),
-              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.edit.notifications.error.title')
-            );
+            const detail = err?.error?.detail;
+
+            if (err.status === 409 && detail) {
+              this.toastrService.error(detail, this.translateService.instant('commons.errors.conflict'));
+            } else {
+              this.toastrService.error(
+                this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
+                this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
+              );
+            }
           }
         })
       );
@@ -141,10 +132,16 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
             );
           },
           error: (err) => {
-            this.toastrService.error(
-              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
-              this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
-            );
+            const detail = err?.error?.detail;
+
+            if (err.status === 409 && detail) {
+              this.toastrService.error(detail, this.translateService.instant('commons.errors.conflict'));
+            } else {
+              this.toastrService.error(
+                this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
+                this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
+              );
+            }
           }
         })
       );

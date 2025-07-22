@@ -1,5 +1,6 @@
+<!--Search and create button-->
 <c-row class="mb-3 mt-3">
-  <c-col [md]="2">
+  <c-col [md]="3">
     <c-input-group sizing="sm" class="search-input">
         <span cInputGroupText>
           <svg [cIcon]="icons.cilSearch"></svg>
@@ -31,44 +32,46 @@
   @if (!isListEmpty) {
     <!-- Main Rate Plan List -->
     <c-row class="rate-plan-list mb-3">
-      @for (plan of listContent; track plan.id) {
-        <c-accordion [alwaysOpen]="true">
-          <c-accordion-item #item0="cAccordionItem" [visible]="false">
+      <c-accordion>
+
+        @for (ratePlan of listContent; track ratePlan.id; let i = $index) {
+          <c-accordion-item #item="cAccordionItem" [visible]="false">
             <ng-template cTemplateId="accordionHeaderTemplate">
-              <button (click)="item0.toggleItem()" [collapsed]="!item0.visible" cAccordionButton>
-                <div class="Info">
-                  <strong class="me-1">{{ plan.name }}</strong>
-                  @if (!plan.enabled) {
-                    <i class="bi bi-patch-minus-fill text-danger" [adaptivePosition]="true"
-                       [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.disabled' | translate">
-                    </i>
-                  } @else {
-                    <i class="bi bi-patch-check-fill text-success" [adaptivePosition]="true"
-                       [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.enabled' | translate">
-                    </i>
-                  }
-                  <span class="badge bg-primary ms-3 fw-normal">{{ plan.segment?.name }}</span>
-                </div>
-                <button cButton size="sm" class="btn-secondary-light ms-3" type="button"
-                        (click)="openRatePlanCuModal(plan); $event.stopPropagation()">
-                  <svg [cIcon]="icons.cilPen" class="me-1"></svg>
-                </button>
-                <button cButton size="sm" type="button" class="btn-danger-light ms-3"
-                        (click)="deletePlan(plan); $event.stopPropagation()">
-                  <svg [cIcon]="icons.cilTrash" class="me-1"></svg>
-                </button>
+              <button (click)="setOpenedRatePlan(i); item.toggleItem()" [collapsed]="!item.visible" cAccordionButton>
+
+                @if (!ratePlan.enabled) {
+                  <i class="bi bi-patch-minus-fill small text-light-danger me-1"
+                     [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.disabled' | translate">
+                  </i>
+                } @else {
+                  <i class="bi bi-patch-check-fill small text-light-success me-1"
+                     [tooltip]="'units.edit-unit.tabs.rates.ratesPlans.list.status.enabled' | translate">
+                  </i>
+                }
+                <span class="rate-plan-name me-2">
+                  {{ ratePlan.name }}
+                </span>
+
+                @for (segment of ratePlan.segments; track segment.id) {
+                  <app-badge [rounded]="true" [smaller]="true" class="me-1">
+                    {{ segment.name|titlecase }}
+                  </app-badge>
+                }
               </button>
             </ng-template>
+
             <ng-template cTemplateId="accordionBodyTemplate">
-              <div class="accordion-body">
-                <c-row class="mb-4">
-                  <app-unit-rate-table-list [ratePlanId]="plan.id"></app-unit-rate-table-list>
-                </c-row>
-              </div>
+              @if (openedRatePlan == i) {
+                <div class="accordion-body">
+                  <c-row class="mb-4">
+                    <app-unit-rate-table-list [ratePlanId]="ratePlan.id"></app-unit-rate-table-list>
+                  </c-row>
+                </div>
+              }
             </ng-template>
           </c-accordion-item>
-        </c-accordion>
-      }
+        }
+      </c-accordion>
     </c-row>
   } @else {
     <!-- Empty State -->

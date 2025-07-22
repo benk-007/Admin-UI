@@ -1,0 +1,27 @@
+@use "./variables" as *;
+
+span.badge {
+  padding: 0.25rem 0.45rem;
+  font-weight: 500;
+  border-radius: 0.25rem;
+  font-size: 0.7rem !important;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  display: inline-block;
+
+  &.smaller {
+    font-size: 0.62rem !important;
+  }
+
+  &.bg-primary-transparent {
+    background-color: $primary-40;
+    color: white !important;
+    font-weight: normal !important;
+  }
+
+  &.bg-danger-transparent {
+    background-color: $danger-40;
+    color: $danger;
+  }
+}
