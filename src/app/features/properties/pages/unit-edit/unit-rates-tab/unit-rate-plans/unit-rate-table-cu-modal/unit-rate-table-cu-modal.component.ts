@@ -211,7 +211,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       maxStay: raw.maxStay,
       daySpecificRates: raw.daySpecificRates,
       additionalGuestFees: raw.additionalGuestFees,
-      ratePlan: {uuid: this.ratePlanId}
+      ratePlan: {id: this.ratePlanId}
     };
 
     if (raw.type === 'STANDARD') {

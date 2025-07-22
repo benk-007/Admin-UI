@@ -1,24 +1,27 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   ButtonDirective,
   ColComponent,
   FormControlDirective,
   FormDirective,
-  FormFeedbackComponent, FormFloatingDirective,
-  FormLabelDirective, FormSelectDirective, InputGroupComponent, InputGroupTextDirective,
+  FormFeedbackComponent,
+  FormLabelDirective,
+  FormSelectDirective,
+  InputGroupComponent,
+  InputGroupTextDirective,
   RowComponent
 } from '@coreui/angular';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
+import {Subscription} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
 
 import {RateApiService} from '../../../../services/rate-api.service';
 import {IconDirective} from '@coreui/icons-angular';
 import {cilPlus, cilTrash} from '@coreui/icons';
 import {NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
-import {JsonPipe, NgClass, NgForOf, NgIf} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {noChildAgeOverlapValidator} from '../../../../validators/no-age-overlap.validator';
 import {minMaxStayValidator} from '../../../../validators/min-max-stay.validator';
 import {ageRangeValidator} from '../../../../validators/ageBucket.validator';
@@ -37,13 +40,9 @@ import {ageRangeValidator} from '../../../../validators/ageBucket.validator';
     TranslatePipe,
     IconDirective,
     NgSelectComponent,
-    NgForOf,
     NgOptionTemplateDirective,
-    NgIf,
     NgClass,
-    JsonPipe,
     FormFeedbackComponent,
-    FormFloatingDirective,
     FormSelectDirective,
     InputGroupComponent,
     InputGroupTextDirective
@@ -58,13 +57,13 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   private readonly subscriptions: Subscription[] = [];
   private existingRateId: string | null = null;
   daysOfWeekOptions = [
-    { label: 'Monday', value: 'MONDAY' },
-    { label: 'Tuesday', value: 'TUESDAY' },
-    { label: 'Wednesday', value: 'WEDNESDAY' },
-    { label: 'Thursday', value: 'THURSDAY' },
-    { label: 'Friday', value: 'FRIDAY' },
-    { label: 'Saturday', value: 'SATURDAY' },
-    { label: 'Sunday', value: 'SUNDAY' }
+    {label: 'Monday', value: 'MONDAY'},
+    {label: 'Tuesday', value: 'TUESDAY'},
+    {label: 'Wednesday', value: 'WEDNESDAY'},
+    {label: 'Thursday', value: 'THURSDAY'},
+    {label: 'Friday', value: 'FRIDAY'},
+    {label: 'Saturday', value: 'SATURDAY'},
+    {label: 'Sunday', value: 'SUNDAY'}
   ];
 
   constructor(
@@ -79,7 +78,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
       minStay: [null, [Validators.required, Validators.min(1)]],
       maxStay: [null, [Validators.min(1)]],
       daySpecificRates: this.fb.array([]),
-      additionalGuestFees: this.fb.array([],[noChildAgeOverlapValidator])
+      additionalGuestFees: this.fb.array([], [noChildAgeOverlapValidator])
     }, {
       validators: [minMaxStayValidator()]
     });
@@ -158,7 +157,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     });
     const payload = {
       ...formValue,
-      unit: { uuid: this.unitId }
+      unit: {id: this.unitId}
     };
 
     const request$ = this.existingRateId
@@ -224,7 +223,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
             fromAge: [0, [Validators.required, Validators.min(0)]],
             toAge: [1, [Validators.required, Validators.min(1)]]
           },
-          { validators: ageRangeValidator() }
+          {validators: ageRangeValidator()}
         )
       );
     }
@@ -237,7 +236,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
           this.fb.group({
             fromAge: [0, [Validators.required, Validators.min(0)]],
             toAge: [1, [Validators.required, Validators.min(1)]]
-          }, { validators: ageRangeValidator() })
+          }, {validators: ageRangeValidator()})
         );
       } else if (type === 'ADULT' && feeGroup.get('ageBucket')) {
         (feeGroup as FormGroup).removeControl('ageBucket');
@@ -307,7 +306,6 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     return this.additionalGuestFees.controls
       .some((group, index) => index !== currentIndex && group.get('guestType')?.value === 'ADULT');
   }
-
 
 
   ngOnDestroy(): void {
