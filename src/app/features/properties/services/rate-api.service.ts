@@ -8,6 +8,7 @@ import {RatePlanPostModel} from '../models/rate/post/rate-plan-post.model';
 import {RatePlanGetModel} from '../models/rate/get/rate-plan-get.model';
 import {RateTablePostModel} from '../models/rate/post/rate-table-post.model';
 import {RateTableGetModel} from '../models/rate/get/rate-table.get.model';
+
 /*import {TablePostModel} from "../../settings/rates/tables/models/table-post.model";
 import {TableItemGetModel} from "../../settings/rates/tables/models/table-get.model";*/
 
@@ -24,7 +25,7 @@ export class RateApiService {
     return this.httpClient.get<DefaultRateModel>(
       environment.apiBaseUrl.concat(environment.unitBaseRateById),
       {
-        params: { unitId }
+        params: {unitId}
       }
     );
   }
@@ -74,7 +75,7 @@ export class RateApiService {
 
     return this.httpClient.get<PageModel<RatePlanGetModel>>(
       `${environment.apiBaseUrl}${environment.RatePlan}?unitId=${unitId}`,
-      { params }
+      {params}
     );
   }
 
@@ -122,7 +123,7 @@ export class RateApiService {
 
     return this.httpClient.get<PageModel<RateTableGetModel>>(
       `${environment.apiBaseUrl}${environment.RateTable}?ratePlanUuid=${ratePlanId}`,
-      { params }
+      {params}
     );
   }
 

@@ -5,7 +5,7 @@
   </h6>
 </div>
 
-{{ratePlanForm.value | json}}
+{{ ratePlanForm.value | json }}
 
 <!-- Modal body -->
 <div class="modal-body">
@@ -17,11 +17,11 @@
         <label cLabel class="required me-2" for="name">
           {{ 'units.edit-unit.tabs.rates.ratesPlans.create.form.name.label' | translate }}
         </label>
-        <input cFormControl formControlName="name" id="name" type="text" />
-        @if(ratePlanForm.get('name')?.touched && ratePlanForm.get('name')?.invalid){
-            <c-form-feedback [valid]="false" >
-                {{ 'commons.errors.required' | translate }}
-            </c-form-feedback>
+        <input cFormControl formControlName="name" id="name" type="text"/>
+        @if (ratePlanForm.get('name')?.touched && ratePlanForm.get('name')?.invalid) {
+          <c-form-feedback [valid]="false">
+            {{ 'commons.errors.required' | translate }}
+          </c-form-feedback>
         }
       </c-col>
     </c-row>
@@ -32,11 +32,11 @@
         <label cLabel for="segment">
           {{ 'units.edit-unit.tabs.rates.ratesPlans.create.form.segment.select.label' | translate }}
         </label>
-        <app-segment-select formControlName="segment" [multiple]="true" [showEnabledOnly]="true"></app-segment-select>
+        <app-segment-select formControlName="segments" [multiple]="true" [showEnabledOnly]="true"></app-segment-select>
       </c-col>
     </c-row>
 
-    <c-row [md]="6"  class="mb-3">
+    <c-row [md]="6" class="mb-3">
       <!-- Enabled (Required) -->
       <c-col [md]="6" sm="12" class="mb-3 d-flex align-items-center">
         <label cLabel class="required me-2 mb-0" for="enabled">
@@ -48,7 +48,7 @@
             class="form-check-input"
             id="enabled"
             role="switch"
-            formControlName="enabled" />
+            formControlName="enabled"/>
         </div>
       </c-col>
     </c-row>

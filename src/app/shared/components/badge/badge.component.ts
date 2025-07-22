@@ -13,6 +13,8 @@ import {NgClass} from "@angular/common";
 export class BadgeComponent {
 
   @Input()
+  smaller: boolean = true;
+  @Input()
   rounded: boolean = false;
 
   @Input()

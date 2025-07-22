@@ -1,11 +1,9 @@
+import {SegmentRefGetModel} from '../commons/segment-ref-get.model';
+import {UnitRefGetModel} from '../commons/unit-ref-get.model';
+
 export interface RatePlanPostModel {
   name: string;
   enabled: boolean;
-  segment?: {
-    uuid: string;
-    name: string;
-  } | null;
-  unit: {
-    uuid: string;
-  };
+  segments: SegmentRefGetModel[];
+  unit: UnitRefGetModel;
 }

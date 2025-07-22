@@ -59,15 +59,15 @@
                 </div>
               </td>
               <td>
-                {{ segment.parent ? segment.parent?.name : ('commons.table.body.n-a'|translate) }}
+                {{ segment.parent ? segment.parent.name : ('commons.table.body.n-a'|translate) }}
               </td>
               <td>
                 {{ segment.description }}
               </td>
               <td>
                 <c-form-check [switch]="true">
-                  <input cFormCheckInput disabled type="checkbox" [checked]="segment.enabled"/>
-                  <label cFormCheckLabel>{{ 'commons.form.enabled-check.label'|translate }}</label>
+                  <input cFormCheckInput disabled type="checkbox" [checked]="segment.enabled" id="enabled"/>
+                  <label cFormCheckLabel for="enabled">{{ 'commons.form.enabled-check.label'|translate }}</label>
                 </c-form-check>
               </td>
               <td>

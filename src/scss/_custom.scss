@@ -18,8 +18,11 @@
 @use './toastr';
 // custom cards
 @use './cards';
+// custom badges
+@use './badges';
 // custom sidebar
 @use './sidebar';
+
 
 // custom calendar today cell color
 .calendar-cell.today {

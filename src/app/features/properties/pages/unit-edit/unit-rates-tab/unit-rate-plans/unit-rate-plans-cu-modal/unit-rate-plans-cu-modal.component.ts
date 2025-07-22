@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Inject,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -22,11 +14,6 @@ import {
   FormLabelDirective,
   RowComponent
 } from '@coreui/angular';
-import {
-  NgLabelTemplateDirective,
-  NgOptionTemplateDirective,
-  NgSelectComponent
-} from '@ng-select/ng-select';
 import {RateApiService} from '../../../../../services/rate-api.service';
 import {RatePlanGetModel} from '../../../../../models/rate/get/rate-plan-get.model';
 import {SegmentSelectComponent} from '../../../../../../../shared/components/segment-select/segment-select.component';
@@ -44,9 +31,6 @@ import {SegmentSelectComponent} from '../../../../../../../shared/components/seg
     FormLabelDirective,
     TranslatePipe,
     CommonModule,
-    NgSelectComponent,
-    NgLabelTemplateDirective,
-    NgOptionTemplateDirective,
     FormFeedbackComponent,
     SegmentSelectComponent
   ],
@@ -59,10 +43,6 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   @Output() actionConfirmed = new EventEmitter<void>();
 
   ratePlanForm: FormGroup;
-  segments = [
-    {uuid: 'seg1', name: 'Segment 1'},
-    {uuid: 'seg2', name: 'Segment 2'},
-  ];
 
   private readonly subscriptions: Subscription[] = [];
 
@@ -75,7 +55,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   ) {
     this.ratePlanForm = this.fb.group({
       name: [null, [Validators.required]],
-      segment: [[]],
+      segments: [[]],
       enabled: [false, [Validators.required]]
     });
   }
@@ -84,7 +64,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
     if (this.ratePlanToEdit) {
       this.ratePlanForm.patchValue({
         name: this.ratePlanToEdit.name,
-        segment: this.ratePlanToEdit.segment ?? [],
+        segments: this.ratePlanToEdit.segments ?? [],
         enabled: this.ratePlanToEdit.enabled
       });
     }
@@ -102,15 +82,15 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
     const formValue = this.ratePlanForm.value;
     const payload = {
       name: formValue.name,
-      segment: Array.isArray(formValue.segment)
-        ? formValue.segment.map((s: any) => ({
+      segments: Array.isArray(formValue.segments)
+        ? formValue.segments.map((s: any) => ({
           uuid: s.uuid ?? s.id,
           name: s.name
         }))
         : [],
 
       enabled: formValue.enabled,
-      unit: { uuid: this.unitId }
+      unit: {id: this.unitId}
     };
 
     if (this.ratePlanToEdit) {
