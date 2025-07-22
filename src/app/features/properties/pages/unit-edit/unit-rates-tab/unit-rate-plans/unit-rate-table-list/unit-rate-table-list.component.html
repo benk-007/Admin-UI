@@ -1,5 +1,5 @@
 <!--Search and create button-->
-<c-row class="mb-3 mt-3">
+<c-row class="mb-3 mt-1">
   <c-col [md]="3">
     <c-input-group sizing="sm" class="search-input">
         <span cInputGroupText>
@@ -75,7 +75,7 @@
     <!-- Empty State -->
     @if (!isSearchActive) {
       <app-empty-data
-        imageSrc="assets/images/animations/no-rate-plans.gif"
+        imageSrc="assets/images/animations/no-rates.gif"
         [message]="'units.edit-unit.tabs.rates.rateTable.list.empty-data' | translate">
       </app-empty-data>
     } @else {

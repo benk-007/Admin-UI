@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-import { cilTrash } from '@coreui/icons';
+import {Subscription} from 'rxjs';
+import {ToastrService} from 'ngx-toastr';
+import {cilTrash} from '@coreui/icons';
 import {RateApiService} from '../../../../../services/rate-api.service';
 import {noChildAgeOverlapValidator} from '../../../../../validators/no-age-overlap.validator';
 import {minMaxStayValidator} from '../../../../../validators/min-max-stay.validator';
@@ -13,12 +13,18 @@ import {IconDirective} from '@coreui/icons-angular';
 import {
   ButtonDirective,
   ButtonGroupComponent,
-  ColComponent, FormCheckLabelDirective,
-  FormControlDirective, FormDirective, FormFeedbackComponent,
-  FormLabelDirective, FormSelectDirective, InputGroupComponent, InputGroupTextDirective,
+  ColComponent,
+  FormCheckLabelDirective,
+  FormControlDirective,
+  FormDirective,
+  FormFeedbackComponent,
+  FormLabelDirective,
+  FormSelectDirective,
+  InputGroupComponent,
+  InputGroupTextDirective,
   RowComponent
 } from '@coreui/angular';
-import {NgClass, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
+import {JsonPipe, NgClass, NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
 import {RateTableGetModel} from '../../../../../models/rate/get/rate-table.get.model';
 import {NgxDaterangepickerBootstrapDirective} from 'ngx-daterangepicker-bootstrap';
@@ -49,7 +55,8 @@ import dayjs from 'dayjs';
     InputGroupComponent,
     InputGroupTextDirective,
     NgxDaterangepickerBootstrapDirective,
-    NgIf
+    NgIf,
+    JsonPipe
   ],
   templateUrl: './unit-rate-table-cu-modal.component.html',
   styleUrl: './unit-rate-table-cu-modal.component.scss'
@@ -60,20 +67,20 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
   ratePlanId!: string;
   unitId!: string;
 
-  icons = { cilTrash };
+  icons = {cilTrash};
   rateTableForm: FormGroup;
   subscriptions: Subscription[] = [];
 
   isNavigating = false;
 
   daysOfWeekOptions = [
-    { label: 'Monday', value: 'MONDAY' },
-    { label: 'Tuesday', value: 'TUESDAY' },
-    { label: 'Wednesday', value: 'WEDNESDAY' },
-    { label: 'Thursday', value: 'THURSDAY' },
-    { label: 'Friday', value: 'FRIDAY' },
-    { label: 'Saturday', value: 'SATURDAY' },
-    { label: 'Sunday', value: 'SUNDAY' }
+    {label: 'Monday', value: 'MONDAY'},
+    {label: 'Tuesday', value: 'TUESDAY'},
+    {label: 'Wednesday', value: 'WEDNESDAY'},
+    {label: 'Thursday', value: 'THURSDAY'},
+    {label: 'Friday', value: 'FRIDAY'},
+    {label: 'Saturday', value: 'SATURDAY'},
+    {label: 'Sunday', value: 'SUNDAY'}
   ];
 
   constructor(
@@ -165,7 +172,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
             this.fb.group({
               fromAge: [fee.ageBucket?.fromAge, [Validators.required, Validators.min(0)]],
               toAge: [fee.ageBucket?.toAge, [Validators.required, Validators.min(1)]]
-            }, { validators: ageRangeValidator() })
+            }, {validators: ageRangeValidator()})
           );
         }
 
@@ -181,7 +188,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const raw = { ...this.rateTableForm.value };
+    const raw = {...this.rateTableForm.value};
 
     raw.startDate = raw.dateRange?.startDate ? dayjs(raw.dateRange.startDate).format('YYYY-MM-DD') : null;
     raw.endDate = raw.dateRange?.endDate ? dayjs(raw.dateRange.endDate).format('YYYY-MM-DD') : null;
@@ -204,7 +211,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       maxStay: raw.maxStay,
       daySpecificRates: raw.daySpecificRates,
       additionalGuestFees: raw.additionalGuestFees,
-      ratePlan: { uuid: this.ratePlanId }
+      ratePlan: {uuid: this.ratePlanId}
     };
 
     if (raw.type === 'STANDARD') {
@@ -215,7 +222,6 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       payload.maxRate = raw.maxRate;
       payload.maxOccupancy = raw.maxOccupancy;
     }
-
 
 
     let request$;
@@ -295,7 +301,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
         this.fb.group({
           fromAge: [null, [Validators.required, Validators.min(0)]],
           toAge: [null, [Validators.required, Validators.min(1)]]
-        }, { validators: ageRangeValidator() })
+        }, {validators: ageRangeValidator()})
       );
     }
 
@@ -306,7 +312,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
           this.fb.group({
             fromAge: [null, [Validators.required, Validators.min(0)]],
             toAge: [null, [Validators.required, Validators.min(1)]]
-          }, { validators: ageRangeValidator() })
+          }, {validators: ageRangeValidator()})
         );
       } else if (type === 'ADULT' && feeGroup.get('ageBucket')) {
         (feeGroup as FormGroup).removeControl('ageBucket');
@@ -354,7 +360,8 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDayRemove(event: any, index: number) {}
+  onDayRemove(event: any, index: number) {
+  }
 
   getDayClass(dayValue: string, index: number) {
     return {

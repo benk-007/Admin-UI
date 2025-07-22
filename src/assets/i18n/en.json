@@ -4,6 +4,12 @@
       "name-input": {
         "label": "Name"
       },
+      "date-range-input": {
+        "label": "Date range"
+      },
+      "type-input": {
+        "label": "Type"
+      },
       "description-input": {
         "label": "Description"
       },
@@ -1120,6 +1126,26 @@
             }
           },
           "rate-plans": {
+
+          },
+          "rate-tables": {
+            "list": {
+
+            },
+            "cu-modal": {
+              "title": {
+
+              },
+              "form": {
+                "type-input": {
+                  "label": "Type",
+                  "values": {
+                    "dynamic": "Dynamic",
+                    "standard": "Standard"
+                  }
+                }
+              }
+            }
           },
           "ratesPlans": {
             "list": {
