@@ -83,7 +83,8 @@
       },
       "save-btn": "Save",
       "update-btn": "Update",
-      "cancel-btn": "Cancel"
+      "cancel-btn": "Cancel",
+      "search-btn": "Search"
     },
     "table": {
       "header": {
@@ -2101,6 +2102,22 @@
         "error": {
           "title": "Rates Table removal failed",
           "message": "An error occurred while removing the rates table. Please try again or contact the support team."
+        }
+      }
+    }
+  },
+  "availability": {
+    "title": "Availability",
+    "list": {
+      "party": "Party",
+      "segment": "Segment",
+      "subSegment": "Sub-Segment",
+      "adults": "Adults",
+      "stayPeriod": "Period",
+      "notifications": {
+        "error": {
+          "title": "Availability Error",
+          "message": "An error occurred while fetching available units. Please try again later."
         }
       }
     }

@@ -1,0 +1,47 @@
+<form [formGroup]="form">
+  <c-row class="mb-3">
+    <c-col [md]="2">
+      <label class="form-label" for="party">{{ 'availability.list.party' | translate }}</label>
+      <input id="party" type="text" class="form-control" formControlName="party" />
+    </c-col>
+
+    <c-col [md]="2">
+      <label class="form-label" for="segment">{{ 'availability.list.segment' | translate }}</label>
+      <input id="segment" type="text" class="form-control" formControlName="segmentId" />
+    </c-col>
+
+    <c-col [md]="2">
+      <label class="form-label" for="subSegment">{{ 'availability.list.subSegment' | translate }}</label>
+      <input id="subSegment" type="text" class="form-control" formControlName="subSegmentId" />
+    </c-col>
+
+    <c-col [md]="2">
+      <label class="form-label">{{ 'availability.list.stayPeriod' | translate }}</label>
+      <div *ngIf="!isNavigating">
+        <input
+          type="text"
+          class="form-control"
+          [locale]="{ applyLabel: 'ok', format: 'DD-MM-YYYY' }"
+          ngxDaterangepickerBootstrap
+          [(ngModel)]="dateRange"
+          [ngModelOptions]="{ standalone: true }"
+        />
+      </div>
+    </c-col>
+
+    <c-col [md]="3">
+      <label class="form-label" for="adults">{{ 'availability.adults' | translate }}</label>
+      <input id="adults" type="number" class="form-control" formControlName="adults" min="1" />
+    </c-col>
+
+    <c-col [md]="1" class="d-flex justify-content-end mt-4">
+      <button cButton type="button" (click)="onSearch()">
+        <svg [cIcon]="icons.cilSearch"></svg>
+      </button>
+    </c-col>
+
+  </c-row>
+
+
+
+</form>

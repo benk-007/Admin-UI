@@ -34,14 +34,16 @@ export const commonProperties = {
   unitImages: UNIT_SERVICE + 'images',
   unitImageById: UNIT_SERVICE + 'images/:imageId',
 
-  /*===========Rates===========*/
+  /*===========availability===========*/
+  availability: UNIT_SERVICE + 'inventory',
+
+  /*===========PRICING Service===========*/
   // Default resource
   unitBaseRateById: PRICING_SERVICE + 'default-rates',
   // Rate plans
   RatePlan: PRICING_SERVICE + 'rate-plans',
   // Rate plans
   RateTable: PRICING_SERVICE + 'rate-tables',
-
 
   /*===========Guest Service===========*/
   // Guest resource
