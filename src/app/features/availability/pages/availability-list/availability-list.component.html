@@ -1,8 +1,8 @@
 <form [formGroup]="form">
   <c-row>
-    <c-col [md]="8">
+    <c-col>
       <c-row class="mb-3">
-        <c-col [md]="4">
+        <c-col [md]="2">
           <label class="form-label" for="party">{{ 'availability.list.party' | translate }}</label>
           <app-party-select
             id="party"
@@ -11,21 +11,17 @@
           </app-party-select>
         </c-col>
 
-        <c-col [md]="3">
+        <c-col [md]="2">
           <label class="form-label" for="segment">{{ 'availability.list.segment' | translate }}</label>
           <app-segment-select formControlName="segmentId" id="segment" [withParent]="false"></app-segment-select>
         </c-col>
 
-        <c-col [md]="3">
+        <c-col [md]="2">
           <label class="form-label" for="subSegment">{{ 'availability.list.subSegment' | translate }}</label>
           <app-segment-select formControlName="subSegmentId" id="subSegment" [withParent]="true"></app-segment-select>
         </c-col>
 
-      </c-row>
-
-      <c-row class="mb-3">
-
-        <c-col [md]="5">
+        <c-col [md]="3">
           <label class="form-label required">{{ 'availability.list.stayPeriod' | translate }}</label>
           <div *ngIf="!isNavigating">
             <input
@@ -40,12 +36,12 @@
           </div>
         </c-col>
 
-        <c-col [md]="2">
+        <c-col [md]="1">
           <label class="form-label" for="adults">{{ 'availability.list.adults' | translate }}</label>
           <input id="adults" type="number" class="form-control" formControlName="adults" />
         </c-col>
 
-        <c-col [md]="2">
+        <c-col [md]="1">
           <label class="form-label" for="childrenDisplay">{{ 'availability.list.children' | translate }}</label>
           <input
             id="childrenDisplay"
@@ -54,9 +50,13 @@
             [value]="childrenAges.length"
             readonly
             [popover]="childrenPopoverTemplate"
+            triggers="manual"
+            [outsideClick]="true"
+            [isOpen]="isChildrenPopoverOpen"
+            (click)="toggleChildrenPopover()"
+            (onHidden)="isChildrenPopoverOpen = false"
             [placement]="'bottom'"
             [container]="'body'"
-            [isOpen]="popoverChildrenCount > 0 || popoverChildrenCount === 0 && childrenAges.length > 0"
           />
         </c-col>
 
@@ -67,7 +67,11 @@
           </button>
         </c-col>
       </c-row>
+    </c-col>
+  </c-row>
 
+  <c-row>
+    <c-col [md]="bookedUnits.length === 0 ? 12 : 8">
       <h6 class="section-title underline mb-3 mt-4">{{ 'availability.list.result' | translate }}</h6>
       @if (!firstCallDone) {
         <c-row class="d-flex justify-content-center mt-5">
@@ -121,13 +125,13 @@
 
                 <c-col [md]="5">
                   <c-row class="d-flex justify-content-end">
-                    <div class="border rounded py-2 px-3 d-flex align-items-center w-auto h-auto">
+                    <div class="border rounded py-2 px-3 me-2 d-flex align-items-center w-auto h-auto">
                       <label class="me-2 mb-0 small">{{ 'availability.list.quantity' | translate }}:</label>
 
                       <button class="btn btn-sm btn-outline-primary px-2" (click)="decrementQuantity(unit)">−</button>
 
                       <input
-                        type="number"
+                        type="text"
                         [value]="selectedQuantities[unit.id] || 1"
                         readonly
                         class="form-control quantity mx-2 small p-2"
@@ -156,20 +160,20 @@
                   </c-row>
 
                   <c-row class="mt-3">
-                      <div class="text-end">
-                        {{ selectedQuantities[unit.id] || 1 }}
-                        {{ 'availability.list.roomsSelected' | translate }}
-                      </div>
+                    <div class="text-end">
+                      {{ selectedQuantities[unit.id] || 1 }}
+                      {{ 'availability.list.roomsSelected' | translate }}
+                    </div>
 
-                      <div class="text-end">
-                        {{ 'availability.list.accommodation' | translate }}:
-                        {{ (unit.price.nightlyRate * (selectedQuantities[unit.id] || 1)) | number:'1.2-2' }} MAD/{{ 'availability.list.night' | translate }}
-                      </div>
+                    <div class="text-end">
+                      {{ 'availability.list.accommodation' | translate }}:
+                      {{ (unit.price.nightlyRate * (selectedQuantities[unit.id] || 1)) | number:'1.2-2' }} MAD/{{ 'availability.list.night' | translate }}
+                    </div>
 
-                      <div class="text-end">
-                        + {{ 'availability.list.supplements.title' | translate }}:
-                        {{ getSupplementsTotal(unit) }} MAD/{{ 'availability.list.night' | translate }}
-                      </div>
+                    <div class="text-end">
+                      + {{ 'availability.list.supplements.title' | translate }}:
+                      {{ getSupplementsTotal(unit) }} MAD/{{ 'availability.list.night' | translate }}
+                    </div>
                   </c-row>
                 </c-col>
               </c-row>
@@ -182,64 +186,61 @@
       }
     </c-col>
 
-    <c-col [md]="4">
-      <c-row [md]="7">
-        <c-col>
-          <h6 class="section-title underline mt-1 mb-3">{{ 'availability.list.recap.title' | translate }}</h6>
-        </c-col>
-        <c-col [md]="5">
-          <button
-            cButton color="primary" size="sm"
-            class="mb-3"
-            [disabled]="bookedUnits.length === 0"
-            (click)="continueBooking()">
-            {{ 'availability.list.continueBooking' | translate }}
-          </button>
-        </c-col>
-      </c-row>
-
-      <div *ngIf="bookedUnits.length > 0;">
-        <div class="card mb-3" *ngFor="let booked of bookedUnits; let i = index">
-          <div class="position-relative">
-
+    <ng-container *ngIf="bookedUnits.length > 0">
+      <c-col [md]="4">
+        <c-row >
+          <c-col [md]="7">
+            <h6 class="section-title underline mt-4 mb-3">{{ 'availability.list.recap.title' | translate }}</h6>
+          </c-col>
+          <c-col [md]="5" class="d-flex justify-content-end">
             <button
-              type="button"
-              class="btn-close btn-sm position-absolute top-0 end-0 m-2"
-              aria-label="Remove"
-              (click)="removeBookedUnit(i)">
+              cButton color="primary" size="sm"
+              class="mb-3 mt-3"
+              [disabled]="bookedUnits.length === 0"
+              (click)="continueBooking()">
+              {{ 'availability.list.continueBooking' | translate }}
             </button>
+          </c-col>
+        </c-row>
 
-            <div class="card-body p-3">
-              <h6 class="card-title">{{ booked.unit.name }}</h6>
-              <p class="card-text small mb-1">
-                {{ 'availability.list.stayPeriod' | translate }}:
-                {{ booked.searchParams.checkinDate }} → {{ booked.searchParams.checkoutDate }}
-              </p>
+        <div *ngIf="bookedUnits.length > 0;">
+          <div class="card mb-3" *ngFor="let booked of bookedUnits; let i = index">
+            <div class="position-relative">
 
-              <p class="card-text small mb-1">
-                {{ 'availability.list.quantity' | translate }}: {{ booked.quantity }}
-              </p>
-              <p class="card-text small mb-1">
-                {{ 'availability.list.nightlyRate' | translate }}: {{ booked.unit.price.nightlyRate }} MAD
-              </p>
-              <p class="card-text small mb-1">
-                {{ 'availability.list.accommodation' | translate }}:
-                {{ (booked.unit.price.nightlyRate * booked.quantity) | number:'1.2-2' }} MAD
-              </p>
-              <p class="card-text small mb-0">
-                {{ 'availability.list.supplements.title' | translate }}:
-                {{ getSelectedSupplementsTotal(booked) }} MAD
-              </p>
+              <button
+                type="button"
+                class="btn-close btn-sm position-absolute top-0 end-0 m-2"
+                aria-label="Remove"
+                (click)="removeBookedUnit(i)">
+              </button>
+
+              <div class="card-body p-3">
+                <h6 class="card-title">{{ booked.unit.name }}</h6>
+                <p class="card-text small mb-1">
+                  {{ 'availability.list.stayPeriod' | translate }}:
+                  {{ booked.searchParams.checkinDate }} → {{ booked.searchParams.checkoutDate }}
+                </p>
+
+                <p class="card-text small mb-1">
+                  {{ 'availability.list.quantity' | translate }}: {{ booked.quantity }}
+                </p>
+                <p class="card-text small mb-1">
+                  {{ 'availability.list.nightlyRate' | translate }}: {{ booked.unit.price.nightlyRate }} MAD
+                </p>
+                <p class="card-text small mb-1">
+                  {{ 'availability.list.accommodation' | translate }}:
+                  {{ (booked.unit.price.totalAmount * booked.quantity) | number:'1.2-2' }} MAD
+                </p>
+                <p class="card-text small mb-0">
+                  {{ 'availability.list.supplements.title' | translate }}:
+                  {{ getSelectedSupplementsTotal(booked) }} MAD
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-<!--      <ng-template #noRecap>-->
-<!--        <app-empty-data imageSrc="assets/images/animations/empty.gif">-->
-<!--        </app-empty-data>-->
-<!--      </ng-template>-->
-    </c-col>
+      </c-col>
+    </ng-container>
 
   </c-row>
 
@@ -262,12 +263,12 @@
       <c-row>
         <c-col class="mb-3" [md]="6" *ngFor="let childAgeControl of childrenAges.controls; let i = index">
           <select cSelect
-          [id]="'childAgeSelect' + i"
-          [formControl]="childAgeControl"
+                  [id]="'childAgeSelect' + i"
+                  [formControl]="childAgeControl"
           >
-          <option [ngValue]="null" disabled>{{ 'availability.list.age' | translate }}</option>
-          <option *ngFor="let age of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]" [ngValue]="age">{{ age }}</option>
-        </select>
+            <option [ngValue]="null" disabled>{{ 'availability.list.age' | translate }}</option>
+            <option *ngFor="let age of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]" [ngValue]="age">{{ age }}</option>
+          </select>
         </c-col>
       </c-row>
     </div>
@@ -276,12 +277,11 @@
   <ng-template #supplementsModal let-modal>
     <div class="modal-header">
       <h6 class="modal-title">{{ 'availability.list.supplementsAvailable' | translate }}</h6>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.hide()"></button>
     </div>
 
     <div class="modal-body">
       <div *ngFor="let item of supplementsPerUnit.get(activeUnit?.id || '') || []; let i = index"
-                class="border rounded p-2 mb-2 d-flex justify-content-between align-items-start">
+           class="border rounded p-2 mb-2 d-flex justify-content-between align-items-start">
         <div>
           <div class="form-check">
             <input

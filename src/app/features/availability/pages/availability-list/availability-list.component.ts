@@ -70,6 +70,7 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
   @ViewChild('supplementsModal') supplementsModalTemplate!: TemplateRef<any>;
 
   selectedQuantities: Record<string, number> = {};
+
   bookedUnits: {
     unit: AvailabilityGetResource;
     quantity: number;
@@ -83,6 +84,8 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
   supplementsPerUnit = new Map<string, SupplementItem[]>();
 
   minSearchDate: Dayjs = dayjs();
+  isChildrenPopoverOpen: boolean = false;
+
 
   constructor(
     private readonly fb: FormBuilder,
@@ -101,6 +104,10 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
       adults: [1],
       childrenAges: this.fb.array([])
     });
+  }
+
+  toggleChildrenPopover(): void {
+    this.isChildrenPopoverOpen = !this.isChildrenPopoverOpen;
   }
 
   onPartyUpdated(party: PartyItemGetModel | null): void {
