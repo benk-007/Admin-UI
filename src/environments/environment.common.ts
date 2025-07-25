@@ -64,6 +64,9 @@ export const commonProperties = {
 
   /*===========CRM Service===========*/
   segmentList: CRM_SERVICE + 'segments',
-  segmentById: CRM_SERVICE + 'segments/:segmentId'
+  segmentById: CRM_SERVICE + 'segments/:segmentId',
+
+  partyList: CRM_SERVICE + 'parties'
+
 
 }
