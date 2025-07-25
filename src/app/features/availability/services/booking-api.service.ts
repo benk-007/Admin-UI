@@ -14,10 +14,11 @@ export class AvailabilityApiService {
   constructor(private httpClient: HttpClient) {
   }
 
-  getAvailableUnits(payload: AvailabilityPostResource): Observable<AvailabilityGetResource[]> {
-    return this.httpClient.post<AvailabilityGetResource[]>(
+  getAvailableUnits(payload: AvailabilityPostResource): Observable<{ content: AvailabilityGetResource[] }> {
+    return this.httpClient.post<{ content: AvailabilityGetResource[] }>(
       environment.apiBaseUrl.concat(environment.availability),
       payload
     );
   }
+
 }

@@ -2114,10 +2114,76 @@
       "subSegment": "Sub-Segment",
       "adults": "Adults",
       "stayPeriod": "Period",
+      "children": "Children",
+      "child": "Child",
+      "age": "Age",
+      "numberOfChildren": "Number of Children",
+      "result": "Result",
+      "available": "available",
+      "occupancy": "Occupancy recommended",
+      "night": "night",
+      "quantity": "Quantity",
+      "book": "Book",
+      "nightlyRate": "Nightly rate",
+      "supplementsAvailable": "Available Supplements",
+      "supplements": {
+        "title": "Supplements",
+        "breakfast": {
+          "label": "Breakfast",
+          "description": "Continental buffet"
+        },
+        "lunch": {
+          "label": "Lunch",
+          "description": "Daily menu"
+        },
+        "dinner": {
+          "label": "Dinner",
+          "description": "Gourmet menu"
+        },
+        "allInclusive": {
+          "label": "All Inclusive",
+          "description": "All meals + drinks"
+        },
+        "halfBoard": {
+          "label": "Half board",
+          "description": "Breakfast + dinner"
+        },
+        "spaAccess": {
+          "label": "Spa Access",
+          "description": "Hammam + pool"
+        }
+      },
+      "roomsSelected": "room(s) selected",
+      "accommodation": "Accommodation",
+      "continueBooking": "Continue booking",
+      "bedding": {
+        "SINGLE": "single bed",
+        "QUEEN": "queen bed",
+        "KING": "king bed",
+        "BUNK": "bunk bed",
+        "SOFA": "sofa bed",
+        "TRUNDLE": "trundle bed",
+        "CRIB": "crib"
+      },
+      "recap": {
+        "title": "Booking Recap"
+      },
       "notifications": {
         "error": {
           "title": "Availability Error",
           "message": "An error occurred while fetching available units. Please try again later."
+        },
+        "invalidDateRange": {
+          "message": "The checkout date must be greater than the check-in date.",
+          "title": "Invalid Date Range"
+        },
+        "dateRequired": {
+          "message": "Please select a check-in and check-out date.",
+          "title": "Date Required"
+        },
+        "formInvalid": {
+          "message": "Please fill in all required fields correctly.",
+          "title": "Invalid Form"
         }
       }
     }
