@@ -18,6 +18,13 @@ export const routes: Routes = [
         data: {
           title: 'Create'
         }
+      },
+      {
+        path: 'booking',
+        loadComponent: () => import('./pages/booking/booking.component').then(m => m.BookingComponent),
+        data: {
+          title: 'Booking'
+        }
       }
     ]
   }

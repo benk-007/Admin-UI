@@ -1,0 +1,29 @@
+@use '../../../../../scss/variables' as *;
+
+.page-title {
+  font-size: 1.3rem;
+  font-weight: 500 !important;
+  color: $primary;
+  letter-spacing: 1px;
+}
+
+.editable-rate {
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: $light;
+  }
+
+  &.editing {
+    background-color: transparent;
+  }
+}
+
+.invalid-feedback {
+  display: block;
+  color: $danger !important;
+  font-size: 0.8rem;
+}

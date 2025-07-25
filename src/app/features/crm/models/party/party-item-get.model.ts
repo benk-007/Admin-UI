@@ -10,3 +10,4 @@ export interface PartyItemGetModel {
   segment: SegmentItemGetModel;
   audit: AuditGetModel;
 }
+

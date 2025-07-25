@@ -27,6 +27,7 @@ import {CrmApiService} from '../../../features/crm/services/crm-api.service';
 export class PartySelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   @Input() disable = false;
+  @Input() initialParty: PartyItemGetModel | null = null;
 
   @Output() updatedParty = new EventEmitter<PartyItemGetModel | null>();
 
@@ -47,6 +48,11 @@ export class PartySelectComponent implements OnInit, OnDestroy, ControlValueAcce
 
   ngOnInit(): void {
     this.subscribeToPartySearch();
+    // Auto-select party if provided
+    if (this.initialParty) {
+      this.selectedParty = this.initialParty;
+      this.writeValue(this.initialParty);
+    }
   }
 
   private subscribeToPartySearch() {

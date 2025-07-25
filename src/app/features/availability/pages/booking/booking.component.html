@@ -1,0 +1,231 @@
+<!-- Page Title -->
+<c-row class="mb-3">
+  <c-col>
+    <h4 class="page-title mb-0">Finaliser la réservation</h4>
+  </c-col>
+</c-row>
+
+<form [formGroup]="bookingForm">
+
+  <!-- Informations Client -->
+  <c-card class="mb-4">
+    <c-card-header>
+      <h6 class="section-title underline mb-0">Informations Client</h6>
+    </c-card-header>
+    <c-card-body>
+      <c-row>
+        <!-- Party Field - Only show if party was selected in previous page -->
+        @if (hasPartyFromPreviousPage) {
+          <c-col [md]="6" class="mb-3">
+            <label cLabel class="form-label" for="party">Party</label>
+            <app-party-select
+              formControlName="party"
+              id="party"
+              [initialParty]="selectedParty"
+              (updatedParty)="onPartySelected($event)">
+            </app-party-select>
+          </c-col>
+        }
+
+        <!-- Name Field -->
+        <c-col [md]="hasPartyFromPreviousPage ? 6 : 12" class="mb-3">
+          <label cLabel class="form-label required" for="guestName">Name</label>
+          <input
+            cFormControl
+            formControlName="guestName"
+            id="guestName"
+            type="text"
+            placeholder="Nom complet du client" />
+          @if (bookingForm.get('guestName')?.touched && bookingForm.get('guestName')?.invalid) {
+            <div class="invalid-feedback">
+              Le nom du client est requis
+            </div>
+          }
+        </c-col>
+      </c-row>
+
+      <c-row>
+        <!-- Email Field -->
+        <c-col [md]="6" class="mb-3">
+          <label cLabel class="form-label" for="email">Email</label>
+          <input
+            cFormControl
+            formControlName="email"
+            id="email"
+            type="email"
+            placeholder="email@example.com" />
+        </c-col>
+
+        <!-- Mobile Field -->
+        <c-col [md]="6" class="mb-3">
+          <label cLabel class="form-label" for="mobile">Mobile</label>
+          <input
+            cFormControl
+            formControlName="mobile"
+            id="mobile"
+            type="tel"
+            placeholder="+212 6XX XXX XXX" />
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </c-card>
+
+  <!-- Détails de la réservation -->
+  <c-card class="mb-4">
+    <c-card-header>
+      <h6 class="section-title underline mb-0">Détails de la réservation</h6>
+    </c-card-header>
+    <c-card-body>
+      @for (room of selectedRooms; track room.roomId + $index) {
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>Chambre:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            {{ room.roomName }}
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>Dates:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            {{ formatDate(room.checkinDate) }} → {{ formatDate(room.checkoutDate) }}
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>Durée:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            {{ room.nights }} nuits
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>Tarif:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            <span
+              contenteditable="true"
+              (blur)="onTariffEdit($index, $event)"
+              (keyup.enter)="onTariffEdit($index, $event)"
+              class="editable-tariff">
+              {{ room.nightlyRate }}
+            </span> MAD/nuit
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-3 pb-3 border-bottom">
+          <c-col [md]="2">
+            <strong>Total:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            <strong>{{ room.total }} MAD</strong>
+          </c-col>
+        </c-row>
+      }
+
+      <!-- Total Général -->
+      <c-row class="mt-4">
+        <c-col [md]="8">
+          <h5 class="mb-0"><strong>Total:</strong></h5>
+        </c-col>
+        <c-col [md]="4" class="text-end">
+          <h5 class="mb-0 text-primary"><strong>{{ getTotalAmount() }} MAD</strong></h5>
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </c-card>
+
+  <!-- Méthode de garantie -->
+  <c-card class="mb-4">
+    <c-card-header>
+      <h6 class="section-title underline mb-0">Méthode de garantie</h6>
+    </c-card-header>
+    <c-card-body>
+      @for (method of paymentMethods; track method.value) {
+        <c-row class="mb-3">
+          <c-col>
+            <c-form-check>
+              <input
+                cFormCheckInput
+                type="radio"
+                [id]="'payment_' + method.value"
+                [value]="method.value"
+                formControlName="paymentMethod" />
+              <label
+                cFormCheckLabel
+                [for]="'payment_' + method.value">
+                {{ method.label }}
+              </label>
+            </c-form-check>
+          </c-col>
+          <c-col [md]="6">
+            @if (bookingForm.get('paymentMethod')?.value === method.value) {
+              <input cFormControl formControlName="guaranteeAmount" type="number" placeholder="Montant" />
+            }
+          </c-col>
+        </c-row>
+      }
+    </c-card-body>
+  </c-card>
+
+  <!-- Notes spéciales -->
+  <c-card class="mb-4">
+    <c-card-header>
+      <h6 class="section-title underline mb-0">Notes spéciales</h6>
+    </c-card-header>
+    <c-card-body>
+      <c-row>
+        <c-col>
+          <textarea
+            cFormControl
+            formControlName="specialNotes"
+            rows="5"
+            placeholder="Demandes spéciales, allergies, préférences...">
+          </textarea>
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </c-card>
+
+  <!-- Boutons d'actions -->
+  <c-row class="mt-4">
+    <c-col class="d-flex justify-content-between">
+      <!-- Bouton Retour à gauche -->
+      <button
+        cButton
+        color="light"
+        variant="ghost"
+        type="button"
+        (click)="goBack()">
+        Retour
+      </button>
+
+      <!-- Boutons d'action à droite -->
+      <div class="d-flex gap-2">
+        <button
+          cButton
+          color="secondary"
+          variant="outline"
+          type="button"
+          (click)="saveAsQuote()">
+          Sauver comme devis
+        </button>
+
+        <button
+          cButton
+          color="primary"
+          type="button"
+          (click)="confirmReservation()">
+          Confirmer réservation
+        </button>
+      </div>
+    </c-col>
+  </c-row>
+
+</form>
