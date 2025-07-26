@@ -84,7 +84,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
       name: formValue.name,
       segments: Array.isArray(formValue.segments)
         ? formValue.segments.map((s: any) => ({
-          uuid: s.uuid ?? s.id,
+          id: s.id,
           name: s.name
         }))
         : [],

@@ -15,7 +15,7 @@ import {
   FormCheckLabelDirective,
   RowComponent
 } from '@coreui/angular';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 
 import { AvailabilityGetResource } from '../../models/availability/get/availability-get.model';
@@ -66,22 +66,21 @@ export class BookingComponent implements OnInit {
 
   // Payment methods for dropdown
   paymentMethods = [
-    { value: PaymentMethodEnum.CREDIT_CARD, label: 'Carte bancaire' },
-    { value: PaymentMethodEnum.CASH, label: 'Espèces' },
-    { value: PaymentMethodEnum.BANK_TRANSFER, label: 'Virement' }
+    { value: PaymentMethodEnum.CREDIT_CARD, key: 'booking.guaranteeMethod.creditCard' },
+    { value: PaymentMethodEnum.CASH, key: 'booking.guaranteeMethod.cash' },
+    { value: PaymentMethodEnum.BANK_TRANSFER, key: 'booking.guaranteeMethod.bankTransfer' }
   ];
 
   // State flags
   showGuaranteeAmount = false;
   selectedParty: PartyItemGetModel | null = null;
   hasPartyFromPreviousPage = false;
-  editingRateIndex: number | null = null;
-  tempRate: number = 0;
 
   constructor(
     private readonly fb: FormBuilder,
     private readonly router: Router,
-    private readonly toastrService: ToastrService
+    private readonly toastrService: ToastrService,
+    private readonly translateService: TranslateService
   ) {
     // Initialize form
     this.bookingForm = this.fb.group({
@@ -107,14 +106,24 @@ export class BookingComponent implements OnInit {
       // Check if party was selected in previous page
       if (this.bookedUnits.length > 0 && this.bookedUnits[0].searchParams.party) {
         this.hasPartyFromPreviousPage = true;
-        // Auto-select the party and trigger auto-fill
         const partyFromPrevious = this.bookedUnits[0].searchParams.party as unknown as PartyItemGetModel;
         this.bookingForm.patchValue({ party: partyFromPrevious });
         this.selectedParty = partyFromPrevious;
         this.onPartySelected(partyFromPrevious);
       }
+
+      // Restore all data from bookingForm
+      if (state.preservedBookingData) {
+        const preserved = state.preservedBookingData;
+        this.bookingForm.patchValue(preserved.formValue);
+        this.selectedParty = preserved.selectedParty;
+        this.showGuaranteeAmount = preserved.showGuaranteeAmount;
+
+        if (this.selectedParty) {
+          this.onPartySelected(this.selectedParty);
+        }
+      }
     } else {
-      // No booking data, redirect back
       this.router.navigate(['/bookings/reservations/create']);
       return;
     }
@@ -122,13 +131,12 @@ export class BookingComponent implements OnInit {
     // Listen to payment method changes
     this.bookingForm.get('paymentMethod')?.valueChanges.subscribe(method => {
       this.showGuaranteeAmount = !!method;
-
-      // Reset guarantee amount when method changes
       if (!method) {
         this.bookingForm.patchValue({ guaranteeAmount: '' });
       }
     });
   }
+
 
   // Process booked units into selected rooms format
   private processBookedUnits(): void {
@@ -190,22 +198,6 @@ export class BookingComponent implements OnInit {
     }
   }
 
-  // Handle rate editing (double-click)
-  enableRateEdit(index: number): void {
-    this.editingRateIndex = index;
-    this.tempRate = this.selectedRooms[index].nightlyRate;
-  }
-
-  // Save rate edit
-  saveRateEdit(index: number): void {
-    if (this.tempRate > 0) {
-      this.selectedRooms[index].nightlyRate = this.tempRate;
-      this.selectedRooms[index].total = this.tempRate * this.selectedRooms[index].nights;
-    }
-    this.editingRateIndex = null;
-    this.tempRate = 0;
-  }
-
   onTariffEdit(index: number, event: any): void {
     const newRate = parseFloat(event.target.textContent);
     if (newRate > 0) {
@@ -220,14 +212,16 @@ export class BookingComponent implements OnInit {
   }
 
   protected formatDate(dateString: string): string {
-    // Convertit "25-07-2025" en "25/07/2025"
     return dateString.replace(/-/g, '/');
   }
 
   // Handle form submission - Save as Quote
   saveAsQuote(): void {
     if (this.bookingForm.get('guestName')?.invalid) {
-      this.toastrService.warning('Veuillez renseigner le nom du client', 'Formulaire incomplet');
+      this.toastrService.warning(
+        this.translateService.instant('booking.notifications.incompleteForm.message'),
+        this.translateService.instant('booking.notifications.incompleteForm.title')
+      );
       return;
     }
 
@@ -235,13 +229,19 @@ export class BookingComponent implements OnInit {
     console.log('💾 Save as Quote:', bookingData);
 
     // TODO: Call API to save as quote
-    this.toastrService.success('Devis sauvegardé avec succès', 'Succès');
+    this.toastrService.success(
+      this.translateService.instant('booking.notifications.quoteSaved.message'),
+      this.translateService.instant('booking.notifications.quoteSaved.title')
+    );
   }
 
   // Handle form submission - Confirm Reservation
   confirmReservation(): void {
     if (this.bookingForm.get('guestName')?.invalid) {
-      this.toastrService.warning('Veuillez renseigner le nom du client', 'Formulaire incomplet');
+      this.toastrService.warning(
+        this.translateService.instant('booking.notifications.incompleteForm.message'),
+        this.translateService.instant('booking.notifications.incompleteForm.title')
+      );
       return;
     }
 
@@ -249,7 +249,10 @@ export class BookingComponent implements OnInit {
     console.log('✅ Confirm Reservation:', bookingData);
 
     // TODO: Call API to confirm reservation
-    this.toastrService.success('Réservation confirmée avec succès', 'Succès');
+    this.toastrService.success(
+      this.translateService.instant('booking.notifications.reservationConfirmed.message'),
+      this.translateService.instant('booking.notifications.reservationConfirmed.title')
+    );
   }
 
   // Create booking payload
@@ -270,6 +273,19 @@ export class BookingComponent implements OnInit {
 
   // Navigate back to availability
   goBack(): void {
-    this.router.navigate(['/bookings/reservations/create']);
+    this.router.navigate(['/bookings/reservations/create'], {
+      state: {
+        bookedUnits: this.bookedUnits,
+        preserveData: true,
+        // Passer les données du booking form
+        preservedBookingData: {
+          formValue: this.bookingForm.getRawValue(),
+          selectedParty: this.selectedParty,
+          showGuaranteeAmount: this.showGuaranteeAmount
+        },
+        // Récupérer et passer les données originales d'availability
+        preservedAvailabilityData: history.state?.preservedAvailabilityData
+      }
+    });
   }
 }

@@ -2187,6 +2187,64 @@
         }
       }
     }
+  },
+  "booking": {
+    "title": "Finalize Reservation",
+    "clientInformation": {
+      "title": "Client Information",
+      "party": "Party",
+      "name": "Name",
+      "email": "Email",
+      "mobile": "Mobile",
+      "namePlaceholder": "Client full name",
+      "emailPlaceholder": "email@example.com",
+      "mobilePlaceholder": "+212 6XX XXX XXX"
+    },
+    "reservationDetails": {
+      "title": "Reservation Details",
+      "room": "Room",
+      "dates": "Dates",
+      "duration": "Duration",
+      "rate": "Rate",
+      "total": "Total",
+      "nights": "nights",
+      "perNight": "MAD/night",
+      "grandTotal": "Total"
+    },
+    "guaranteeMethod": {
+      "title": "Guarantee Method",
+      "creditCard": "Credit Card",
+      "cash": "Cash",
+      "bankTransfer": "Bank Transfer",
+      "amount": "Amount",
+      "amountPlaceholder": "0"
+    },
+    "specialNotes": {
+      "title": "Special Notes",
+      "placeholder": "Special requests, allergies, preferences..."
+    },
+    "actions": {
+      "back": "Back",
+      "saveAsQuote": "Save as Quote",
+      "confirmReservation": "Confirm Reservation"
+    },
+    "validation": {
+      "nameRequired": "Client name is required"
+    },
+    "notifications": {
+      "incompleteForm": {
+        "title": "Incomplete Form",
+        "message": "Please enter the client name"
+      },
+      "quoteSaved": {
+        "title": "Success",
+        "message": "Quote saved successfully"
+      },
+      "reservationConfirmed": {
+        "title": "Success",
+        "message": "Reservation confirmed successfully"
+      }
+    }
   }
 }
 
