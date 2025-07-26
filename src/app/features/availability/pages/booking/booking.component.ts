@@ -34,6 +34,11 @@ interface BookedUnit {
   searchParams: AvailabilityPostResource;
 }
 
+const LOCAL_STORAGE_RECAP_KEY = 'availabilityRecap';
+const LOCAL_STORAGE_BOOKING_FORM_KEY = 'bookingFormState';
+const LOCAL_STORAGE_ROOM_RATES_KEY = 'bookingEditedRates';
+
+
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.component.html',
@@ -48,7 +53,6 @@ interface BookedUnit {
     FormsModule,
     FormLabelDirective,
     FormControlDirective,
-    FormSelectDirective,
     FormCheckComponent,
     FormCheckInputDirective,
     FormCheckLabelDirective,
@@ -100,8 +104,27 @@ export class BookingComponent implements OnInit {
     const state = navigation?.extras.state || history.state;
 
     if (state?.bookedUnits) {
+      const savedState = localStorage.getItem(LOCAL_STORAGE_BOOKING_FORM_KEY);
+      if (savedState) {
+        try {
+          const parsed = JSON.parse(savedState);
+          this.bookingForm.patchValue(parsed.formValue || {});
+          this.selectedParty = parsed.selectedParty || null;
+          this.showGuaranteeAmount = parsed.showGuaranteeAmount || false;
+
+          if (this.selectedParty) {
+            this.onPartySelected(this.selectedParty);
+          }
+        } catch (e) {
+          console.error('Failed to parse booking form from localStorage', e);
+          localStorage.removeItem(LOCAL_STORAGE_BOOKING_FORM_KEY);
+        }
+      }
+      this.bookingForm.valueChanges.subscribe(() => this.persistFormToStorage());
+
       this.bookedUnits = state.bookedUnits;
       this.processBookedUnits();
+      this.restoreEditedRates();
 
       // Check if party was selected in previous page
       if (this.bookedUnits.length > 0 && this.bookedUnits[0].searchParams.party) {
@@ -135,6 +158,45 @@ export class BookingComponent implements OnInit {
         this.bookingForm.patchValue({ guaranteeAmount: '' });
       }
     });
+  }
+
+  private restoreEditedRates(): void {
+    const raw = localStorage.getItem(LOCAL_STORAGE_ROOM_RATES_KEY);
+    if (!raw) return;
+
+    try {
+      const editedRates: { roomId: string; rate: number }[] = JSON.parse(raw);
+      for (let room of this.selectedRooms) {
+        const match = editedRates.find(r => r.roomId === room.roomId);
+        if (match) {
+          room.nightlyRate = match.rate;
+          room.total = match.rate * room.nights;
+        }
+      }
+    } catch (e) {
+      console.warn('Invalid edited rate data in localStorage');
+      localStorage.removeItem(LOCAL_STORAGE_ROOM_RATES_KEY);
+    }
+  }
+
+
+  private persistFormToStorage(): void {
+    const formValue = this.bookingForm.getRawValue();
+    const stateToSave = {
+      formValue,
+      selectedParty: this.selectedParty,
+      showGuaranteeAmount: this.showGuaranteeAmount
+    };
+    localStorage.setItem(LOCAL_STORAGE_BOOKING_FORM_KEY, JSON.stringify(stateToSave));
+  }
+
+  private persistEditedRates(): void {
+    const rates = this.selectedRooms.map(room => ({
+      roomId: room.roomId,
+      rate: room.nightlyRate
+    }));
+
+    localStorage.setItem(LOCAL_STORAGE_ROOM_RATES_KEY, JSON.stringify(rates));
   }
 
 
@@ -196,6 +258,7 @@ export class BookingComponent implements OnInit {
         mobile: ''
       });
     }
+    this.persistFormToStorage();
   }
 
   onTariffEdit(index: number, event: any): void {
@@ -203,6 +266,8 @@ export class BookingComponent implements OnInit {
     if (newRate > 0) {
       this.selectedRooms[index].nightlyRate = newRate;
       this.selectedRooms[index].total = newRate * this.selectedRooms[index].nights;
+
+      this.persistEditedRates();
     }
   }
 
@@ -233,6 +298,11 @@ export class BookingComponent implements OnInit {
       this.translateService.instant('booking.notifications.quoteSaved.message'),
       this.translateService.instant('booking.notifications.quoteSaved.title')
     );
+
+    localStorage.removeItem(LOCAL_STORAGE_RECAP_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_BOOKING_FORM_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_ROOM_RATES_KEY);
+
   }
 
   // Handle form submission - Confirm Reservation
@@ -253,6 +323,11 @@ export class BookingComponent implements OnInit {
       this.translateService.instant('booking.notifications.reservationConfirmed.message'),
       this.translateService.instant('booking.notifications.reservationConfirmed.title')
     );
+
+    localStorage.removeItem(LOCAL_STORAGE_RECAP_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_BOOKING_FORM_KEY);
+    localStorage.removeItem(LOCAL_STORAGE_ROOM_RATES_KEY);
+
   }
 
   // Create booking payload
@@ -269,23 +344,5 @@ export class BookingComponent implements OnInit {
       guaranteeAmount: formValue.guaranteeAmount ? parseFloat(formValue.guaranteeAmount) : undefined,
       specialNotes: formValue.specialNotes
     };
-  }
-
-  // Navigate back to availability
-  goBack(): void {
-    this.router.navigate(['/bookings/reservations/create'], {
-      state: {
-        bookedUnits: this.bookedUnits,
-        preserveData: true,
-        // Passer les données du booking form
-        preservedBookingData: {
-          formValue: this.bookingForm.getRawValue(),
-          selectedParty: this.selectedParty,
-          showGuaranteeAmount: this.showGuaranteeAmount
-        },
-        // Récupérer et passer les données originales d'availability
-        preservedAvailabilityData: history.state?.preservedAvailabilityData
-      }
-    });
   }
 }

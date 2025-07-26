@@ -50,7 +50,6 @@ import {Router} from '@angular/router';
     SpinnerComponent,
     PartySelectComponent,
     SegmentSelectComponent,
-    JsonPipe,
     DecimalPipe,
   ],
   standalone: true,
@@ -97,10 +96,6 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // Check for preserved data AVANT la création du form
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state || history.state;
-
     this.form = this.fb.group({
       party: [],
       segmentId: [],
@@ -109,37 +104,7 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
       childrenAges: this.fb.array([])
     });
 
-    // Restore all data if exist
-    if (state?.preserveData && state?.preservedAvailabilityData) {
-      const preserved = state.preservedAvailabilityData;
-
-      // Restore form
-      this.form.patchValue(preserved.formValue);
-
-      // Restaurer FormArrays for children
-      if (preserved.formValue.childrenAges?.length > 0) {
-        preserved.formValue.childrenAges.forEach((age: number) => {
-          this.childrenAges.push(this.fb.control(age, [Validators.required, Validators.min(0), Validators.max(17)]));
-        });
-      }
-
-      // Restore other data
-      this.dateRange = preserved.dateRange;
-      this.availableUnits = preserved.availableUnits || [];
-      this.isSearchPerformed = preserved.isSearchPerformed || false;
-      this.selectedQuantities = preserved.selectedQuantities || {};
-      this.popoverChildrenCount = preserved.popoverChildrenCount || 0;
-
-      // Restore supplements per unit
-      if (preserved.supplementsPerUnit) {
-        this.supplementsPerUnit = new Map(Object.entries(preserved.supplementsPerUnit));
-      }
-
-      // Restore bookedUnits
-      if (state.bookedUnits) {
-        this.bookedUnits = state.bookedUnits;
-      }
-    }
+    this.restoreRecapFromStorage();
   }
 
   toggleChildrenPopover(): void {
@@ -387,30 +352,39 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.bookedUnits.push({ unit, quantity, supplements, searchParams });
+    const entry = { unit, quantity, supplements, searchParams };
+    this.bookedUnits.push(entry);
+    this.saveRecapToStorage();
   }
+
+  private saveRecapToStorage(): void {
+    const data = JSON.stringify(this.bookedUnits);
+    localStorage.setItem('availabilityRecap', data);
+  }
+
 
   removeBookedUnit(index: number): void {
     this.bookedUnits.splice(index, 1);
+    this.saveRecapToStorage();
   }
 
-  continueBooking(): void {
-    console.log('📦 Booking Recap Payload:', this.bookedUnits);
-    this.router.navigate(['/bookings/reservations/booking'], {
-      state: {
-        bookedUnits: this.bookedUnits,
-        // Preserve all Data
-        preservedAvailabilityData: {
-          formValue: this.form.getRawValue(),
-          dateRange: this.dateRange,
-          availableUnits: this.availableUnits,
-          isSearchPerformed: this.isSearchPerformed,
-          selectedQuantities: this.selectedQuantities,
-          supplementsPerUnit: Object.fromEntries(this.supplementsPerUnit),
-          popoverChildrenCount: this.popoverChildrenCount
-        },
-        preservedBookingData: history.state?.preservedBookingData
+  private restoreRecapFromStorage(): void {
+    const raw = localStorage.getItem('availabilityRecap');
+    if (raw) {
+      try {
+        this.bookedUnits = JSON.parse(raw);
+      } catch (e) {
+        console.error('Invalid recap data in storage');
+        localStorage.removeItem('availabilityRecap');
       }
+    }
+  }
+
+
+  continueBooking(): void {
+    console.log('Booking Recap Payload:', this.bookedUnits);
+    this.router.navigate(['/bookings/reservations/booking'], {
+      state: { bookedUnits: this.bookedUnits }
     });
   }
 
