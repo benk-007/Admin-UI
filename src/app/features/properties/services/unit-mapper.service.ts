@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
-import {UnitDetailsPatchModel} from "../models/details/unit-details-patch.model";
-import {AmenityEnum} from "../models/details/amenity.enum";
-import {RoomPatchModel} from "../models/rooms-bedding/room-patch.model";
-import {RoomPostModel} from "../models/rooms-bedding/room-post.model";
+import {RoomPatchModel} from '../models/room-bedding/patch/room-patch.model';
+import {RoomPostModel} from '../models/room-bedding/post/room-post.model';
+import {AmenityEnum} from '../models/details/enums/amenity.enum';
+import {UnitDetailsPatchModel} from '../models/details/patch/unit-details-patch.model';
+
 
 @Injectable({
   providedIn: 'root'

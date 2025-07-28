@@ -19,6 +19,9 @@ import {UnitItemGetModel} from '../models/unit/get/unit-item-get.model';
 import {UnitPostModel} from '../models/unit/post/unit-post.model';
 import {UnitGetModel} from '../models/unit/get/unit-get.model';
 import {UnitGeneralPatchModel} from '../models/unit/patch/unit-general-patch.model';
+import {RoomGetModel} from '../models/room-bedding/get/room-get.model';
+import {RoomPostModel} from '../models/room-bedding/post/room-post.model';
+import {RoomPatchModel} from '../models/room-bedding/patch/room-patch.model';
 
 // import {MultiUnitPostModel} from "../models/multi-unit-post.model";
 
@@ -71,6 +74,22 @@ export class UnitApiService {
     return this.httpClient.get<UnitGetModel>(environment.apiBaseUrl.concat(environment.unitInfosById).replace(':unitId', unitId));
   }
 
+  getUnitRooms(unitId: string) {
+    return this.httpClient.get<PageModel<RoomGetModel>>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId));
+  }
+
+  createRoom(payload: RoomPostModel, unitId: string) {
+    return this.httpClient.post<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId), payload);
+  }
+
+  updateRoom(payload: RoomPatchModel, unitId: string, roomId: string) {
+    return this.httpClient.patch<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId), payload);
+  }
+
+  deleteRoom(unitId: string, roomId: string) {
+    return this.httpClient.delete<void>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId));
+  }
+
   /*
 
 
@@ -93,23 +112,6 @@ export class UnitApiService {
         environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId),
         payload
       );
-    }
-
-
-    getUnitRooms(unitId: string) {
-      return this.httpClient.get<PageModel<RoomGetModel>>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId));
-    }
-
-    createRoom(payload: RoomPostModel, unitId: string) {
-      return this.httpClient.post<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId), payload);
-    }
-
-    updateRoom(payload: RoomPatchModel, unitId: string, roomId: string) {
-      return this.httpClient.patch<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId), payload);
-    }
-
-    deleteRoom(unitId: string, roomId: string) {
-      return this.httpClient.delete<void>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId));
     }
 
   */
