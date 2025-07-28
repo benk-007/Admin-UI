@@ -1,0 +1,226 @@
+<c-col [md]="12">
+  <form cForm [formGroup]="roomForm" (submit)="submit()">
+    <c-card>
+      <c-card-body>
+        <!--Title & CTA buttons-->
+        <c-row class="mb-3">
+          <!--Title-->
+          <c-col [md]="6" class="d-flex align-items-center">
+            <h6 class="text-primary mb-0"
+                cCardTitle>{{ 'units.edit-unit.tabs.rooms-bedding.sections.room.title'|translate }}
+              {{ roomIndex + 1 }}</h6>
+          </c-col>
+
+          <!--Update & Delete buttons-->
+          <c-col [md]="6" class="d-flex justify-content-end align-items-start">
+            <button cButton size="sm" color="primary" type="submit" class="align-self-center"
+                    [ngClass]="{'me-2': (roomIndex != 0 || room.id)}" [disabled]="!roomForm.valid">
+              <svg [cIcon]="icons.cilSave" class="me-2"></svg>
+              {{ ('commons.form.buttons.'.concat((room && room.id) ? 'update' : 'create'))|translate }}
+            </button>
+            @if (roomIndex != 0 || room.id) {
+              <button cButton size="sm" variant="outline" color="danger" type="button" (click)="removeRoom(roomIndex)"
+                      class="align-self-center">
+                <svg [cIcon]="icons.cilTrash"></svg>
+              </button>
+            }
+          </c-col>
+        </c-row>
+
+        <!--Room section-->
+        <c-row>
+          <!--Form section-->
+          <c-col [md]="6">
+
+            <c-row>
+              <!--Name input-->
+              <c-col [md]="4" class="mb-3">
+                <label cLabel for="roomName" class="required">
+                  {{ 'units.edit-unit.tabs.rooms-bedding.sections.room.form.name-input.label'|translate }}</label>
+                <input id="roomName" type="text" cFormControl formControlName="name"/>
+                @if ((roomForm.get('name')?.touched || roomForm.get('name')?.dirty) && roomForm.controls['name'].hasError('required')) {
+                  <c-form-feedback [valid]="false">
+                    {{ 'commons.errors.required' | translate }}
+                  </c-form-feedback>
+                }
+              </c-col>
+
+              <!--Type input-->
+              <c-col [md]="4" class="mb-3">
+                <label cLabel for="roomType" class="required">
+                  {{ 'units.edit-unit.tabs.rooms-bedding.sections.room.form.type-input.label'|translate }}</label>
+                <select cSelect id="roomType" formControlName="type">
+                  <option *ngFor="let type of roomTypes"
+                          [value]="type">{{ ('units.edit-unit.tabs.rooms-bedding.sections.room.form.type-input.values.' + type)|translate }}
+                  </option>
+                </select>
+                @if ((roomForm.get('type')?.touched || roomForm.get('type')?.dirty) && roomForm.controls['type'].hasError('required')) {
+                  <c-form-feedback [valid]="false">
+                    {{ 'commons.errors.required' | translate }}
+                  </c-form-feedback>
+                }
+              </c-col>
+
+              <!--SubType input-->
+              @if (roomForm.get('type')?.value && roomForm.get('type')?.value != 'GENERAL') {
+                <c-col [md]="4" class="mb-3">
+                  <label cLabel for="roomSubType" class="required">
+                    {{ 'units.edit-unit.tabs.rooms-bedding.sections.room.form.sub-type-input.label'|translate }}</label>
+                  <select cSelect id="roomSubType" formControlName="subType">
+
+                    <option *ngFor="let type of getRoomSubTypes(roomForm.get('type')?.value)"
+                            [value]="type">{{ ('units.edit-unit.tabs.rooms-bedding.sections.room.form.sub-type-input.values.' + type)|translate }}
+                    </option>
+                  </select>
+                  @if ((roomForm.get('subType')?.touched || roomForm.get('subType')?.dirty) && roomForm.controls['subType'].hasError('required')) {
+                    <c-form-feedback [valid]="false">
+                      {{ 'commons.errors.required' | translate }}
+                    </c-form-feedback>
+                  }
+                </c-col>
+              }
+
+              <!--Attached Bathroom input-->
+              @if (roomForm.get('type')?.value && (roomForm.get('type')?.value == 'LIVING' || roomForm.get('type')?.value == 'BEDROOM')) {
+                <c-col [md]="4" class="mb-3">
+                  <label cLabel for="roomBathroom">
+                    {{ 'units.edit-unit.tabs.rooms-bedding.sections.room.form.bathroom-input.label'|translate|translate }}
+                  </label>
+                  <select cSelect id="roomBathroom" formControlName="bathroom" [compareWith]='compareBathroom'>
+                    <option [value]="null">
+                      {{ 'units.edit-unit.tabs.rooms-bedding.sections.room.form.bathroom-input.placeholder' | translate }}
+                    </option>
+                    <option *ngFor="let bathroom of bathrooms"
+                            [ngValue]="bathroom">{{ bathroom.name }}
+                    </option>
+                  </select>
+                </c-col>
+              }
+
+              <!--Floor Size input-->
+              <c-col [md]="4" class="mb-3">
+                <label cLabel for="floor-size">
+                  {{ 'commons.form.floor-size-input.label'|translate }}</label>
+                <c-input-group>
+                  <input id="floor-size" cFormControl formControlName="floorSize" type="number"/>
+                  <c-dropdown>
+                    <button cButton cDropdownToggle color="secondary" variant="outline">
+                      {{ roomForm.get('floorSizeUnit')?.value }}
+                    </button>
+                    <div cDropdownMenu>
+                      <button cDropdownItem *ngFor="let floorSizeUnit of floorSizeUnits"
+                              (click)="setFloorSizeUnit(floorSizeUnit)">
+                        {{ 'commons.form.floor-size-input.values.'.concat(floorSizeUnit)|translate }}
+                      </button>
+                    </div>
+                  </c-dropdown>
+                </c-input-group>
+                @if (((roomForm.get('floorSize')?.touched || roomForm.get('floorSize')?.dirty))) {
+                  @if (roomForm.controls['floorSize'].hasError('required')) {
+                    <c-form-feedback [valid]="false">{{ 'commons.errors.required'|translate }}</c-form-feedback>
+                  }
+                }
+              </c-col>
+
+              <!--Description input-->
+              <c-col [md]="12">
+                <label cLabel for="roomDescription">
+                  {{ 'units.edit-unit.tabs.rooms-bedding.sections.room.form.description-input.label'|translate }}
+                </label>
+                <textarea id="roomDescription" cFormControl rows="4" formControlName="description"
+                          [placeholder]="'units.edit-unit.tabs.rooms-bedding.sections.room.form.description-input.placeholder'|translate"></textarea>
+              </c-col>
+            </c-row>
+
+          </c-col>
+
+          <!--Image or Bedding section-->
+          <c-col [md]="6" class="bg-info bg-opacity-10 pt-3 pb-3" formArrayName="beds">
+            @if (roomForm.get('type')?.value == 'BEDROOM' || (roomForm.get('type')?.value == 'LIVING' && roomForm.get('subType')?.value == 'BED_IN_LIVING_ROOM')) {
+              <!--Bed type & quantity input-->
+              <c-row class="mb-3" *ngFor="let bed of roomBeds().controls; let bedIndex=index"
+                     [formGroupName]="bedIndex">
+
+                <!--Type input-->
+                <c-col [md]="5">
+                  <label for="bed-type" cLabel
+                         class="required">{{ 'units.edit-unit.tabs.rooms-bedding.sections.bed.form.type-input.label'|translate }}</label>
+                  <select cSelect id="bed-type" formControlName="type">
+                    <option *ngFor="let bedType of bedTypes"
+                            [value]="bedType">{{ 'units.edit-unit.tabs.rooms-bedding.sections.bed.form.type-input.values.'.concat(bedType)|translate }}
+                    </option>
+                  </select>
+                  @let typeControl = bed.get('type')!;
+                  @if ((typeControl.touched || typeControl.dirty) && typeControl.hasError('required')) {
+                    <c-form-feedback [valid]="false">
+                      {{ 'commons.errors.required' | translate }}
+                    </c-form-feedback>
+                  }
+                </c-col>
+
+                <!--multiplier-->
+                <c-col [md]="1">
+                  <label cLabel for="staticEmail2">
+                    &nbsp;
+                  </label>
+                  <input [plaintext]="true" cFormControl readonly type="text" value="X"
+                         style="text-align: center;"/>
+                </c-col>
+
+                <!--Quantity input-->
+                <c-col [md]="4">
+                  <label for="bed-quantity" cLabel
+                         class="required">{{ 'units.edit-unit.tabs.rooms-bedding.sections.bed.form.quantity-input.label'|translate }}</label>
+                  <input type="number" cFormControl formControlName="quantity" name="bed-quantity"/>
+                  @let quantityControl = bed.get('quantity')!;
+                  @if ((quantityControl.touched || quantityControl.dirty) && quantityControl.hasError('required')) {
+                    <c-form-feedback [valid]="false">
+                      {{ 'commons.errors.required' | translate }}
+                    </c-form-feedback>
+                  }
+                </c-col>
+
+                <!--Remove button-->
+                <c-col [md]="2" class="delete-col">
+                  <label cLabel for="staticEmail2" class=" d-block">
+                    &nbsp;
+                  </label>
+                  <button cButton color="danger" variant="outline" type="button"
+                          (click)="removeBed(bedIndex)">
+                    <svg [cIcon]="icons.cilX" class="me-1"></svg>
+                    {{ 'commons.form.buttons.delete'|translate }}
+                  </button>
+                </c-col>
+              </c-row>
+
+              <!--Add bed button-->
+              <c-row>
+                <c-col [md]="12">
+                  <button cButton size="sm" type="button" (click)="addBed()">
+                    <svg [cIcon]="icons.cilPlus" size="sm" class="me-1"></svg>
+                    {{ 'units.edit-unit.tabs.rooms-bedding.sections.bed.form.add-btn'|translate }}
+                  </button>
+                </c-col>
+              </c-row>
+            } @else {
+              <!--Messages-->
+              @if (roomForm.get('type')?.value == 'GENERAL') {
+                <app-empty-data imageSrc="assets/images/animations/general-room.gif"
+                                [message]="'units.edit-unit.tabs.rooms-bedding.sections.bed.messages.general-room'|translate"></app-empty-data>
+              } @else if (roomForm.get('type')?.value == 'KITCHEN') {
+                <app-empty-data imageSrc="assets/images/animations/kitchen.gif"
+                                [message]="'units.edit-unit.tabs.rooms-bedding.sections.bed.messages.kitchen-room'|translate"></app-empty-data>
+              } @else if (roomForm.get('type')?.value == 'LIVING' && (roomForm.get('subType')?.value == null || roomForm.get('subType')?.value == 'LIVING_ROOM')) {
+                <app-empty-data imageSrc="assets/images/animations/living-room.gif"
+                                [message]="'units.edit-unit.tabs.rooms-bedding.sections.bed.messages.living-room'|translate"></app-empty-data>
+              } @else if (roomForm.get('type')?.value == 'BATHROOM') {
+                <app-empty-data imageSrc="assets/images/animations/bathroom.gif"
+                                [message]="'units.edit-unit.tabs.rooms-bedding.sections.bed.messages.bathroom'|translate"></app-empty-data>
+              }
+            }
+          </c-col>
+        </c-row>
+      </c-card-body>
+    </c-card>
+  </form>
+</c-col>

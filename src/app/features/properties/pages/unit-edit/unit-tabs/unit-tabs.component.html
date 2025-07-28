@@ -14,9 +14,8 @@
        routerLinkActive="active"><i
       class="bi bi-house me-1"></i> {{ 'units.edit-unit.tabs.detail-information.title'|translate }}</a>
   </c-nav-item>
-  }
   <c-nav-item>
-    <a cNavLink class=" active" routerLink="detail"
+    <a cNavLink class=" active" routerLink="bedding-rooms"
        routerLinkActive="active"><i
       class="bi bi-lamp me-1"></i> {{ 'units.edit-unit.tabs.rooms-bedding.title'|translate }}</a>
   </c-nav-item>
@@ -25,7 +24,7 @@
       <i class="bi bi-layers me-1"></i> {{ 'units.edit-unit.tabs.sub-units.title'|translate }}
     </a>
   </c-nav-item>
-
+  }
   <c-dropdown variant="nav-item">
     <!--TODO: handle active styling based on route-->
     <a [routerLink]="" routerLinkActive="active" cDropdownToggle cNavLink><i

@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {UnitDetailsPatchModel} from '../models/details/patch/unit-details-patch.model';
 import {AmenityEnum} from '../models/details/enums/amenity.enum';
+import {RoomPatchModel} from '../models/room-bedding/patch/room-patch.model';
+import {RoomPostModel} from '../models/room-bedding/post/room-post.model';
 
 
 @Injectable({
@@ -66,7 +68,7 @@ export class UnitMapperService {
 
   }
 
-  /*formToRoomPatchModel(value: any): RoomPatchModel {
+  formToRoomPatchModel(value: any): RoomPatchModel {
     let bathroomId;
     if (value.bathroom) {
       if (value.bathroom == 'null') {
@@ -112,5 +114,5 @@ export class UnitMapperService {
       beds: value.beds
     }
     return payload;
-  }*/
+  }
 }

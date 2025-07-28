@@ -1,0 +1,15 @@
+.delete-col {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+
+  button {
+    width: 100%;
+    height:80%;
+    font-size: 0.8rem;
+  }
+  label {
+    height: 10px;
+  }
+}

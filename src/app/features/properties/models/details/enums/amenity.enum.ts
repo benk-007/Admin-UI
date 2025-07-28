@@ -1,4 +1,4 @@
-export enum AmenityEnum {
+export enum AmenityEnum{
   ALL_DAY_CHECKIN = 'ALL_DAY_CHECKIN',
   AIR_CONDITIONING = 'AIR_CONDITIONING',
   BATHTUB = 'BATHTUB',

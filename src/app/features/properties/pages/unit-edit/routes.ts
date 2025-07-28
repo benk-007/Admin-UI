@@ -1,6 +1,6 @@
 import {Routes} from "@angular/router";
 import {UnitGeneralTabComponent} from './unit-general-tab/unit-general-tab.component';
-
+import {UnitRoomBeddingTabComponent} from './unit-room-bedding-tab/unit-room-bedding-tab.component';
 export const routes: Routes = [
   {
     path: '',
@@ -26,6 +26,13 @@ export const routes: Routes = [
         loadComponent: () => import('./unit-detail-tab/unit-detail-tab.component').then(m => m.UnitDetailTabComponent),
         data: {
           title: 'Detail Information'
+        }
+      },
+      {
+        path: 'bedding-rooms',
+        loadComponent: () => import('./unit-room-bedding-tab/unit-room-bedding-tab.component').then(m => UnitRoomBeddingTabComponent),
+        data: {
+          title: 'List'
         }
       },
       {

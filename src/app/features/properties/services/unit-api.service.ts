@@ -21,6 +21,9 @@ import {UnitGeneralPatchModel} from '../models/unit/patch/unit-general-patch.mod
 import {UnitDetailsGetModel} from '../models/details/get/unit-details-get.model';
 import {UnitDetailsPatchModel} from '../models/details/patch/unit-details-patch.model';
 import {PageFilterModel} from '../../../shared/models/page-filter.model';
+import {RoomGetModel} from '../models/room-bedding/get/room-get.model';
+import {RoomPostModel} from '../models/room-bedding/post/room-post.model';
+import {RoomPatchModel} from '../models/room-bedding/patch/room-patch.model';
 
 // import {MultiUnitPostModel} from "../models/multi-unit-post.model";
 
@@ -73,32 +76,13 @@ export class UnitApiService {
     return this.httpClient.get<UnitGetModel>(environment.apiBaseUrl.concat(environment.unitInfosById).replace(':unitId', unitId));
   }
 
-
-
-
-    getUnitDetailsById(unitId: string) {
-      return this.httpClient.get<UnitDetailsGetModel>(environment.apiBaseUrl.concat(environment.unitDetailsById).replace(':unitId', unitId))
-    }
-
-    updateUnitDetailsById(unitId: string, payload: UnitDetailsPatchModel) {
-      return this.httpClient.patch<UnitDetailsGetModel>(environment.apiBaseUrl.concat(environment.unitDetailsById).replace(':unitId', unitId), payload);
-    }
-
-  /*
-
-  getUnitInstructionsById(unitId: string) {
-    return this.httpClient.get<UnitInstructionsGetModel>(
-      environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId)
-    );
+  getUnitDetailsById(unitId: string) {
+    return this.httpClient.get<UnitDetailsGetModel>(environment.apiBaseUrl.concat(environment.unitDetailsById).replace(':unitId', unitId))
   }
 
-  updateUnitInstructionsById(unitId: string, payload: UnitInstructionsPatchModel) {
-    return this.httpClient.patch<UnitInstructionsGetModel>(
-      environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId),
-      payload
-    );
+  updateUnitDetailsById(unitId: string, payload: UnitDetailsPatchModel) {
+    return this.httpClient.patch<UnitDetailsGetModel>(environment.apiBaseUrl.concat(environment.unitDetailsById).replace(':unitId', unitId), payload);
   }
-
 
   getUnitRooms(unitId: string) {
     return this.httpClient.get<PageModel<RoomGetModel>>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId));
@@ -116,7 +100,22 @@ export class UnitApiService {
     return this.httpClient.delete<void>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId));
   }
 
-*/
+  /*
+
+  getUnitInstructionsById(unitId: string) {
+    return this.httpClient.get<UnitInstructionsGetModel>(
+      environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId)
+    );
+  }
+
+    updateUnitInstructionsById(unitId: string, payload: UnitInstructionsPatchModel) {
+      return this.httpClient.patch<UnitInstructionsGetModel>(
+        environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId),
+        payload
+      );
+    }
+
+  */
 
   getSubUnits(multiUnitId: string, pageFilter?: PageFilterModel) {
     let params = new HttpParams();

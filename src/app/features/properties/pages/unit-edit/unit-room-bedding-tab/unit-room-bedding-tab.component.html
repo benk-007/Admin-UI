@@ -1,1 +1,15 @@
-<p>unit-room-bedding-tab works!</p>
+<c-row class="mt-3">
+  <c-col [md]="12" class="d-flex justify-content-end">
+    <button cButton color="secondary" size="sm" variant="outline" class="me-2" (click)="addRoom()">
+      <svg [cIcon]="icons.cilPlus" size="sm" class="me-1"></svg>
+      {{ 'units.edit-unit.tabs.rooms-bedding.sections.room.form.add-btn'|translate }}
+    </button>
+  </c-col>
+</c-row>
+
+<c-row class="mt-3">
+  <ng-container *ngFor="let room of rooms;  let roomIndex = index">
+    <app-room [roomIndex]="roomIndex" [room]="room" [unitId]="unitId" [bathroomOptions]="bathrooms"
+              (deletedEvent)="handleRoomDeletion($event)" (createdEvent)="handleRoomCu($event)"></app-room>
+  </ng-container>
+</c-row>
