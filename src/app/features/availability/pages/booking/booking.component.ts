@@ -130,9 +130,11 @@ export class BookingComponent implements OnInit {
       if (this.bookedUnits.length > 0 && this.bookedUnits[0].searchParams.party) {
         this.hasPartyFromPreviousPage = true;
         const partyFromPrevious = this.bookedUnits[0].searchParams.party as unknown as PartyItemGetModel;
-        this.bookingForm.patchValue({ party: partyFromPrevious });
-        this.selectedParty = partyFromPrevious;
-        this.onPartySelected(partyFromPrevious);
+        if (!savedState) {
+          this.bookingForm.patchValue({ party: partyFromPrevious });
+          this.selectedParty = partyFromPrevious;
+          this.onPartySelected(partyFromPrevious);
+        }
       }
 
       // Restore all data from bookingForm
@@ -158,6 +160,11 @@ export class BookingComponent implements OnInit {
         this.bookingForm.patchValue({ guaranteeAmount: '' });
       }
     });
+  }
+
+  onContactFieldChange(field: 'email' | 'mobile'): void {
+    this.bookingForm.get(field)?.enable();
+    this.persistFormToStorage();
   }
 
   private restoreEditedRates(): void {
@@ -237,26 +244,24 @@ export class BookingComponent implements OnInit {
 
     if (party?.contact) {
       // Auto-fill contact fields and make them readonly
-      this.bookingForm.patchValue({
-        email: party.contact.email || '',
-        mobile: party.contact.mobile || ''
-      });
+      const currentEmail = this.bookingForm.get('email')?.value;
+      const currentMobile = this.bookingForm.get('mobile')?.value;
 
-      // Disable fields if they have values
-      if (party.contact.email) {
+      // fill email only if empty
+      if (!currentEmail && party.contact.email) {
+        this.bookingForm.patchValue({ email: party.contact.email });
         this.bookingForm.get('email')?.disable();
       }
-      if (party.contact.mobile) {
+
+      // fill mobile only if empty
+      if (!currentMobile && party.contact.mobile) {
+        this.bookingForm.patchValue({ mobile: party.contact.mobile });
         this.bookingForm.get('mobile')?.disable();
       }
     } else {
-      // Re-enable fields if no party or no contact
+      // Re-enable fields if no party
       this.bookingForm.get('email')?.enable();
       this.bookingForm.get('mobile')?.enable();
-      this.bookingForm.patchValue({
-        email: '',
-        mobile: ''
-      });
     }
     this.persistFormToStorage();
   }

@@ -53,7 +53,8 @@
             formControlName="email"
             id="email"
             type="email"
-            placeholder="{{'booking.clientInformation.emailPlaceholder' | translate}}"  />
+            placeholder="{{'booking.clientInformation.emailPlaceholder' | translate}}"
+            (input)="onContactFieldChange('email')"/>
         </c-col>
 
         <!-- Mobile Field -->
@@ -64,7 +65,8 @@
             formControlName="mobile"
             id="mobile"
             type="tel"
-            placeholder="{{'booking.clientInformation.mobilePlaceholder' | translate}}" />
+            placeholder="{{'booking.clientInformation.mobilePlaceholder' | translate}}"
+            (input)="onContactFieldChange('mobile')" />
         </c-col>
       </c-row>
     </c-card-body>
