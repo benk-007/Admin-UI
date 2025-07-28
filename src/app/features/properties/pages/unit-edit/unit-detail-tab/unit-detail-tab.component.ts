@@ -196,7 +196,6 @@ export class UnitDetailTabComponent implements OnInit, OnDestroy {
         next: (data) => {
           console.log('Unit details retrieved successfully:', data);
           this.handleUnitDetailsSuccessResponse(data);
-          this.applyFormConstraints();
         },
         error: (err) => {
           console.error('Error retrieving unit details:', err);
@@ -231,21 +230,6 @@ export class UnitDetailTabComponent implements OnInit, OnDestroy {
           control.setValue(true);
         }
       });
-    }
-  }
-
-  /**
-   * Apply form constraints based on unit type and nature
-   * Disables certain fields for multi-units and sub-units
-   */
-  private applyFormConstraints(): void {
-    if (this.unit.nature === 'MULTI_UNIT') {
-      // Disable floor size fields for multi-units
-      this.unitDetailsForm.get('floorSize')?.disable();
-      this.unitDetailsForm.get('floorSizeUnit')?.disable();
-    } else if (this.unit.parent) {
-      // Disable type field for sub-units
-      this.unitDetailsForm.get('type')?.disable();
     }
   }
 
