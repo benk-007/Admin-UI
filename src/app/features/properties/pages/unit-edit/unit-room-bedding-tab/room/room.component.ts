@@ -117,8 +117,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       name: [null, [Validators.required]],
       type: [null, [Validators.required]],
       subType: [null, [Validators.required]],
-      floorSize: [null, [Validators.required]],
-      floorSizeUnit: [FloorSizeUnitEnum.SQM, [Validators.required]],
+      floorSize: [null],
+      floorSizeUnit: [FloorSizeUnitEnum.SQM],
       bathroom: [null],
       description: [null],
       beds: this.fb.array([])
