@@ -14,11 +14,13 @@ import {UnitDetailsPatchModel} from "../models/details/unit-details-patch.model"
 import {RoomGetModel} from "../models/rooms-bedding/room-get.model";
 import {RoomPostModel} from "../models/rooms-bedding/room-post.model";
 import {RoomPatchModel} from "../models/rooms-bedding/room-patch.model";*/
-import {PageFilterModel} from 'src/app/shared/models/page-filter.model';
 import {UnitItemGetModel} from '../models/unit/get/unit-item-get.model';
 import {UnitPostModel} from '../models/unit/post/unit-post.model';
 import {UnitGetModel} from '../models/unit/get/unit-get.model';
 import {UnitGeneralPatchModel} from '../models/unit/patch/unit-general-patch.model';
+import {UnitDetailsGetModel} from '../models/details/get/unit-details-get.model';
+import {UnitDetailsPatchModel} from '../models/details/patch/unit-details-patch.model';
+import {PageFilterModel} from '../../../shared/models/page-filter.model';
 
 // import {MultiUnitPostModel} from "../models/multi-unit-post.model";
 
@@ -71,7 +73,7 @@ export class UnitApiService {
     return this.httpClient.get<UnitGetModel>(environment.apiBaseUrl.concat(environment.unitInfosById).replace(':unitId', unitId));
   }
 
-  /*
+
 
 
     getUnitDetailsById(unitId: string) {
@@ -82,37 +84,39 @@ export class UnitApiService {
       return this.httpClient.patch<UnitDetailsGetModel>(environment.apiBaseUrl.concat(environment.unitDetailsById).replace(':unitId', unitId), payload);
     }
 
-    getUnitInstructionsById(unitId: string) {
-      return this.httpClient.get<UnitInstructionsGetModel>(
-        environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId)
-      );
-    }
+  /*
 
-    updateUnitInstructionsById(unitId: string, payload: UnitInstructionsPatchModel) {
-      return this.httpClient.patch<UnitInstructionsGetModel>(
-        environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId),
-        payload
-      );
-    }
+  getUnitInstructionsById(unitId: string) {
+    return this.httpClient.get<UnitInstructionsGetModel>(
+      environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId)
+    );
+  }
+
+  updateUnitInstructionsById(unitId: string, payload: UnitInstructionsPatchModel) {
+    return this.httpClient.patch<UnitInstructionsGetModel>(
+      environment.apiBaseUrl.concat(environment.unitInstructionsById).replace(':unitId', unitId),
+      payload
+    );
+  }
 
 
-    getUnitRooms(unitId: string) {
-      return this.httpClient.get<PageModel<RoomGetModel>>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId));
-    }
+  getUnitRooms(unitId: string) {
+    return this.httpClient.get<PageModel<RoomGetModel>>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId));
+  }
 
-    createRoom(payload: RoomPostModel, unitId: string) {
-      return this.httpClient.post<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId), payload);
-    }
+  createRoom(payload: RoomPostModel, unitId: string) {
+    return this.httpClient.post<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomsById).replace(':unitId', unitId), payload);
+  }
 
-    updateRoom(payload: RoomPatchModel, unitId: string, roomId: string) {
-      return this.httpClient.patch<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId), payload);
-    }
+  updateRoom(payload: RoomPatchModel, unitId: string, roomId: string) {
+    return this.httpClient.patch<RoomGetModel>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId), payload);
+  }
 
-    deleteRoom(unitId: string, roomId: string) {
-      return this.httpClient.delete<void>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId));
-    }
+  deleteRoom(unitId: string, roomId: string) {
+    return this.httpClient.delete<void>(environment.apiBaseUrl.concat(environment.unitRoomById).replace(':unitId', unitId).replace(':roomId', roomId));
+  }
 
-  */
+*/
 
   getSubUnits(multiUnitId: string, pageFilter?: PageFilterModel) {
     let params = new HttpParams();
