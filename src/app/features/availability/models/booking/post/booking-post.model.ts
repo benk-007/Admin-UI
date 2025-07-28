@@ -6,8 +6,9 @@ export interface BookingPostModel {
   guestName: string;
   email?: string;
   mobile?: string;
-  rooms: SelectedRoomModel[];
+  units: SelectedRoomModel[];
   paymentMethod?: PaymentMethodEnum;
   guaranteeAmount?: number;
   specialNotes?: string;
+  totalAmount?: number;
 }

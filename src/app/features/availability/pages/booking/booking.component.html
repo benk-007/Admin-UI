@@ -78,13 +78,13 @@
       <h6 class="section-title underline mb-0">{{ 'booking.reservationDetails.title' | translate }}</h6>
     </c-card-header>
     <c-card-body>
-      @for (room of selectedRooms; track room.roomId + $index) {
+      @for (room of selectedRooms; track room.unitId + $index) {
         <c-row class="mb-2">
           <c-col [md]="2">
             <strong>{{ 'booking.reservationDetails.room' | translate }}:</strong>
           </c-col>
           <c-col [md]="10" class="text-end">
-            {{ room.roomName }}
+            {{ room.unitName }}
           </c-col>
         </c-row>
 

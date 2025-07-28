@@ -172,9 +172,9 @@ export class BookingComponent implements OnInit {
     if (!raw) return;
 
     try {
-      const editedRates: { roomId: string; rate: number }[] = JSON.parse(raw);
+      const editedRates: { unitId: string; rate: number }[] = JSON.parse(raw);
       for (let room of this.selectedRooms) {
-        const match = editedRates.find(r => r.roomId === room.roomId);
+        const match = editedRates.find(r => r.unitId === room.unitId);
         if (match) {
           room.nightlyRate = match.rate;
           room.total = match.rate * room.nights;
@@ -199,7 +199,7 @@ export class BookingComponent implements OnInit {
 
   private persistEditedRates(): void {
     const rates = this.selectedRooms.map(room => ({
-      roomId: room.roomId,
+      roomId: room.unitId,
       rate: room.nightlyRate
     }));
 
@@ -223,14 +223,16 @@ export class BookingComponent implements OnInit {
       // Create room entry for each quantity
       for (let i = 0; i < bookedUnit.quantity; i++) {
         const selectedRoom: SelectedRoomModel = {
-          roomId: unit.id,
-          roomName: unit.name,
+          unitId: unit.id,
+          unitName: unit.name,
           checkinDate: searchParams.checkinDate,
           checkoutDate: searchParams.checkoutDate,
           nights: nights,
           nightlyRate: unit.price.nightlyRate,
           total: unit.price.totalAmount,
-          quantity: 1
+          quantity: 1,
+          adults: searchParams.guests.adults,
+          children: searchParams.guests.children.reduce((sum, child) => sum + child.quantity, 0)
         };
 
         this.selectedRooms.push(selectedRoom);
@@ -344,10 +346,11 @@ export class BookingComponent implements OnInit {
       guestName: formValue.guestName,
       email: formValue.email,
       mobile: formValue.mobile,
-      rooms: this.selectedRooms,
+      units: this.selectedRooms,
       paymentMethod: formValue.paymentMethod,
       guaranteeAmount: formValue.guaranteeAmount ? parseFloat(formValue.guaranteeAmount) : undefined,
-      specialNotes: formValue.specialNotes
+      specialNotes: formValue.specialNotes,
+      totalAmount: this.getTotalAmount()
     };
   }
 }
