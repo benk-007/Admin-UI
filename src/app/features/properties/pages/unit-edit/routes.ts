@@ -22,6 +22,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'details',
+        loadComponent: () => import('./unit-detail-tab/unit-detail-tab.component').then(m => m.UnitDetailTabComponent),
+        data: {
+          title: 'Detail Information'
+        }
+      },
+      {
         path: 'rates',
         loadChildren: () => import('./unit-rates-tab/routes').then((m) => m.routes),
         data: {

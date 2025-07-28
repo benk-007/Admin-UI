@@ -8,11 +8,13 @@
        routerLinkActive="active"><i
       class="bi bi-info-circle me-1"></i> {{ 'units.edit-unit.tabs.general-information.title'|translate }}</a>
   </c-nav-item>
+  @if (!unit?.parent) {
   <c-nav-item>
-    <a cNavLink class=" active" routerLink="detail"
+    <a cNavLink class=" active" routerLink="details"
        routerLinkActive="active"><i
       class="bi bi-house me-1"></i> {{ 'units.edit-unit.tabs.detail-information.title'|translate }}</a>
   </c-nav-item>
+  }
   <c-nav-item>
     <a cNavLink class=" active" routerLink="detail"
        routerLinkActive="active"><i
