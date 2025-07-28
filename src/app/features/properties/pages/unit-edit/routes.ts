@@ -22,7 +22,7 @@ export const routes: Routes = [
         }
       },
       {
-        path: 'detail',
+        path: 'details',
         loadComponent: () => import('./unit-detail-tab/unit-detail-tab.component').then(m => m.UnitDetailTabComponent),
         data: {
           title: 'Detail Information'
