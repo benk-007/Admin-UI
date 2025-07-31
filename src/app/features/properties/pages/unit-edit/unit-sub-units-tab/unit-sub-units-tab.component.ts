@@ -91,6 +91,25 @@ export class UnitSubUnitsTabComponent extends ListContentComponent implements On
   }
 
   /**
+   * Get initials from unit name for avatar display
+   * @param name - Unit name
+   * @returns Initials string
+   */
+  override getNameInitials(name: string): string {
+    if (!name) return 'N/A';
+
+    const words = name.trim().split(' ').filter(word => word.length > 0);
+
+    if (words.length === 1) {
+      return words[0].slice(0, 2).toUpperCase();
+    } else if (words.length >= 2) {
+      return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+    }
+
+    return 'N/A';
+  }
+
+  /**
    * Retrieve sub-units list from API
    * Handles pagination, sorting, and search functionality
    * @param params - Query parameters for API call
