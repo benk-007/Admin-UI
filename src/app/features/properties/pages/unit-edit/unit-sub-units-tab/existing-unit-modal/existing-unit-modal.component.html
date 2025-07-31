@@ -1,0 +1,36 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ 'units.create-multi-unit.form.existing-units.label'|translate }}</h5>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="assignForm" (ngSubmit)="onSubmit()" cForm>
+
+    <c-row>
+      <c-col [md]="12" class="mb-3">
+        <label cLabel class="required">{{ 'units.unit-list.table.header.name'|translate }}</label>
+        <app-unit-select
+          formControlName="selectedUnits"
+          [allowMultiUnit]="false">
+        </app-unit-select>
+        @if (assignForm.get('selectedUnits')?.hasError('required') && assignForm.get('selectedUnits')?.touched) {
+          <c-form-feedback [valid]="false">
+            {{ 'commons.errors.required'|translate }}
+          </c-form-feedback>
+        }
+      </c-col>
+    </c-row>
+
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSubmitting">
+    {{ 'commons.form.buttons.cancel'|translate }}
+  </button>
+  <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="assignForm.invalid || isSubmitting">
+    @if (isSubmitting) {
+      <span class="spinner-border spinner-border-sm me-2"></span>
+    }
+    {{ isSubmitting ? ('commons.snippets.loading'|translate) + '...' : ('commons.form.buttons.create'|translate) }}
+  </button>
+</div>

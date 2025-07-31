@@ -19,11 +19,14 @@
        routerLinkActive="active"><i
       class="bi bi-lamp me-1"></i> {{ 'units.edit-unit.tabs.rooms-bedding.title'|translate }}</a>
   </c-nav-item>
-  <c-nav-item>
-    <a cNavLink class=" active" routerLink="detail" routerLinkActive="active">
-      <i class="bi bi-layers me-1"></i> {{ 'units.edit-unit.tabs.sub-units.title'|translate }}
-    </a>
-  </c-nav-item>
+  }
+  @if (unit?.nature === 'MULTI_UNIT') {
+    <c-nav-item>
+      <a cNavLink routerLink="sub-units" routerLinkActive="active">
+        <i class="bi bi-layers me-1"></i>
+        {{ 'units.edit-unit.tabs.sub-units.title'|translate }}
+      </a>
+    </c-nav-item>
   }
   <c-dropdown variant="nav-item">
     <!--TODO: handle active styling based on route-->
