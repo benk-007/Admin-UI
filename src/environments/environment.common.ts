@@ -40,6 +40,7 @@ export const commonProperties = {
   booking: Booking_SERVICE + 'bookings',
   bookingByid: Booking_SERVICE + 'bookings/:bookingId',
   bookingItems: Booking_SERVICE + 'bookings/:parentId/items',
+  bookingDrafts: Booking_SERVICE + 'bookings/drafts',
 
 
   /*===========PRICING Service===========*/

@@ -25,6 +25,8 @@ import {BookingItemGetModel} from '../../models/booking/get/booking-item-get.mod
 import {BookingPatchModel} from '../../models/booking/patch/booking-patch.model';
 import {SupplementItem} from '../../models/supplement/commons/supplement-item.model';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
+import {PageFilterModel} from '../../../../shared/models/page-filter.model';
+import {CrmApiService} from '../../../crm/services/crm-api.service';
 
 @Component({
   selector: 'app-booking',
@@ -82,6 +84,7 @@ export class BookingComponent implements OnInit {
     private translate: TranslateService,
     private modalService: BsModalService,
     private readonly translateService: TranslateService,
+    private readonly crmApiService: CrmApiService
   ) {
     effect(() => {
       const patch = this.patchPayload();
@@ -137,22 +140,9 @@ export class BookingComponent implements OnInit {
         });
 
         this.selectedParty = res.party;
-
         this.bookingForm.get('party')?.disable();
-        if (res.party?.contact?.email) {
-          const emailControl = this.bookingForm.get('email');
-          emailControl?.setValue(res.party.contact.email);
-          emailControl?.disable();
-        }
-
-        if (res.party?.contact?.mobile) {
-          const mobileControl = this.bookingForm.get('mobile');
-          mobileControl?.setValue(res.party.contact.mobile);
-          mobileControl?.disable();
-        }
 
         this.selectedItems = res.items;
-
         this.setupPatchTriggers();
       },
       error: () => {
@@ -222,7 +212,12 @@ export class BookingComponent implements OnInit {
 
     // Now we call the patch with the itemId in the URL
     this.bookingService.patchBooking(itemId, patch).subscribe({
-      next: () => {
+      next: (res) => {
+        const updatedItem = res.items?.find(i => i.id === itemId);
+        if (updatedItem) {
+          Object.assign(item, updatedItem);
+        }
+
         this.toastrService.success(
           this.translate.instant('booking.notifications.patchSuccess.message'),
           this.translate.instant('booking.notifications.patchSuccess.title')
@@ -282,7 +277,6 @@ export class BookingComponent implements OnInit {
     ];
   }
 
-
   openSupplementsModal(item: BookingItemGetModel): void {
     this.activeItemId = item.id;
 
@@ -304,23 +298,27 @@ export class BookingComponent implements OnInit {
   validateSupplements(): void {
     if (!this.activeItemId) return;
 
-    const selectedSupps = this.supplementsForEdit.filter(s => s.selected).map(({ label, description, price }) => ({ label, description, price }));
+    const selectedSupps = this.supplementsForEdit
+      .filter(s => s.selected)
+      .map(({ label, description, price }) => ({ label, description, price }));
 
     const patch: BookingPatchModel = {
       supplements: selectedSupps
     };
 
     this.bookingService.patchBooking(this.activeItemId, patch).subscribe({
-      next: () => {
+      next: (res) => {
         this.toastrService.success(
           this.translate.instant('booking.notifications.patchSuccess.message'),
           this.translate.instant('booking.notifications.patchSuccess.title')
         );
         this.modalRef?.hide();
 
-        // Update local display
         const item = this.selectedItems.find(i => i.id === this.activeItemId);
-        if (item) item.supplements = selectedSupps;
+        if (item) {
+          item.supplements = selectedSupps;
+          item.total = res.items?.find(i => i.id === this.activeItemId)?.total ?? item.total;
+        }
       },
       error: () => {
         this.toastrService.error(
@@ -330,6 +328,7 @@ export class BookingComponent implements OnInit {
       }
     });
   }
+
 
   confirmReservation(): void {
     if (!this.bookingId) return;
@@ -344,14 +343,21 @@ export class BookingComponent implements OnInit {
           this.translate.instant('booking.notifications.confirmationSuccess.message'),
           this.translate.instant('booking.notifications.confirmationSuccess.title')
         );
-
         this.router.navigate(['/bookings/reservations']);
       },
-      error: () => {
-        this.toastrService.error(
-          this.translate.instant('booking.notifications.confirmationError.message'),
-          this.translate.instant('booking.notifications.confirmationError.title')
-        );
+      error: (err) => {
+        if (err.status === 409 && err.error?.code === 'BKG_CFT_ERR_1') {
+          const unitName = err.error?.detail?.match(/Unit (.*?) is not available/)?.[1] || this.translate.instant('booking.notifications.unitNotAvailable.fallbackUnitName');
+          this.toastrService.error(
+            this.translate.instant('booking.notifications.unitNotAvailable.message', { unit: unitName }),
+            this.translate.instant('booking.notifications.unitNotAvailable.title')
+          );
+        } else {
+          this.toastrService.error(
+            this.translate.instant('booking.notifications.confirmationError.message'),
+            this.translate.instant('booking.notifications.confirmationError.title')
+          );
+        }
       }
     });
   }

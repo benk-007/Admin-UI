@@ -2169,6 +2169,17 @@
       "recap": {
         "title": "Booking Recap"
       },
+      "resumeDrafts": {
+        "seeDrafts": "See Drafts",
+        "title": "Your Draft Bookings",
+        "resumeButton": "Resume",
+        "unitLabel": "unit(s)",
+        "empty": "No draft bookings found."
+      },
+      "errors": {
+        "guestRequired": "Minimum one guest required.",
+        "ageRequired": "Select age"
+      },
       "notifications": {
         "error": {
           "title": "Availability Error",
@@ -2201,6 +2212,18 @@
         "bookingLoadFailed": {
           "message": "Could not load booking details.",
           "title": "Error"
+        },
+        "draftsLoadFailed": {
+          "message": "Unable to load draft bookings.",
+          "title": "Error"
+        },
+        "deleteSuccess": {
+          "title": "Draft Removed",
+          "message": "The draft booking has been successfully removed."
+        },
+        "deleteError": {
+          "title": "Error",
+          "message": "Could not delete the draft. Please try again."
         }
       }
     }
@@ -2282,6 +2305,11 @@
       "confirmationError": {
         "title": "Confirmation Failed",
         "message": "Unable to confirm the booking. Please try again."
+      },
+      "unitNotAvailable": {
+        "title": "Unit not available",
+        "message": "The unit {{unit}} is no longer available for the selected period.",
+        "fallbackUnitName": "the selected unit"
       }
     }
   }

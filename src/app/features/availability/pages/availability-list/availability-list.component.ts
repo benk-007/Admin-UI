@@ -6,9 +6,9 @@ import {
   FormsModule,
   Validators,
   FormArray,
-  FormControl
+  FormControl, AbstractControl
 } from '@angular/forms';
-import { Location } from '@angular/common';
+import {Location} from '@angular/common';
 
 import dayjs, { Dayjs } from 'dayjs';
 import {AvailabilityGetModel} from '../../models/availability/get/availability-get.model';
@@ -21,7 +21,7 @@ import {NgxDaterangepickerBootstrapDirective} from 'ngx-daterangepicker-bootstra
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {ToastrService} from 'ngx-toastr';
 import {IconDirective} from '@coreui/icons-angular';
-import {cilSearch} from '@coreui/icons';
+import {cilSearch, cilTrash} from '@coreui/icons';
 import {PopoverDirective} from 'ngx-bootstrap/popover';
 import {EmptyDataComponent} from '../../../../shared/components/empty-data/empty-data.component';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
@@ -32,6 +32,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BookingItemGetModel} from '../../models/booking/get/booking-item-get.model';
 import {BookingPostModel} from '../../models/booking/post/booking-post.model';
 import {BookingItemPostModel} from '../../models/booking/post/booking-item-post.model';
+import {BookingGetModel} from '../../models/booking/get/booking-get.model';
+import {PageFilterModel} from '../../../../shared/models/page-filter.model';
 
 @Component({
   selector: 'app-availability-list',
@@ -62,7 +64,7 @@ import {BookingItemPostModel} from '../../models/booking/post/booking-item-post.
 })
 export class AvailabilityListComponent implements OnInit, OnDestroy {
 
-  icons = {cilSearch}
+  icons = {cilSearch, cilTrash}
 
   form!: FormGroup;
 
@@ -88,13 +90,13 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
     subSegmentId: null
   };
 
-
   supplementsPerUnit = new Map<string, SupplementItem[]>();
-
   selectedSegmentId: string | undefined = undefined;
-
   originalAvailability = new Map<string, number>();
 
+  @ViewChild('draftsModal') draftsModalTemplate!: TemplateRef<any>;
+  draftsModalRef?: BsModalRef;
+  draftBookings = signal<BookingGetModel[]>([]);
 
 
   constructor(
@@ -105,7 +107,7 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -115,13 +117,27 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
       subSegmentId: [],
       adults: [1],
       childrenAges: this.fb.array([])
+    }, {
+      validators: (group: AbstractControl) => {
+        const adults = group.get('adults')?.value || 0;
+        const children = (group.get('childrenAges') as FormArray).length;
+        return (adults + children > 0) ? null : { guestCountRequired: true };
+      }
     });
+
     this.form.get('segmentId')?.valueChanges.subscribe((segment: any) => {
       this.selectedSegmentId = segment?.id || segment?.uuid || null;
       this.form.get('subSegmentId')?.reset();
     });
+
+    const bookingIdFromUrl = this.route.snapshot.paramMap.get('id');
+    if (bookingIdFromUrl) {
+      this.restoreBookingFromParentId(bookingIdFromUrl);
+    }
+
     console.log('Selected segment ID:', this.selectedSegmentId);
   }
+
 
   get childrenAges(): FormArray<FormControl<number | null>> {
     return this.form.get('childrenAges') as FormArray<FormControl<number | null>>;
@@ -205,27 +221,28 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
       this.quantities.set(updated);
 
       if (this.parentBookingId()) {
-        if (this.parentBookingId()) {
-          const updatedItem = this.buildSingleBookingItem(unit, updated[unit.id] ?? 0);
-          this.bookingService.updateBookingItems(this.parentBookingId()!, updatedItem).subscribe({
-            next: () => {
-              this.refreshBooking();
+        const updatedItem = this.buildSingleBookingItem(unit, updated[unit.id] ?? 0);
 
-              if (Object.keys(updated).length === 0) {
-                this.parentBookingId.set(null);
-                this.bookedItems.set([]);
-                this.quantities.set({});
-                this.location.replaceState('/bookings/reservations/create');
-              }
-            },
-            error: () => {
-              this.toastrService.error(
-                this.translateService.instant('availability.list.notifications.bookingUpdateFailed.message'),
-                this.translateService.instant('availability.list.notifications.bookingUpdateFailed.title')
-              );
+        this.bookingService.updateBookingItems(this.parentBookingId()!, updatedItem).subscribe({
+          next: () => {
+            this.refreshBooking();
+
+            // If no more quantities after this update, assume booking group is now empty
+            const hasItemsLeft = Object.values(updated).some(q => q > 0);
+            if (!hasItemsLeft) {
+              this.parentBookingId.set(null);
+              this.bookedItems.set([]);
+              this.quantities.set({});
+              this.location.replaceState('/bookings/reservations/create');
             }
-          });
-        }
+          },
+          error: () => {
+            this.toastrService.error(
+              this.translateService.instant('availability.list.notifications.bookingUpdateFailed.message'),
+              this.translateService.instant('availability.list.notifications.bookingUpdateFailed.title')
+            );
+          }
+        });
       }
     }
   }
@@ -610,11 +627,108 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
       .reduce((total, s) => total + Number(s.price), 0);
   }
 
+  restoreBookingFromParentId(parentId: string): void {
+    this.parentBookingId.set(parentId);
+
+    this.bookingService.getBookingById(parentId).subscribe({
+      next: res => {
+        this.bookedItems.set(res.items);
+        const quantitiesMap: Record<string, number> = {};
+
+        for (const item of res.items) {
+          quantitiesMap[item.unit.unitId] = item.quantity;
+
+          if (item.supplements?.length) {
+            this.supplementsPerUnit.set(item.unit.unitId, item.supplements.map(s => ({
+              ...s,
+              selected: true
+            })));
+          }
+        }
+
+        this.quantities.set(quantitiesMap);
+        if (res.party) {
+          const segmentId = res.segmentId ? { id: res.segmentId } : null;
+          const subSegmentId = res.subSegmentId ? { id: res.subSegmentId } : null;
+
+          this.form.patchValue({
+            party: res.party,
+            segmentId,
+            subSegmentId
+          });
+
+          this.lastBookingContext = {
+            partyId: res.party?.id ?? null,
+            segmentId: res.segmentId ?? null,
+            subSegmentId: res.subSegmentId ?? null
+          };
+        }
+
+        this.location.replaceState(`/bookings/reservations/${parentId}/results`);
+      },
+      error: () => {
+        this.toastrService.error(
+          this.translateService.instant('availability.list.notifications.bookingLoadFailed.message'),
+          this.translateService.instant('availability.list.notifications.bookingLoadFailed.title')
+        );
+      }
+    });
+  }
+
+  openDraftsModal(): void {
+    const pageFilter: PageFilterModel = {
+      page: 0,
+      size: 10,
+      sort: 'createdAt',
+      sortDirection: 'DESC',
+      search: ''
+    };
+
+    this.bookingService.getDraftGroupBookings(pageFilter).subscribe({
+      next: (res) => {
+        this.draftBookings.set(res.content ?? []);
+        this.draftsModalRef = this.modalService.show(this.draftsModalTemplate, { class: 'modal-lg' });
+      },
+      error: () => {
+        this.toastrService.error(
+          this.translateService.instant('availability.list.notifications.draftsLoadFailed.message'),
+          this.translateService.instant('availability.list.notifications.draftsLoadFailed.title')
+        );
+      }
+    });
+  }
+
+  resumeDraft(bookingId: string): void {
+    this.draftsModalRef?.hide();
+    this.router.navigate(['/bookings/reservations', bookingId, 'results']);
+  }
+
   continueBooking(): void {
     const parentId = this.parentBookingId();
     if (parentId) {
       this.router.navigate([`/bookings/reservations/${parentId}/confirm`]);
     }
+  }
+
+  removeDraft(bookingId: string, index: number): void {
+    this.bookingService.deleteBookingItem(bookingId).subscribe({
+      next: () => {
+        const updatedDrafts = [...this.draftBookings()];
+        updatedDrafts.splice(index, 1);
+        this.draftBookings.set(updatedDrafts);
+
+        this.toastrService.success(
+          this.translateService.instant('availability.list.notifications.deleteSuccess.message'),
+          this.translateService.instant('availability.list.notifications.deleteSuccess.title')
+        );
+      },
+      error: () => {
+        this.toastrService.error(
+          this.translateService.instant('availability.list.notifications.deleteError.message'),
+          this.translateService.instant('availability.list.notifications.deleteError.title')
+        );
+      }
+    });
   }
 
   ngOnDestroy(): void {

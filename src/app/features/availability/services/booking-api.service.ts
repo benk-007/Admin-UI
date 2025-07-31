@@ -9,6 +9,7 @@ import {BookingItemGetModel} from '../models/booking/get/booking-item-get.model'
 import {BookingGetModel} from '../models/booking/get/booking-get.model';
 import {BookingItemPostModel} from '../models/booking/post/booking-item-post.model';
 import {BookingPatchModel} from '../models/booking/patch/booking-patch.model';
+import {PageFilterModel} from '../../../shared/models/page-filter.model';
 
 @Injectable({
   providedIn: 'root'
@@ -59,4 +60,26 @@ export class BookingApiService {
     );
   }
 
+  getDraftGroupBookings(pageFilter: PageFilterModel): Observable<{ content: BookingGetModel[] }> {
+    let params = new HttpParams()
+      .set('page', pageFilter.page)
+      .set('size', pageFilter.size);
+
+    if (pageFilter.search) {
+      params = params.set('search', pageFilter.search);
+    }
+
+    if (pageFilter.sort) {
+      params = params.set('sort', pageFilter.sort);
+    }
+
+    if (pageFilter.sortDirection) {
+      params = params.set('sortDirection', pageFilter.sortDirection);
+    }
+
+    return this.httpClient.get<{ content: BookingGetModel[] }>(
+      environment.apiBaseUrl.concat(environment.bookingDrafts),
+      { params }
+    );
+  }
 }
