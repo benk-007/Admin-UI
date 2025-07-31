@@ -1,4 +1,4 @@
-import {Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {BehaviorSubject, debounceTime, distinctUntilChanged, Subscription} from 'rxjs';
 import {PageFilterModel} from '../../models/page-filter.model';
@@ -32,6 +32,8 @@ export class SegmentSelectComponent implements OnInit, OnDestroy, ControlValueAc
   @Input() allowMultiUnit = false;  // Nouveau paramètre pour permettre les MULTI_UNIT si nécessaire
   @Output() updatedUnits = new EventEmitter<SegmentItemGetModel[] | null>();
   @Input() showEnabledOnly: boolean = false;
+  @Input() parentId?: string;
+
 
   segmentSearchList: SegmentItemGetModel[] = [];
   selectedSegments: SegmentItemGetModel[] | null = null;
@@ -82,6 +84,14 @@ export class SegmentSelectComponent implements OnInit, OnDestroy, ControlValueAc
       };
     }
 
+    if (this.parentId) {
+      advancedSearchFiler = {
+        ...advancedSearchFiler,
+        parentId: this.parentId
+      };
+    }
+
+
     if (this.showEnabledOnly) {
       advancedSearchFiler = {
         ...advancedSearchFiler,
@@ -109,6 +119,15 @@ export class SegmentSelectComponent implements OnInit, OnDestroy, ControlValueAc
         }
       })
     )
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['parentId'] && !changes['parentId'].firstChange) {
+      console.log('parentId changed to:', this.parentId);
+      this.segmentSearchPage = 0;
+      this.isLastPage = false;
+      this.retrieveUnitSearchList();
+    }
   }
 
   // Called when user types in search box

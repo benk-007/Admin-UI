@@ -1,4 +1,4 @@
-export interface AvailabilityGetResource {
+export interface AvailabilityGetModel {
   id: string;
   name: string;
   inventory: {

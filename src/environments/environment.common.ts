@@ -4,6 +4,7 @@ export const GUEST_SERVICE = 'guestMgtApi/';
 export const MEDIA_SERVICE = 'mediaMgtApi/';
 export const PRICING_SERVICE = 'rateMgtApi/'
 export const CRM_SERVICE = 'guestMgtApi/';
+export const Booking_SERVICE = 'bookingMgtApi/';
 
 export const commonProperties = {
   /*===========UAA Service===========*/
@@ -34,8 +35,12 @@ export const commonProperties = {
   unitImages: UNIT_SERVICE + 'images',
   unitImageById: UNIT_SERVICE + 'images/:imageId',
 
-  /*===========availability===========*/
-  availability: UNIT_SERVICE + 'inventory',
+  /*===========Booking===========*/
+  inventory: UNIT_SERVICE + 'inventory',
+  booking: Booking_SERVICE + 'bookings',
+  bookingByid: Booking_SERVICE + 'bookings/:bookingId',
+  bookingItems: Booking_SERVICE + 'bookings/:parentId/items',
+
 
   /*===========PRICING Service===========*/
   // Default resource

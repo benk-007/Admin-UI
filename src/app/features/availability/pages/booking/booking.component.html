@@ -14,22 +14,20 @@
     </c-card-header>
     <c-card-body>
       <c-row>
-        <!-- Party Field - Only show if party was selected in previous page -->
-        @if (hasPartyFromPreviousPage) {
-          <c-col [md]="6" class="mb-3">
-            <label cLabel class="form-label" for="party">{{ 'booking.clientInformation.party' | translate }}</label>
-            <app-party-select
-              formControlName="party"
-              id="party"
-              [initialParty]="selectedParty"
-              (updatedParty)="onPartySelected($event)">
-            </app-party-select>
-          </c-col>
-        }
+        <c-col [md]="6" class="mb-3" *ngIf="selectedParty">
+          <label cLabel class="form-label" for="party">{{ 'booking.clientInformation.party' | translate }}</label>
+          <input
+            id="party"
+            type="text"
+            cFormControl
+            class="form-control"
+            [value]="selectedParty.name"
+            disabled />
+        </c-col>
 
         <!-- Name Field -->
-        <c-col [md]="hasPartyFromPreviousPage ? 6 : 12" class="mb-3">
-          <label cLabel class="form-label required" for="guestName">{{ 'booking.clientInformation.name' | translate }}</label>
+        <c-col [md]="selectedParty ? 6 : 12" class="mb-3">
+        <label cLabel class="form-label required" for="guestName">{{ 'booking.clientInformation.name' | translate }}</label>
           <input
             cFormControl
             formControlName="guestName"
@@ -53,8 +51,7 @@
             formControlName="email"
             id="email"
             type="email"
-            placeholder="{{'booking.clientInformation.emailPlaceholder' | translate}}"
-            (input)="onContactFieldChange('email')"/>
+            placeholder="{{'booking.clientInformation.emailPlaceholder' | translate}}"/>
         </c-col>
 
         <!-- Mobile Field -->
@@ -66,7 +63,7 @@
             id="mobile"
             type="tel"
             placeholder="{{'booking.clientInformation.mobilePlaceholder' | translate}}"
-            (input)="onContactFieldChange('mobile')" />
+          />
         </c-col>
       </c-row>
     </c-card-body>
@@ -78,13 +75,13 @@
       <h6 class="section-title underline mb-0">{{ 'booking.reservationDetails.title' | translate }}</h6>
     </c-card-header>
     <c-card-body>
-      @for (room of selectedRooms; track room.unitId + $index) {
+      @for (item of selectedItems; track item.unit.unitId + $index) {
         <c-row class="mb-2">
           <c-col [md]="2">
             <strong>{{ 'booking.reservationDetails.room' | translate }}:</strong>
           </c-col>
           <c-col [md]="10" class="text-end">
-            {{ room.unitName }}
+            {{ item.unit.unitName }}
           </c-col>
         </c-row>
 
@@ -93,7 +90,7 @@
             <strong>{{ 'booking.reservationDetails.dates' | translate }}:</strong>
           </c-col>
           <c-col [md]="10" class="text-end">
-            {{ formatDate(room.checkinDate) }} → {{ formatDate(room.checkoutDate) }}
+            {{ formatDate(item.checkinDate) }} → {{ formatDate(item.checkoutDate) }}
           </c-col>
         </c-row>
 
@@ -102,7 +99,16 @@
             <strong>{{ 'booking.reservationDetails.duration' | translate }}:</strong>
           </c-col>
           <c-col [md]="10" class="text-end">
-            {{ room.nights }} {{ 'booking.reservationDetails.nights' | translate }}
+            {{ item.nights }} {{ 'booking.reservationDetails.nights' | translate }}
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>{{ 'booking.reservationDetails.quantity' | translate }}:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            {{ item.quantity }}
           </c-col>
         </c-row>
 
@@ -113,20 +119,37 @@
           <c-col [md]="10" class="text-end">
             <span
               contenteditable="true"
-              (blur)="onTariffEdit($index, $event)"
-              (keyup.enter)="onTariffEdit($index, $event)"
-              class="editable-tariff">
-              {{ room.nightlyRate }}
-            </span> {{ 'booking.reservationDetails.perNight' | translate }}
+              class="editable-rate"
+              (blur)="onRateChange(item.id, $event)"
+              (keydown.enter)="onRateChange(item.id, $event)"
+              [attr.data-item-id]="item.id">
+              {{ item.nightlyRate }}
+            </span>
+            {{ 'booking.reservationDetails.perNight' | translate }}
           </c-col>
         </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>{{ 'booking.reservationDetails.supplements' | translate }}:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+          <span
+            class="clickable"
+            style="cursor: pointer"
+            (click)="openSupplementsModal(item)">
+            {{ getSupplementsTotal(item) }} {{ 'booking.reservationDetails.perNight' | translate }}
+          </span>
+          </c-col>
+        </c-row>
+
 
         <c-row class="mb-3 pb-3 border-bottom">
           <c-col [md]="2">
             <strong>{{ 'booking.reservationDetails.total' | translate }}:</strong>
           </c-col>
           <c-col [md]="10" class="text-end">
-            <strong>{{ room.total }} MAD</strong>
+            <strong>{{ item.total }} MAD</strong>
           </c-col>
         </c-row>
       }
@@ -201,19 +224,17 @@
   </c-card>
 
   <!-- Actions Button -->
-  <c-row class="mt-4">
+  <c-row class="mt-4 mb-4">
     <c-col class="d-flex justify-content-end">
-
-      <!-- Booking Buttons -->
       <div class="d-flex gap-2">
-        <button
-          cButton
-          color="secondary"
-          variant="outline"
-          type="button"
-          (click)="saveAsQuote()">
-          {{ 'booking.actions.saveAsQuote' | translate }}
-        </button>
+<!--        <button-->
+<!--          cButton-->
+<!--          color="secondary"-->
+<!--          variant="outline"-->
+<!--          type="button"-->
+<!--          (click)="saveAsQuote()">-->
+<!--          {{ 'booking.actions.saveAsQuote' | translate }}-->
+<!--        </button>-->
 
         <button
           cButton
@@ -225,5 +246,45 @@
       </div>
     </c-col>
   </c-row>
+
+  <ng-template #supplementsModalTemplate let-modal>
+    <div class="modal-header">
+      <h6 class="modal-title">{{ 'availability.list.supplementsAvailable' | translate }}</h6>
+    </div>
+
+    <div class="modal-body">
+      <div *ngFor="let item of supplementsForEdit; let i = index"
+           class="border rounded p-2 mb-2 d-flex justify-content-between align-items-start">
+        <div>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [checked]="item.selected"
+              (change)="item.selected = !item.selected"
+              [id]="'supplement-' + i" />
+            <label class="form-check-label fw-bold" [for]="'supplement-' + i">{{ item.label }}</label>
+          </div>
+          <div class="text-muted small ms-4">{{ item.description }}</div>
+        </div>
+        <input
+          type="number"
+          min="0"
+          class="form-control form-control-sm mt-1 price"
+          [(ngModel)]="item.price"
+          [ngModelOptions]="{ standalone: true }" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button cButton color="light" variant="ghost" size="sm" (click)="modalRef?.hide()">
+        {{ 'commons.form.cancel-btn' | translate }}
+      </button>
+      <button cButton class="ms-3" color="primary" size="sm" (click)="validateSupplements()">
+        {{ 'commons.form.save-btn' | translate }}
+      </button>
+    </div>
+  </ng-template>
+
 
 </form>

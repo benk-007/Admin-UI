@@ -29,6 +29,9 @@ export class CrmApiService {
     if (pageFilter.advancedSearchFormValue?.enabled != null) {
       params = params.set('enabled', pageFilter.advancedSearchFormValue.enabled);
     }
+    if (pageFilter.advancedSearchFormValue?.parentId) {
+      params = params.set('parentId', pageFilter.advancedSearchFormValue.parentId);
+    }
     return this.httpClient.get<PageModel<SegmentItemGetModel>>(environment.apiBaseUrl.concat(environment.segmentList), {params});
   }
 

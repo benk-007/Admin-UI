@@ -1,4 +1,4 @@
-export interface AvailabilityPostResource {
+export interface AvailabilityPostModel {
   party: string;
   checkinDate: string;
   checkoutDate: string;

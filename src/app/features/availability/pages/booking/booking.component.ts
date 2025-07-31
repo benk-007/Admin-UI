@@ -1,48 +1,37 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import {
-  ButtonDirective,
-  CardBodyComponent,
-  CardComponent,
-  CardHeaderComponent,
-  ColComponent,
-  FormControlDirective,
-  FormLabelDirective,
-  FormSelectDirective,
-  FormCheckComponent,
-  FormCheckInputDirective,
-  FormCheckLabelDirective,
-  RowComponent
-} from '@coreui/angular';
+import {Component, effect, OnInit, signal, TemplateRef, ViewChild} from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
+import { BookingApiService } from '../../services/booking-api.service';
+import { BookingGetModel } from '../../models/booking/get/booking-get.model';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-
-import { AvailabilityGetResource } from '../../models/availability/get/availability-get.model';
-import { AvailabilityPostResource } from '../../models/availability/post/availability-post.model';
-import { SupplementItem } from '../../models/supplement/commons/supplement-item.model';
-import { PaymentMethodEnum } from '../../models/booking/enums/payment-method.enum';
-import { BookingPostModel } from '../../models/booking/post/booking-post.model';
-import { SelectedRoomModel } from '../../models/booking/selected-room.model';
-import { PartyItemGetModel } from '../../../crm/models/party/party-item-get.model';
+import {
+  RowComponent,
+  ColComponent,
+  CardComponent,
+  CardHeaderComponent,
+  CardBodyComponent,
+  ButtonDirective,
+  FormLabelDirective,
+  FormControlDirective,
+  FormCheckComponent,
+  FormCheckInputDirective,
+  FormCheckLabelDirective
+} from '@coreui/angular';
 import { PartySelectComponent } from '../../../../shared/components/party-select/party-select.component';
-
-interface BookedUnit {
-  unit: AvailabilityGetResource;
-  quantity: number;
-  supplements: SupplementItem[];
-  searchParams: AvailabilityPostResource;
-}
-
-const LOCAL_STORAGE_RECAP_KEY = 'availabilityRecap';
-const LOCAL_STORAGE_BOOKING_FORM_KEY = 'bookingFormState';
-const LOCAL_STORAGE_ROOM_RATES_KEY = 'bookingEditedRates';
-
+import { PartyItemGetModel } from '../../../crm/models/party/party-item-get.model';
+import {NgForOf, NgIf} from '@angular/common';
+import {BookingItemGetModel} from '../../models/booking/get/booking-item-get.model';
+import {BookingPatchModel} from '../../models/booking/patch/booking-patch.model';
+import {SupplementItem} from '../../models/supplement/commons/supplement-item.model';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.scss'],
+  standalone: true,
+  providers: [BsModalService],
   imports: [
     RowComponent,
     ColComponent,
@@ -53,304 +42,318 @@ const LOCAL_STORAGE_ROOM_RATES_KEY = 'bookingEditedRates';
     FormsModule,
     FormLabelDirective,
     FormControlDirective,
+    TranslatePipe,
     FormCheckComponent,
     FormCheckInputDirective,
     FormCheckLabelDirective,
+    NgIf,
     ButtonDirective,
-    TranslatePipe,
-    PartySelectComponent
-  ],
-  standalone: true
+    NgForOf
+  ]
 })
 export class BookingComponent implements OnInit {
 
-  bookingForm: FormGroup;
-  bookedUnits: BookedUnit[] = [];
-  selectedRooms: SelectedRoomModel[] = [];
+  bookingForm!: FormGroup;
+  bookingId: string | null = null;
+  bookingData: BookingGetModel | null = null;
+  selectedParty: PartyItemGetModel | null = null;
 
-  // Payment methods for dropdown
+  patchPayload = signal<Partial<BookingPatchModel>>({});
+
+  selectedItems: BookingItemGetModel[] = [];
+
+  @ViewChild('supplementsModalTemplate') supplementsModalTemplate!: TemplateRef<any>;
+  modalRef?: BsModalRef;
+  activeItemId: string | null = null;
+  supplementsForEdit: SupplementItem[] = [];
+
   paymentMethods = [
-    { value: PaymentMethodEnum.CREDIT_CARD, key: 'booking.guaranteeMethod.creditCard' },
-    { value: PaymentMethodEnum.CASH, key: 'booking.guaranteeMethod.cash' },
-    { value: PaymentMethodEnum.BANK_TRANSFER, key: 'booking.guaranteeMethod.bankTransfer' }
+    { value: 'CREDIT_CARD', key: 'booking.guaranteeMethod.creditCard' },
+    { value: 'CASH', key: 'booking.guaranteeMethod.cash' },
+    { value: 'BANK_TRANSFER', key: 'booking.guaranteeMethod.bankTransfer' }
   ];
 
-  // State flags
-  showGuaranteeAmount = false;
-  selectedParty: PartyItemGetModel | null = null;
-  hasPartyFromPreviousPage = false;
-
   constructor(
-    private readonly fb: FormBuilder,
-    private readonly router: Router,
-    private readonly toastrService: ToastrService,
-    private readonly translateService: TranslateService
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private bookingService: BookingApiService,
+    private toastrService: ToastrService,
+    private translate: TranslateService,
+    private modalService: BsModalService,
+    private readonly translateService: TranslateService,
   ) {
-    // Initialize form
-    this.bookingForm = this.fb.group({
-      party: [null],
-      guestName: ['', [Validators.required]],
-      email: [''],
-      mobile: [''],
-      paymentMethod: [''],
-      guaranteeAmount: [''],
-      specialNotes: ['']
+    effect(() => {
+      const patch = this.patchPayload();
+      if (this.bookingId && Object.keys(patch).length > 0) {
+        this.bookingService.patchBooking(this.bookingId, patch).subscribe({
+          next: () => {
+            this.toastrService.success(
+              this.translate.instant('booking.notifications.patchSuccess.message'),
+              this.translate.instant('booking.notifications.patchSuccess.title')
+            );
+          },
+          error: () => {
+            this.toastrService.error(
+              this.translate.instant('booking.notifications.patchError.message'),
+              this.translate.instant('booking.notifications.patchError.title')
+            );
+          }
+        });
+      }
     });
   }
 
   ngOnInit(): void {
-    // Retrieve data from router state
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state || history.state;
+    this.bookingForm = this.fb.group({
+      party: [null],
+      guestName: ['', Validators.required],
+      email: ['', Validators.email],
+      mobile: ['', Validators.pattern(/^\+?\d{8,15}$/)],
+      paymentMethod: [''],
+      guaranteeAmount: [''],
+      specialNotes: ['']
+    });
 
-    if (state?.bookedUnits) {
-      const savedState = localStorage.getItem(LOCAL_STORAGE_BOOKING_FORM_KEY);
-      if (savedState) {
-        try {
-          const parsed = JSON.parse(savedState);
-          this.bookingForm.patchValue(parsed.formValue || {});
-          this.selectedParty = parsed.selectedParty || null;
-          this.showGuaranteeAmount = parsed.showGuaranteeAmount || false;
+    this.bookingId = this.route.snapshot.paramMap.get('id');
 
-          if (this.selectedParty) {
-            this.onPartySelected(this.selectedParty);
-          }
-        } catch (e) {
-          console.error('Failed to parse booking form from localStorage', e);
-          localStorage.removeItem(LOCAL_STORAGE_BOOKING_FORM_KEY);
-        }
-      }
-      this.bookingForm.valueChanges.subscribe(() => this.persistFormToStorage());
-
-      this.bookedUnits = state.bookedUnits;
-      this.processBookedUnits();
-      this.restoreEditedRates();
-
-      // Check if party was selected in previous page
-      if (this.bookedUnits.length > 0 && this.bookedUnits[0].searchParams.party) {
-        this.hasPartyFromPreviousPage = true;
-        const partyFromPrevious = this.bookedUnits[0].searchParams.party as unknown as PartyItemGetModel;
-        if (!savedState) {
-          this.bookingForm.patchValue({ party: partyFromPrevious });
-          this.selectedParty = partyFromPrevious;
-          this.onPartySelected(partyFromPrevious);
-        }
-      }
-
-      // Restore all data from bookingForm
-      if (state.preservedBookingData) {
-        const preserved = state.preservedBookingData;
-        this.bookingForm.patchValue(preserved.formValue);
-        this.selectedParty = preserved.selectedParty;
-        this.showGuaranteeAmount = preserved.showGuaranteeAmount;
-
-        if (this.selectedParty) {
-          this.onPartySelected(this.selectedParty);
-        }
-      }
-    } else {
+    if (!this.bookingId) {
       this.router.navigate(['/bookings/reservations/create']);
       return;
     }
 
-    // Listen to payment method changes
-    this.bookingForm.get('paymentMethod')?.valueChanges.subscribe(method => {
-      this.showGuaranteeAmount = !!method;
-      if (!method) {
-        this.bookingForm.patchValue({ guaranteeAmount: '' });
-      }
-    });
-  }
+    this.bookingService.getBookingById(this.bookingId).subscribe({
+      next: (res) => {
+        this.bookingData = res;
 
-  onContactFieldChange(field: 'email' | 'mobile'): void {
-    this.bookingForm.get(field)?.enable();
-    this.persistFormToStorage();
-  }
+        this.bookingForm.patchValue({
+          party: res.party,
+          guestName: res.guestName,
+          email: res.party?.contact?.email ?? '',
+          mobile: res.party?.contact?.mobile ?? '',
+          paymentMethod: res.paymentMethod,
+          guaranteeAmount: res.guaranteeAmount,
+          specialNotes: res.specialNotes
+        });
 
-  private restoreEditedRates(): void {
-    const raw = localStorage.getItem(LOCAL_STORAGE_ROOM_RATES_KEY);
-    if (!raw) return;
+        this.selectedParty = res.party;
 
-    try {
-      const editedRates: { unitId: string; rate: number }[] = JSON.parse(raw);
-      for (let room of this.selectedRooms) {
-        const match = editedRates.find(r => r.unitId === room.unitId);
-        if (match) {
-          room.nightlyRate = match.rate;
-          room.total = match.rate * room.nights;
+        this.bookingForm.get('party')?.disable();
+        if (res.party?.contact?.email) {
+          const emailControl = this.bookingForm.get('email');
+          emailControl?.setValue(res.party.contact.email);
+          emailControl?.disable();
         }
-      }
-    } catch (e) {
-      console.warn('Invalid edited rate data in localStorage');
-      localStorage.removeItem(LOCAL_STORAGE_ROOM_RATES_KEY);
-    }
-  }
 
+        if (res.party?.contact?.mobile) {
+          const mobileControl = this.bookingForm.get('mobile');
+          mobileControl?.setValue(res.party.contact.mobile);
+          mobileControl?.disable();
+        }
 
-  private persistFormToStorage(): void {
-    const formValue = this.bookingForm.getRawValue();
-    const stateToSave = {
-      formValue,
-      selectedParty: this.selectedParty,
-      showGuaranteeAmount: this.showGuaranteeAmount
-    };
-    localStorage.setItem(LOCAL_STORAGE_BOOKING_FORM_KEY, JSON.stringify(stateToSave));
-  }
+        this.selectedItems = res.items;
 
-  private persistEditedRates(): void {
-    const rates = this.selectedRooms.map(room => ({
-      roomId: room.unitId,
-      rate: room.nightlyRate
-    }));
-
-    localStorage.setItem(LOCAL_STORAGE_ROOM_RATES_KEY, JSON.stringify(rates));
-  }
-
-
-  // Process booked units into selected rooms format
-  private processBookedUnits(): void {
-    this.selectedRooms = [];
-
-    this.bookedUnits.forEach(bookedUnit => {
-      const unit = bookedUnit.unit;
-      const searchParams = bookedUnit.searchParams;
-
-      // Calculate nights between dates
-      const checkinDate = new Date(searchParams.checkinDate.split('-').reverse().join('-'));
-      const checkoutDate = new Date(searchParams.checkoutDate.split('-').reverse().join('-'));
-      const nights = Math.ceil((checkoutDate.getTime() - checkinDate.getTime()) / (1000 * 60 * 60 * 24));
-
-      // Create room entry for each quantity
-      for (let i = 0; i < bookedUnit.quantity; i++) {
-        const selectedRoom: SelectedRoomModel = {
-          unitId: unit.id,
-          unitName: unit.name,
-          checkinDate: searchParams.checkinDate,
-          checkoutDate: searchParams.checkoutDate,
-          nights: nights,
-          nightlyRate: unit.price.nightlyRate,
-          total: unit.price.totalAmount,
-          quantity: 1,
-          adults: searchParams.guests.adults,
-          children: searchParams.guests.children.reduce((sum, child) => sum + child.quantity, 0)
-        };
-
-        this.selectedRooms.push(selectedRoom);
+        this.setupPatchTriggers();
+      },
+      error: () => {
+        this.toastrService.error(
+          this.translate.instant('booking.notifications.bookingLoadFailed.message'),
+          this.translate.instant('booking.notifications.bookingLoadFailed.title')
+        );
+        this.router.navigate(['/bookings/reservations/create']);
       }
     });
   }
 
-  // Handle party selection
-  onPartySelected(party: PartyItemGetModel | null): void {
-    this.selectedParty = party;
+  setupPatchTriggers(): void {
+    this.bookingForm.get('guestName')?.valueChanges.subscribe(value => {
+      this.patchPayload.set({ guestName: value });
+    });
 
-    if (party?.contact) {
-      // Auto-fill contact fields and make them readonly
-      const currentEmail = this.bookingForm.get('email')?.value;
-      const currentMobile = this.bookingForm.get('mobile')?.value;
-
-      // fill email only if empty
-      if (!currentEmail && party.contact.email) {
-        this.bookingForm.patchValue({ email: party.contact.email });
-        this.bookingForm.get('email')?.disable();
-      }
-
-      // fill mobile only if empty
-      if (!currentMobile && party.contact.mobile) {
-        this.bookingForm.patchValue({ mobile: party.contact.mobile });
-        this.bookingForm.get('mobile')?.disable();
-      }
-    } else {
-      // Re-enable fields if no party
-      this.bookingForm.get('email')?.enable();
-      this.bookingForm.get('mobile')?.enable();
+    const emailCtrl = this.bookingForm.get('email');
+    if (emailCtrl?.enabled) {
+      emailCtrl.valueChanges.subscribe(value => {
+        this.patchPayload.set({ email: value });
+      });
     }
-    this.persistFormToStorage();
+
+    const mobileCtrl = this.bookingForm.get('mobile');
+    if (mobileCtrl?.enabled) {
+      mobileCtrl.valueChanges.subscribe(value => {
+        this.patchPayload.set({ mobile: value });
+      });
+    }
+
+    this.bookingForm.get('paymentMethod')?.valueChanges.subscribe(value => {
+      this.patchPayload.set({ paymentMethod: value });
+    });
+
+    this.bookingForm.get('guaranteeAmount')?.valueChanges.subscribe(value => {
+      this.patchPayload.set({ guaranteeAmount: parseFloat(value) || 0 });
+    });
+
+    this.bookingForm.get('specialNotes')?.valueChanges.subscribe(value => {
+      this.patchPayload.set({ specialNotes: value });
+    });
   }
 
-  onTariffEdit(index: number, event: any): void {
-    const newRate = parseFloat(event.target.textContent);
-    if (newRate > 0) {
-      this.selectedRooms[index].nightlyRate = newRate;
-      this.selectedRooms[index].total = newRate * this.selectedRooms[index].nights;
-
-      this.persistEditedRates();
-    }
+  getSupplementsTotal(item: BookingItemGetModel): number {
+    return item.supplements?.reduce((sum, s) => sum + s.price, 0) || 0;
   }
 
-  // Calculate total amount
   getTotalAmount(): number {
-    return this.selectedRooms.reduce((total, room) => total + room.total, 0);
+    return this.selectedItems.reduce((sum, room) => sum + room.total, 0);
   }
 
-  protected formatDate(dateString: string): string {
+  onRateChange(itemId: string, event: Event): void {
+    const span = event.target as HTMLElement;
+    const newRate = parseFloat(span.textContent?.trim() || '');
+
+    if (isNaN(newRate) || newRate <= 0) return;
+
+    const item = this.selectedItems.find(i => i.id === itemId);
+    if (!item) return;
+
+    item.nightlyRate = newRate;
+
+    const patch: BookingPatchModel = {
+      nightlyRate: newRate
+    };
+
+    // Now we call the patch with the itemId in the URL
+    this.bookingService.patchBooking(itemId, patch).subscribe({
+      next: () => {
+        this.toastrService.success(
+          this.translate.instant('booking.notifications.patchSuccess.message'),
+          this.translate.instant('booking.notifications.patchSuccess.title')
+        );
+      },
+      error: () => {
+        this.toastrService.error(
+          this.translate.instant('booking.notifications.patchError.message'),
+          this.translate.instant('booking.notifications.patchError.title')
+        );
+      }
+    });
+  }
+
+  formatDate(dateString: string): string {
     return dateString.replace(/-/g, '/');
   }
 
-  // Handle form submission - Save as Quote
-  saveAsQuote(): void {
-    if (this.bookingForm.get('guestName')?.invalid) {
-      this.toastrService.warning(
-        this.translateService.instant('booking.notifications.incompleteForm.message'),
-        this.translateService.instant('booking.notifications.incompleteForm.title')
-      );
-      return;
-    }
-
-    const bookingData = this.createBookingPayload();
-    console.log('💾 Save as Quote:', bookingData);
-
-    // TODO: Call API to save as quote
-    this.toastrService.success(
-      this.translateService.instant('booking.notifications.quoteSaved.message'),
-      this.translateService.instant('booking.notifications.quoteSaved.title')
-    );
-
-    localStorage.removeItem(LOCAL_STORAGE_RECAP_KEY);
-    localStorage.removeItem(LOCAL_STORAGE_BOOKING_FORM_KEY);
-    localStorage.removeItem(LOCAL_STORAGE_ROOM_RATES_KEY);
-
+  getDefaultSupplementOptions(): SupplementItem[] {
+    return [
+      {
+        label: this.translateService.instant('availability.list.supplements.breakfast.label'),
+        description: this.translateService.instant('availability.list.supplements.breakfast.description'),
+        price: 120,
+        selected: false
+      },
+      {
+        label: this.translateService.instant('availability.list.supplements.lunch.label'),
+        description: this.translateService.instant('availability.list.supplements.lunch.description'),
+        price: 180,
+        selected: false
+      },
+      {
+        label: this.translateService.instant('availability.list.supplements.dinner.label'),
+        description: this.translateService.instant('availability.list.supplements.dinner.description'),
+        price: 250,
+        selected: false
+      },
+      {
+        label: this.translateService.instant('availability.list.supplements.allInclusive.label'),
+        description: this.translateService.instant('availability.list.supplements.allInclusive.description'),
+        price: 450,
+        selected: false
+      },
+      {
+        label: this.translateService.instant('availability.list.supplements.halfBoard.label'),
+        description: this.translateService.instant('availability.list.supplements.halfBoard.description'),
+        price: 320,
+        selected: false
+      },
+      {
+        label: this.translateService.instant('availability.list.supplements.spaAccess.label'),
+        description: this.translateService.instant('availability.list.supplements.spaAccess.description'),
+        price: 200,
+        selected: false
+      }
+    ];
   }
 
-  // Handle form submission - Confirm Reservation
-  confirmReservation(): void {
-    if (this.bookingForm.get('guestName')?.invalid) {
-      this.toastrService.warning(
-        this.translateService.instant('booking.notifications.incompleteForm.message'),
-        this.translateService.instant('booking.notifications.incompleteForm.title')
-      );
-      return;
+
+  openSupplementsModal(item: BookingItemGetModel): void {
+    this.activeItemId = item.id;
+
+    const allOptions = this.getDefaultSupplementOptions();
+    const selected = item.supplements || [];
+
+    for (const option of allOptions) {
+      if (selected.some(s => s.label === option.label)) {
+        option.selected = true;
+      }
     }
 
-    const bookingData = this.createBookingPayload();
-    console.log('✅ Confirm Reservation:', bookingData);
-
-    // TODO: Call API to confirm reservation
-    this.toastrService.success(
-      this.translateService.instant('booking.notifications.reservationConfirmed.message'),
-      this.translateService.instant('booking.notifications.reservationConfirmed.title')
-    );
-
-    localStorage.removeItem(LOCAL_STORAGE_RECAP_KEY);
-    localStorage.removeItem(LOCAL_STORAGE_BOOKING_FORM_KEY);
-    localStorage.removeItem(LOCAL_STORAGE_ROOM_RATES_KEY);
-
+    this.supplementsForEdit = allOptions;
+    this.modalRef = this.modalService.show(this.supplementsModalTemplate, {
+      class: 'modal-lg'
+    });
   }
 
-  // Create booking payload
-  private createBookingPayload(): BookingPostModel {
-    const formValue = this.bookingForm.getRawValue(); // Use getRawValue to include disabled fields
+  validateSupplements(): void {
+    if (!this.activeItemId) return;
 
-    return {
-      party: this.selectedParty?.id,
-      guestName: formValue.guestName,
-      email: formValue.email,
-      mobile: formValue.mobile,
-      units: this.selectedRooms,
-      paymentMethod: formValue.paymentMethod,
-      guaranteeAmount: formValue.guaranteeAmount ? parseFloat(formValue.guaranteeAmount) : undefined,
-      specialNotes: formValue.specialNotes,
-      totalAmount: this.getTotalAmount()
+    const selectedSupps = this.supplementsForEdit.filter(s => s.selected).map(({ label, description, price }) => ({ label, description, price }));
+
+    const patch: BookingPatchModel = {
+      supplements: selectedSupps
     };
+
+    this.bookingService.patchBooking(this.activeItemId, patch).subscribe({
+      next: () => {
+        this.toastrService.success(
+          this.translate.instant('booking.notifications.patchSuccess.message'),
+          this.translate.instant('booking.notifications.patchSuccess.title')
+        );
+        this.modalRef?.hide();
+
+        // Update local display
+        const item = this.selectedItems.find(i => i.id === this.activeItemId);
+        if (item) item.supplements = selectedSupps;
+      },
+      error: () => {
+        this.toastrService.error(
+          this.translate.instant('booking.notifications.patchError.message'),
+          this.translate.instant('booking.notifications.patchError.title')
+        );
+      }
+    });
   }
+
+  confirmReservation(): void {
+    if (!this.bookingId) return;
+
+    const patch: BookingPatchModel = {
+      status: 'CONFIRMED'
+    };
+
+    this.bookingService.patchBooking(this.bookingId, patch).subscribe({
+      next: () => {
+        this.toastrService.success(
+          this.translate.instant('booking.notifications.confirmationSuccess.message'),
+          this.translate.instant('booking.notifications.confirmationSuccess.title')
+        );
+
+        this.router.navigate(['/bookings/reservations']);
+      },
+      error: () => {
+        this.toastrService.error(
+          this.translate.instant('booking.notifications.confirmationError.message'),
+          this.translate.instant('booking.notifications.confirmationError.title')
+        );
+      }
+    });
+  }
+
 }

@@ -1,14 +1,20 @@
-import {SelectedRoomModel} from '../selected-room.model';
-import {PaymentMethodEnum} from '../enums/payment-method.enum';
+import {BookingItemPostModel} from './booking-item-post.model';
+import {ContactModel} from '../../../../../shared/models/contact.model';
+
 
 export interface BookingPostModel {
-  party?: string;
-  guestName: string;
-  email?: string;
-  mobile?: string;
-  units: SelectedRoomModel[];
-  paymentMethod?: PaymentMethodEnum;
+  party: {
+    id: string;
+    name: string;
+    contact: ContactModel;
+  } | null;
+  segmentId: string | null;
+  subSegmentId: string | null;
+  status: string;
+  guestName?: string;
+  paymentMethod?: string;
   guaranteeAmount?: number;
   specialNotes?: string;
-  totalAmount?: number;
+  items: BookingItemPostModel[];
 }
+

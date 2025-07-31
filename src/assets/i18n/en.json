@@ -2124,6 +2124,7 @@
       "night": "night",
       "quantity": "Quantity",
       "book": "Book",
+      "total": "Total",
       "nightlyRate": "Nightly rate",
       "supplementsAvailable": "Available Supplements",
       "supplements": {
@@ -2184,6 +2185,22 @@
         "formInvalid": {
           "message": "Please fill in all required fields correctly.",
           "title": "Invalid Form"
+        },
+        "bookingCreationFailed": {
+          "message": "Failed to create the booking.",
+          "title": "Booking Error"
+        },
+        "bookingUpdateFailed": {
+          "message": "Failed to update booking item.",
+          "title": "Update Error"
+        },
+        "itemRemoveFailed": {
+          "message": "Failed to remove item.",
+          "title": "Error"
+        },
+        "bookingLoadFailed": {
+          "message": "Could not load booking details.",
+          "title": "Error"
         }
       }
     }
@@ -2205,6 +2222,8 @@
       "room": "Room",
       "dates": "Dates",
       "duration": "Duration",
+      "supplements": "Supplements",
+      "quantity": "Quantity",
       "rate": "Rate",
       "total": "Total",
       "nights": "nights",
@@ -2243,6 +2262,26 @@
       "reservationConfirmed": {
         "title": "Success",
         "message": "Reservation confirmed successfully"
+      },
+      "patchSuccess": {
+        "title": "Update Successful",
+        "message": "The booking item was updated successfully."
+      },
+      "patchError": {
+        "title": "Update Failed",
+        "message": "An error occurred while updating the booking item."
+      },
+      "bookingLoadFailed": {
+        "title": "Loading Failed",
+        "message": "Unable to load booking data."
+      },
+      "confirmationSuccess": {
+        "title": "Reservation Confirmed",
+        "message": "The booking has been successfully confirmed."
+      },
+      "confirmationError": {
+        "title": "Confirmation Failed",
+        "message": "Unable to confirm the booking. Please try again."
       }
     }
   }
