@@ -9,21 +9,26 @@
       class="bi bi-info-circle me-1"></i> {{ 'units.edit-unit.tabs.general-information.title'|translate }}</a>
   </c-nav-item>
   @if (!unit?.parent) {
-  <c-nav-item>
-    <a cNavLink class=" active" routerLink="details"
-       routerLinkActive="active"><i
-      class="bi bi-house me-1"></i> {{ 'units.edit-unit.tabs.detail-information.title'|translate }}</a>
-  </c-nav-item>
-  <c-nav-item>
-    <a cNavLink class=" active" routerLink="bedding-rooms"
-       routerLinkActive="active"><i
-      class="bi bi-lamp me-1"></i> {{ 'units.edit-unit.tabs.rooms-bedding.title'|translate }}</a>
-  </c-nav-item>
-  <c-nav-item>
-    <a cNavLink class=" active" routerLink="detail" routerLinkActive="active">
-      <i class="bi bi-layers me-1"></i> {{ 'units.edit-unit.tabs.sub-units.title'|translate }}
-    </a>
-  </c-nav-item>
+    <c-nav-item>
+      <a cNavLink class=" active" routerLink="details"
+         routerLinkActive="active"><i
+        class="bi bi-house me-1"></i> {{ 'units.edit-unit.tabs.detail-information.title'|translate }}</a>
+    </c-nav-item>
+    <c-nav-item>
+      <a cNavLink class=" active" routerLink="bedding-rooms"
+         routerLinkActive="active"><i
+        class="bi bi-lamp me-1"></i> {{ 'units.edit-unit.tabs.rooms-bedding.title'|translate }}</a>
+    </c-nav-item>
+    <c-nav-item>
+      <a cNavLink class=" active" routerLink="detail" routerLinkActive="active">
+        <i class="bi bi-layers me-1"></i> {{ 'units.edit-unit.tabs.sub-units.title'|translate }}
+      </a>
+    </c-nav-item>
+    <c-nav-item>
+      <a cNavLink routerLink="fees" routerLinkActive="active">
+        <i class="bi bi-cash-coin me-1"></i>{{ 'units.edit-unit.tabs.fees.title'|translate }}
+      </a>
+    </c-nav-item>
   }
   <c-dropdown variant="nav-item">
     <!--TODO: handle active styling based on route-->

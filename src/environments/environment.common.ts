@@ -42,6 +42,11 @@ export const commonProperties = {
   // Rate plans
   RateTable: PRICING_SERVICE + 'rate-tables',
 
+  /*===========Fees===========*/
+  // Fee resource
+  fees: PRICING_SERVICE + 'fees',
+  feesApply: PRICING_SERVICE + 'fees/apply',
+
 
   /*===========Guest Service===========*/
   // Guest resource

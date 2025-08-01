@@ -42,6 +42,13 @@ export const routes: Routes = [
           title: 'Rates'
         }
       },
+      {
+        path: 'fees',
+        loadComponent: () => import('./unit-fees-tab/unit-fees-tab.component').then(m => m.UnitFeesTabComponent),
+        data: {
+          title: 'Fees'
+        }
+      },
       /*      {
               path: ':unitId/view',
               loadComponent: () => import('./pages/view-unit/view-unit.component').then((m) => m.ViewUnitComponent)

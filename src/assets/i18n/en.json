@@ -93,6 +93,11 @@
       },
       "body": {
         "n-a": "N/A"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "view": "View"
       }
     },
     "labels": {
@@ -1372,6 +1377,79 @@
             },
             "edit": {
               "title": "Edit SubUnit"
+            }
+          }
+        },
+        "fees": {
+          "title": "Booking Fees",
+          "hint": "Manage additional fees that apply to bookings for this unit",
+          "add-btn": "Add Fee",
+          "copy-btn": "Copy",
+          "copy-from-rental": "Copy from Rental",
+          "copy-to-rental": "Copy to Rental",
+          "table": {
+            "header": {
+              "name": "Name",
+              "amount": "Amount (MAD)",
+              "type": "Type",
+              "modality": "Modality",
+              "status": "Status"
+            },
+            "body": {
+              "active": "Active",
+              "inactive": "Inactive"
+            }
+          },
+          "form": {
+            "name": {
+              "label": "Name",
+              "placeholder": "Enter fee name"
+            },
+            "amount": {
+              "label": "Amount (MAD)",
+              "placeholder": "Enter amount"
+            },
+            "type": {
+              "label": "Type",
+              "values": {
+                "flat": "Flat",
+                "percent": "Percent"
+              }
+            },
+            "modality": {
+              "label": "Modality",
+              "values": {
+                "per-stay": "Per Stay",
+                "per-night": "Per Night",
+                "per-person": "Per Person",
+                "per-person-per-night": "Per Person/Per Night (PP/PN)"
+              }
+            },
+            "description": {
+              "label": "Description",
+              "placeholder": "Enter description (optional)"
+            },
+            "active": {
+              "label": "Active"
+            }
+          },
+          "empty-data": "No booking fees found. Click 'Add Fee' to create your first fee.",
+          "notifications": {
+            "create": {
+              "success": {
+                "title": "Fee Created",
+                "message": "Fee '{{name}}' has been successfully created"
+              },
+              "error": {
+                "title": "Creation Failed",
+                "message": "An error occurred while creating the fee. Please try again."
+              }
+            },
+            "load": {
+              "error": {
+                "title": "Loading Error",
+                "message": "An error occurred while loading fees"
+              }
             }
           }
         }

@@ -1,0 +1,163 @@
+<c-row class="mb-3">
+  <c-col md="12" class="d-flex justify-content-between align-items-center">
+    <h6 class="section-title underline mb-0">
+      {{ 'units.edit-unit.tabs.fees.title' | translate }}
+    </h6>
+
+    <div class="d-flex gap-2">
+      <!-- Add Fee Button -->
+      <button
+        cButton
+        color="primary"
+        size="sm"
+        variant="outline"
+        (click)="addNewFee()"
+        [disabled]="isLoading">
+        <svg [cIcon]="icons.cilPlus" size="sm" class="me-1"></svg>
+        {{ 'units.edit-unit.tabs.fees.add-btn' | translate }}
+      </button>
+
+      <!-- Copy Dropdown -->
+      <c-button-group>
+        <c-dropdown variant="btn-group">
+          <button
+            cButton
+            color="secondary"
+            size="sm"
+            variant="outline"
+            cDropdownToggle>
+            <svg [cIcon]="icons.cilCopy" size="sm" class="me-1"></svg>
+            {{ 'units.edit-unit.tabs.fees.copy-btn' | translate }}
+          </button>
+          <ul cDropdownMenu>
+            <li>
+              <button cDropdownItem (click)="openCopyFromModal()">
+                {{ 'units.edit-unit.tabs.fees.copy-from-rental' | translate }}
+              </button>
+            </li>
+            <li>
+              <button cDropdownItem (click)="openCopyToModal()">
+                {{ 'units.edit-unit.tabs.fees.copy-to-rental' | translate }}
+              </button>
+            </li>
+          </ul>
+        </c-dropdown>
+      </c-button-group>
+    </div>
+  </c-col>
+</c-row>
+
+<!-- New Fee Forms -->
+@for (newFee of newFees; track newFee.id; let i = $index) {
+  <c-row class="mb-3">
+    <c-col md="12">
+      <app-unit-fee-form
+        [unitId]="unitId"
+        [feeData]="newFee"
+        [formIndex]="i"
+        (feeCreated)="onFeeCreated($event, i)"
+        (feeCreationError)="onFeeCreationError(i)"
+        (formRemoved)="removeNewFee(i)">
+      </app-unit-fee-form>
+    </c-col>
+  </c-row>
+}
+
+<!-- Loading Spinner -->
+@if (isLoading) {
+  <c-row class="d-flex justify-content-center mt-4">
+    <c-spinner color="secondary"></c-spinner>
+  </c-row>
+  <c-row class="d-flex justify-content-center mt-2">
+    <c-col md="4" class="d-flex justify-content-center text-center">
+      {{ 'commons.snippets.loading' | translate }}
+    </c-col>
+  </c-row>
+}
+
+<!-- Fees List -->
+@if (!isLoading) {
+  @if (fees.length > 0 || newFees.length > 0) {
+    <div class="table-responsive">
+      <table cTable [responsive]="true">
+        <thead>
+        <tr>
+          <th>{{ 'units.edit-unit.tabs.fees.table.header.name' | translate }}</th>
+          <th>{{ 'units.edit-unit.tabs.fees.table.header.amount' | translate }}</th>
+          <th>{{ 'units.edit-unit.tabs.fees.table.header.type' | translate }}</th>
+          <th>{{ 'units.edit-unit.tabs.fees.table.header.modality' | translate }}</th>
+          <th>{{ 'units.edit-unit.tabs.fees.table.header.status' | translate }}</th>
+          <th>{{ 'commons.table.header.actions' | translate }}</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (fee of fees; track fee.id) {
+            <tr>
+              <td>
+                <div class="d-flex flex-column">
+                  <span class="fw-semibold">{{ fee.name }}</span>
+                  @if (fee.description) {
+                    <small class="text-muted">{{ fee.description }}</small>
+                  }
+                </div>
+              </td>
+              <td>
+                <span class="fw-semibold">{{ fee.amount }}</span>
+                <small class="text-muted ms-1">MAD</small>
+              </td>
+              <td>
+                <span class="badge"
+                      [ngClass]="fee.type === 'FLAT' ? 'bg-primary-transparent' : 'bg-secondary-transparent'">
+                  {{ getTypeLabel(fee.type) }}
+                </span>
+              </td>
+              <td>
+                <span class="badge bg-info-10 text-info">
+                  {{ getModalityLabel(fee.modality) }}
+                </span>
+              </td>
+              <td>
+                @if (fee.active) {
+                  <span class="text-success">
+                    <i class="bi bi-check-circle-fill me-1"></i>
+                    {{ 'units.edit-unit.tabs.fees.table.body.active' | translate }}
+                  </span>
+                } @else {
+                  <span class="text-muted">
+                    <i class="bi bi-pause-circle-fill me-1"></i>
+                    {{ 'units.edit-unit.tabs.fees.table.body.inactive' | translate }}
+                  </span>
+                }
+              </td>
+              <td>
+                <div class="d-flex gap-1">
+                  <button
+                    cButton
+                    size="sm"
+                    class="btn-secondary-light"
+                    type="button"
+                    title="{{ 'commons.table.actions.edit' | translate }}">
+                    <svg [cIcon]="icons.cilPen" size="sm"></svg>
+                  </button>
+                  <button
+                    cButton
+                    size="sm"
+                    class="btn-danger-light"
+                    type="button"
+                    title="{{ 'commons.table.actions.delete' | translate }}">
+                    <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <app-empty-data
+      imageSrc="assets/images/animations/fees.gif"
+      [message]="'units.edit-unit.tabs.fees.empty-data' | translate">
+    </app-empty-data>
+  }
+}
