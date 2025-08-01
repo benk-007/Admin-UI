@@ -1,0 +1,40 @@
+@use '../../../../../../../scss/variables' as *;
+
+// Wizard navigation styles (same as multi-unit-create-modal)
+.wizard-navigation {
+  .step-indicator {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid $border-color;
+    background-color: $light;
+    color: $gray;
+    transition: all 0.2s ease;
+
+    &.active {
+      background-color: $primary;
+      border-color: $primary;
+      color: white;
+    }
+
+    &.completed {
+      background-color: $success;
+      border-color: $success;
+      color: white;
+    }
+  }
+
+  .step-connector {
+    width: 3rem;
+    height: 2px;
+    background-color: $border-color;
+  }
+
+  .step-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}

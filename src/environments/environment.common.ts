@@ -45,7 +45,7 @@ export const commonProperties = {
   /*===========Fees===========*/
   // Fee resource
   fees: PRICING_SERVICE + 'fees',
-  feesApply: PRICING_SERVICE + 'fees/apply',
+  feesApply: PRICING_SERVICE + 'fees/copyTo',
 
 
   /*===========Guest Service===========*/

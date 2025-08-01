@@ -66,6 +66,7 @@
         "update": "Update",
         "create": "Create",
         "confirm": "Confirm",
+        "save": "Save",
         "cancel": "Cancel",
         "delete": "Delete",
         "previous-btn": "Previous",
@@ -1387,6 +1388,9 @@
           "copy-btn": "Copy",
           "copy-from-rental": "Copy from Rental",
           "copy-to-rental": "Copy to Rental",
+          "create": {
+            "title": "Add New Fee"
+          },
           "table": {
             "header": {
               "name": "Name",
@@ -1433,6 +1437,46 @@
               "label": "Active"
             }
           },
+          "copy-to": {
+            "title": "Copy Fees to Rentals",
+            "steps": {
+              "select-fees": {
+                "title": "Select Fees to Copy"
+              },
+              "select-rentals": {
+                "title": "Select Rentals to Copy to"
+              }
+            },
+            "buttons": {
+              "overwrite": "Overwrite",
+              "copy": "Copy"
+            },
+            "no-fees": "No fees found for copying. Please create fees first.",
+            "no-units": "No units available for copying. Please check your unit list.",
+            "select-units": {
+              "placeholder": "Select units to copy fees to..."
+            }
+          },
+          "copy-from": {
+            "title": "Copy Fees from Rentals",
+            "steps": {
+              "select-rentals": {
+                "title": "Select Rentals"
+              },
+              "select-fees": {
+                "title": "Select Fees to Copy"
+              }
+            },
+            "buttons": {
+              "overwrite": "Overwrite",
+              "copy": "Copy"
+            },
+            "no-units": "No units available. Please check your unit list.",
+            "no-fees": "No fees found in selected units. Please select units with existing fees.",
+            "select-units": {
+              "placeholder": "Select units to copy fees from..."
+            }
+          },
           "empty-data": "No booking fees found. Click 'Add Fee' to create your first fee.",
           "notifications": {
             "create": {
@@ -1450,10 +1494,19 @@
                 "title": "Loading Error",
                 "message": "An error occurred while loading fees"
               }
+            },
+            "copy": {
+              "success": {
+                "title": "Fees Copied Successfully",
+                "message": "{{count}} fee(s) have been successfully copied"
+              },
+              "error": {
+                "title": "Copy Failed",
+                "message": "An error occurred while copying fees. Please try again."
+              }
             }
           }
-        }
-      }
+        }      }
     }
   },
   "crm": {

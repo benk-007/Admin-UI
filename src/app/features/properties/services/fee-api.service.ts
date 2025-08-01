@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { PageModel } from '../../../shared/models/pageable/page.model';
 import { FeeGetModel } from '../models/fee/get/fee-get.model';
 import { FeePostModel } from '../models/fee/post/fee-post.model';
+import { FeePatchModel } from '../models/fee/patch/fee-patch.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,19 +26,23 @@ export class FeeApiService {
 
   /**
    * Get fees by unit ID with pagination
+   * Backend expects unitIds as Set<String> parameter
    */
   getFeesByUnitId(
     unitId: string,
     page: number = 0,
-    size: number = 5,
-    sort: string = 'createdAt',
-    sortDirection: string = 'desc'
+    size: number = 10,
+    sort: string = 'name',
+    sortDirection: string = 'asc'
   ): Observable<PageModel<FeeGetModel>> {
     let params = new HttpParams()
-      .set('unitId', unitId)
       .set('page', page.toString())
       .set('size', size.toString());
 
+    // Backend expects unitIds as Set<String>, so we pass it as unitIds parameter
+    params = params.set('unitIds', unitId);
+
+    // Add sort parameter if provided
     if (sort) {
       params = params.set('sort', `${sort},${sortDirection}`);
     }
@@ -51,33 +56,54 @@ export class FeeApiService {
   /**
    * Update an existing fee
    */
-  updateFee(feeId: string, payload: FeePostModel): Observable<FeeGetModel> {
-    return this.httpClient.put<FeeGetModel>(
+  updateFee(feeId: string, payload: FeePatchModel): Observable<FeeGetModel> {
+    return this.httpClient.patch<FeeGetModel>(
       environment.apiBaseUrl.concat(environment.fees).concat(`/${feeId}`),
       payload
     );
   }
 
   /**
-   * Get all fees with pagination (for copy from functionality)
+   * Delete a fee
+   */
+  deleteFee(feeId: string): Observable<void> {
+    return this.httpClient.delete<void>(
+      environment.apiBaseUrl.concat(environment.fees).concat(`/${feeId}`)
+    );
+  }
+
+  /**
+   * Get all fees with pagination and optional filters
+   * Used for copy functionality
    */
   getAllFees(
     page: number = 0,
-    size: number = 5,
-    sort: string = 'createdAt',
-    sortDirection: string = 'desc',
-    search?: string
+    size: number = 10,
+    sort: string = 'name',
+    sortDirection: string = 'asc',
+    search?: string,
+    unitIds?: string[]
   ): Observable<PageModel<FeeGetModel>> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
+    // Add sort parameter
     if (sort) {
       params = params.set('sort', `${sort},${sortDirection}`);
     }
 
-    if (search) {
-      params = params.set('search', search);
+    // Add search parameter if provided
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    // Add unitIds filter if provided
+    // Backend expects Set<String> so we add each unitId separately
+    if (unitIds && unitIds.length > 0) {
+      unitIds.forEach(unitId => {
+        params = params.append('unitIds', unitId);
+      });
     }
 
     return this.httpClient.get<PageModel<FeeGetModel>>(
@@ -87,28 +113,20 @@ export class FeeApiService {
   }
 
   /**
-   * Apply fees to units (copy)
+   * Copy fees to units
+   * Backend endpoint: POST /fees/copyTo?overwrite=true/false
    */
-  applyFeesToUnits(payload: {
+  copyFeesToUnits(payload: {
     feeIds: string[];
     unitIds: string[];
-  }): Observable<void> {
-    return this.httpClient.post<void>(
-      environment.apiBaseUrl.concat(environment.feesApply),
-      payload
-    );
-  }
+  }, overwrite: boolean = false): Observable<void> {
+    const url = environment.apiBaseUrl.concat(environment.feesApply);
+    let params = new HttpParams();
 
-  /**
-   * Apply fees to units (overwrite)
-   */
-  overwriteUnitsWithFees(payload: {
-    feeIds: string[];
-    unitIds: string[];
-  }): Observable<void> {
-    return this.httpClient.post<void>(
-      environment.apiBaseUrl.concat(environment.feesApply).concat('?overwrite=true'),
-      payload
-    );
+    if (overwrite) {
+      params = params.set('overwrite', 'true');
+    }
+
+    return this.httpClient.post<void>(url, payload, { params });
   }
 }

@@ -11,7 +11,7 @@
         color="primary"
         size="sm"
         variant="outline"
-        (click)="addNewFee()"
+        (click)="openFeeCreateModal()"
         [disabled]="isLoading">
         <svg [cIcon]="icons.cilPlus" size="sm" class="me-1"></svg>
         {{ 'units.edit-unit.tabs.fees.add-btn' | translate }}
@@ -47,22 +47,6 @@
   </c-col>
 </c-row>
 
-<!-- New Fee Forms -->
-@for (newFee of newFees; track newFee.id; let i = $index) {
-  <c-row class="mb-3">
-    <c-col md="12">
-      <app-unit-fee-form
-        [unitId]="unitId"
-        [feeData]="newFee"
-        [formIndex]="i"
-        (feeCreated)="onFeeCreated($event, i)"
-        (feeCreationError)="onFeeCreationError(i)"
-        (formRemoved)="removeNewFee(i)">
-      </app-unit-fee-form>
-    </c-col>
-  </c-row>
-}
-
 <!-- Loading Spinner -->
 @if (isLoading) {
   <c-row class="d-flex justify-content-center mt-4">
@@ -77,7 +61,7 @@
 
 <!-- Fees List -->
 @if (!isLoading) {
-  @if (fees.length > 0 || newFees.length > 0) {
+  @if (fees.length > 0) {
     <div class="table-responsive">
       <table cTable [responsive]="true">
         <thead>
@@ -136,6 +120,7 @@
                     size="sm"
                     class="btn-secondary-light"
                     type="button"
+                    (click)="editFee(fee)"
                     title="{{ 'commons.table.actions.edit' | translate }}">
                     <svg [cIcon]="icons.cilPen" size="sm"></svg>
                   </button>
@@ -144,6 +129,7 @@
                     size="sm"
                     class="btn-danger-light"
                     type="button"
+                    (click)="deleteFee(fee)"
                     title="{{ 'commons.table.actions.delete' | translate }}">
                     <svg [cIcon]="icons.cilTrash" size="sm"></svg>
                   </button>

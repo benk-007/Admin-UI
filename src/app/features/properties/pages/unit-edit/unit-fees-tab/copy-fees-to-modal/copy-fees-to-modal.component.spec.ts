@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UnitFeeFormComponent } from './unit-fee-form.component';
+import { CopyFeesToModalComponent } from './copy-fees-to-modal.component';
 
-describe('UnitFeeFormComponent', () => {
-  let component: UnitFeeFormComponent;
-  let fixture: ComponentFixture<UnitFeeFormComponent>;
+describe('CopyFeesToModalComponent', () => {
+  let component: CopyFeesToModalComponent;
+  let fixture: ComponentFixture<CopyFeesToModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UnitFeeFormComponent]
+      imports: [CopyFeesToModalComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UnitFeeFormComponent);
+    fixture = TestBed.createComponent(CopyFeesToModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
