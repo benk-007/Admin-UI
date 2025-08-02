@@ -1,4 +1,7 @@
 {
+  "header": {
+    "new-booking": "New booking"
+  },
   "commons": {
     "form": {
       "name-input": {

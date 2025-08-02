@@ -393,8 +393,8 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
     const raw = this.form.value;
     const payload: AvailabilityPostModel = {
       party: raw.party,
-      checkinDate: this.dateRange.startDate.format('DD-MM-YYYY'),
-      checkoutDate: this.dateRange.endDate.format('DD-MM-YYYY'),
+      checkinDate: this.dateRange.startDate.format('YYYY-MM-DD'),
+      checkoutDate: this.dateRange.endDate.format('YYYY-MM-DD'),
       segmentId: raw.segmentId?.id ?? null,
       subSegmentId: raw.subSegmentId?.id ?? null,
       guests: { adults: raw.adults, children: childrenPayload }
