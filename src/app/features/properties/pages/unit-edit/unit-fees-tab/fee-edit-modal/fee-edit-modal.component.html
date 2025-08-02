@@ -1,0 +1,164 @@
+<!-- Modal title -->
+<div class="modal-header justify-content-center align-items-center">
+  <h6 class="modal-title">
+    {{ 'units.edit-unit.tabs.fees.edit.title' | translate }}
+  </h6>
+</div>
+
+<!-- Modal body -->
+<div class="modal-body">
+  <form (submit)="submit()" [formGroup]="feeForm" cForm>
+    <c-row>
+      <!-- Left Column: Name, Amount, Type, Modality, Active -->
+      <c-col md="6">
+        <!-- First Row: Name and Amount -->
+        <c-row class="mb-3">
+          <c-col md="6">
+            <label cLabel class="required" for="feeName">
+              {{ 'units.edit-unit.tabs.fees.form.name.label' | translate }}
+            </label>
+            <input
+              cFormControl
+              formControlName="name"
+              id="feeName"
+              type="text"
+              [placeholder]="'units.edit-unit.tabs.fees.form.name.placeholder' | translate">
+            @if (feeForm.get('name')?.touched && feeForm.get('name')?.hasError('required')) {
+              <c-form-feedback [valid]="false">
+                {{ 'commons.errors.required' | translate }}
+              </c-form-feedback>
+            }
+          </c-col>
+
+          <c-col md="6">
+            <label cLabel class="required" for="feeAmount">
+              {{ 'units.edit-unit.tabs.fees.form.amount.label' | translate }}
+            </label>
+            <input
+              cFormControl
+              formControlName="amount"
+              id="feeAmount"
+              type="number"
+              step="0.01"
+              min="0"
+              [placeholder]="'units.edit-unit.tabs.fees.form.amount.placeholder' | translate">
+            @if (feeForm.get('amount')?.touched) {
+              @if (feeForm.get('amount')?.hasError('required')) {
+                <c-form-feedback [valid]="false">
+                  {{ 'commons.errors.required' | translate }}
+                </c-form-feedback>
+              }
+              @if (feeForm.get('amount')?.hasError('min')) {
+                <c-form-feedback [valid]="false">
+                  {{ 'commons.errors.strictly-positive' | translate }}
+                </c-form-feedback>
+              }
+            }
+          </c-col>
+        </c-row>
+
+        <!-- Second Row: Type and Modality -->
+        <c-row class="mb-3">
+          <c-col md="6">
+            <label cLabel for="feeType" class="required">
+              {{ 'units.edit-unit.tabs.fees.form.type.label' | translate }}
+            </label>
+            <select cSelect id="feeType" formControlName="type">
+              <option *ngFor="let type of feeTypes" [value]="type">
+                {{ ('units.edit-unit.tabs.fees.form.type.values.' + type.toLowerCase()) | translate }}
+              </option>
+            </select>
+            @if ((feeForm.get('type')?.touched || feeForm.get('type')?.dirty) && feeForm.controls['type'].hasError('required')) {
+              <c-form-feedback [valid]="false">
+                {{ 'commons.errors.required' | translate }}
+              </c-form-feedback>
+            }
+          </c-col>
+
+          <c-col md="6">
+            <label cLabel for="feeModality" class="required">
+              {{ 'units.edit-unit.tabs.fees.form.modality.label' | translate }}
+            </label>
+            <select cSelect id="feeModality" formControlName="modality">
+              <option *ngFor="let modality of feeModalities" [value]="modality">
+                {{ ('units.edit-unit.tabs.fees.form.modality.values.' + getModalityKey(modality)) | translate }}
+              </option>
+            </select>
+            @if ((feeForm.get('modality')?.touched || feeForm.get('modality')?.dirty) && feeForm.controls['modality'].hasError('required')) {
+              <c-form-feedback [valid]="false">
+                {{ 'commons.errors.required' | translate }}
+              </c-form-feedback>
+            }
+          </c-col>
+        </c-row>
+
+        <!-- Third Row: Active Toggle -->
+        <c-row class="mb-3">
+          <c-col md="6" class="d-flex align-items-center">
+            <c-form-check [switch]="true">
+              <input
+                cFormCheckInput
+                formControlName="active"
+                type="checkbox"
+                id="feeActive">
+              <label cFormCheckLabel for="feeActive">
+                {{ 'units.edit-unit.tabs.fees.form.active.label' | translate }}
+              </label>
+            </c-form-check>
+          </c-col>
+        </c-row>
+      </c-col>
+
+      <!-- Right Column: Description -->
+      <c-col md="6">
+        <label cLabel for="feeDescription">
+          {{ 'units.edit-unit.tabs.fees.form.description.label' | translate }}
+        </label>
+        <textarea
+          cFormControl
+          formControlName="description"
+          id="feeDescription"
+          rows="6"
+          [placeholder]="'units.edit-unit.tabs.fees.form.description.placeholder' | translate">
+        </textarea>
+      </c-col>
+    </c-row>
+
+    <!-- Loading indicator when submitting -->
+    @if (isSubmitting) {
+      <c-row>
+        <c-col md="12" class="text-center mt-2">
+          <div class="d-flex align-items-center justify-content-center">
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            <small class="text-muted">Updating fee...</small>
+          </div>
+        </c-col>
+      </c-row>
+    }
+
+    <!-- Modal footer -->
+    <c-row class="mt-4">
+      <c-col class="d-flex justify-content-end">
+        <button
+          type="button"
+          cButton
+          color="light"
+          size="sm"
+          variant="ghost"
+          (click)="closeModal()"
+          [disabled]="isSubmitting">
+          {{ 'commons.form.buttons.cancel' | translate }}
+        </button>
+        <button
+          type="submit"
+          cButton
+          class="ms-3"
+          color="primary"
+          size="sm"
+          [disabled]="!feeForm.valid || isSubmitting">
+          {{ 'commons.form.buttons.save' | translate }}
+        </button>
+      </c-col>
+    </c-row>
+  </form>
+</div>

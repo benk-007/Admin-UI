@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -19,14 +19,14 @@ import {
 } from '@coreui/angular';
 
 import { FeeApiService } from '../../../../services/fee-api.service';
-import { FeePostModel } from '../../../../models/fee/post/fee-post.model';
+import { FeePatchModel } from '../../../../models/fee/patch/fee-patch.model';
 import { FeeGetModel } from '../../../../models/fee/get/fee-get.model';
 import { FeeTypeEnum } from '../../../../models/fee/enum/fee-type.enum';
 import { FeeModalityEnum } from '../../../../models/fee/enum/fee-modality.enum';
 import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-fee-create-modal',
+  selector: 'app-fee-edit-modal',
   standalone: true,
   imports: [
     CommonModule,
@@ -44,12 +44,12 @@ import {TranslatePipe} from '@ngx-translate/core';
     RowComponent,
     TranslatePipe
   ],
-  templateUrl: './fee-create-modal.component.html',
-  styleUrl: './fee-create-modal.component.scss'
+  templateUrl: './fee-edit-modal.component.html',
+  styleUrl: './fee-edit-modal.component.scss'
 })
-export class FeeCreateModalComponent implements OnDestroy {
+export class FeeEditModalComponent implements OnInit, OnDestroy {
 
-  @Input() unitId!: string;
+  @Input() feeToEdit!: FeeGetModel;
   @Output() actionConfirmed = new EventEmitter<FeeGetModel>();
 
   feeForm: FormGroup;
@@ -68,6 +68,12 @@ export class FeeCreateModalComponent implements OnDestroy {
     private readonly toastrService: ToastrService
   ) {
     this.feeForm = this.createForm();
+  }
+
+  ngOnInit(): void {
+    if (this.feeToEdit) {
+      this.populateForm();
+    }
   }
 
   ngOnDestroy(): void {
@@ -89,6 +95,20 @@ export class FeeCreateModalComponent implements OnDestroy {
   }
 
   /**
+   * Populate form with existing fee data
+   */
+  private populateForm(): void {
+    this.feeForm.patchValue({
+      name: this.feeToEdit.name,
+      amount: this.feeToEdit.amount,
+      type: this.feeToEdit.type,
+      modality: this.feeToEdit.modality,
+      description: this.feeToEdit.description || '',
+      active: this.feeToEdit.active
+    });
+  }
+
+  /**
    * Submit the form
    */
   submit(): void {
@@ -99,36 +119,35 @@ export class FeeCreateModalComponent implements OnDestroy {
     this.isSubmitting = true;
     const formValue = this.feeForm.value;
 
-    const payload: FeePostModel = {
+    const payload: FeePatchModel = {
       name: formValue.name.trim(),
       amount: parseFloat(formValue.amount),
       type: formValue.type,
       modality: formValue.modality,
       description: formValue.description?.trim() || undefined,
-      active: formValue.active,
-      unit: { id: this.unitId }
+      active: formValue.active
     };
 
     this.subscriptions.push(
-      this.feeApiService.createFee(payload).subscribe({
-        next: (createdFee) => {
+      this.feeApiService.updateFee(this.feeToEdit.id, payload).subscribe({
+        next: (updatedFee) => {
           this.isSubmitting = false; // Reset loading state
-          this.actionConfirmed.emit(createdFee);
+          this.actionConfirmed.emit(updatedFee);
           this.closeModal();
-          this.toastrService.success(
-            `Fee "${createdFee.name}" has been successfully created`,
-            'Fee Created'
+          this.toastrService.info(
+            `Fee "${updatedFee.name}" has been successfully updated`,
+            'Fee Updated'
           );
         },
         error: (error) => {
-          console.error('Error creating fee:', error);
+          console.error('Error updating fee:', error);
           this.isSubmitting = false; // Reset loading state
 
           // Handle specific error cases
           const errorMessage = error?.error?.detail ||
-            'An error occurred while creating the fee. Please try again.';
+            'An error occurred while updating the fee. Please try again.';
 
-          this.toastrService.error(errorMessage, 'Creation Failed');
+          this.toastrService.error(errorMessage, 'Update Failed');
         }
       })
     );
@@ -141,11 +160,7 @@ export class FeeCreateModalComponent implements OnDestroy {
     if (this.isSubmitting) return;
 
     this.modalRef.hide();
-    this.feeForm.reset({
-      type: FeeTypeEnum.FLAT,
-      modality: FeeModalityEnum.PER_STAY,
-      active: true
-    });
+    this.feeForm.reset();
     this.isSubmitting = false;
   }
 

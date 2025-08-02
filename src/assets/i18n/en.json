@@ -1389,7 +1389,26 @@
           "copy-from-rental": "Copy from Rental",
           "copy-to-rental": "Copy to Rental",
           "create": {
-            "title": "Add New Fee"
+            "title": "Add Fee"
+          },
+          "edit": {
+            "title": "Edit Fee"
+          },
+          "delete": {
+            "modal": {
+              "title": "Delete Fee",
+              "message": "Are you sure you want to delete the fee \"{{name}}\"? This action cannot be undone."
+            },
+            "notifications": {
+              "success": {
+                "title": "Fee Deleted",
+                "message": "Fee \"{{name}}\" has been successfully deleted"
+              },
+              "error": {
+                "title": "Delete Failed",
+                "message": "An error occurred while deleting the fee. Please try again."
+              }
+            }
           },
           "table": {
             "header": {
@@ -1407,11 +1426,11 @@
           "form": {
             "name": {
               "label": "Name",
-              "placeholder": "Enter fee name"
+              "placeholder": "Name"
             },
             "amount": {
               "label": "Amount (MAD)",
-              "placeholder": "Enter amount"
+              "placeholder": "Amount (MAD)"
             },
             "type": {
               "label": "Type",
@@ -1431,7 +1450,7 @@
             },
             "description": {
               "label": "Description",
-              "placeholder": "Enter description (optional)"
+              "placeholder": "Description"
             },
             "active": {
               "label": "Active"
@@ -1503,6 +1522,16 @@
               "error": {
                 "title": "Copy Failed",
                 "message": "An error occurred while copying fees. Please try again."
+              }
+            },
+            "update": {
+              "success": {
+                "title": "Fee Updated",
+                "message": "Fee \"{{name}}\" has been successfully updated"
+              },
+              "error": {
+                "title": "Update Failed",
+                "message": "An error occurred while updating the fee. Please try again."
               }
             }
           }

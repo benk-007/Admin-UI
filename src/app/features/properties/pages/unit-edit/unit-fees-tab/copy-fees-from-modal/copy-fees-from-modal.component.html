@@ -43,14 +43,8 @@
   <!-- Step 1: Select Rentals -->
   @if (currentStep === 1) {
     <div class="step1">
-      <!-- Unit select and search bar -->
+      <!-- Search bar only (no unit select) -->
       <c-row class="mb-3">
-        <c-col md="6">
-          <app-unit-select
-            [(ngModel)]="selectedUnits"
-            [allowMultiUnit]="true">
-          </app-unit-select>
-        </c-col>
         <c-col md="6">
           <c-input-group sizing="sm" class="search-input">
             <span cInputGroupText>
@@ -76,16 +70,13 @@
         </c-row>
       }
 
-      <!-- Units Table with Selection -->
+      <!-- Units Table with Selection - Only Name column -->
       @if (!isLoadingUnits && units.length > 0) {
         <div class="table-responsive">
           <table cTable [responsive]="true" appSelectableTable (selectionChange)="onUnitsSelectionChange($event)">
             <thead>
             <tr>
               <th>{{ 'units.unit-list.table.header.name' | translate }}</th>
-              <th>{{ 'units.unit-list.table.header.description' | translate }}</th>
-              <th>{{ 'units.unit-list.table.header.city' | translate }}</th>
-              <th>{{ 'units.unit-list.table.header.country' | translate }}</th>
             </tr>
             </thead>
             <tbody>
@@ -119,20 +110,6 @@
                       </div>
                     </div>
                   </td>
-                  <td>
-                    @if (unit.beds || unit.bathrooms) {
-                      <span>
-                        <span class="me-1 fs-6">{{ unit.beds || 0 }}</span>
-                        <svg [cIcon]="icons.cilBed" size="sm" class="text-secondary me-2"></svg>
-                      </span>
-                      <span>
-                        <span class="me-1 fs-6">{{ unit.bathrooms || 0 }}</span>
-                        <svg [cIcon]="icons.cilBath" size="sm" class="text-warning"></svg>
-                      </span>
-                    }
-                  </td>
-                  <td>{{ unit.address?.city }}</td>
-                  <td>{{ 'commons.countries.' + unit.address?.country | translate }}</td>
                 </tr>
               }
             </tbody>
@@ -208,16 +185,7 @@
               @for (fee of fees; track fee.id; let i = $index) {
                 <tr>
                   <td>
-                    <div class="d-flex flex-column">
-                      <span class="fw-semibold">{{ fee.name }}</span>
-                      @if (fee.description) {
-                        <small class="text-muted">{{ fee.description }}</small>
-                      }
-                      <!-- Show source unit name -->
-                      <small class="text-info">
-                        <i class="bi bi-house-fill me-1"></i>{{ getUnitNameById(fee.unit.id) }}
-                      </small>
-                    </div>
+                    <span class="fw-semibold">{{ fee.name }}</span>
                   </td>
                   <td>
                     <span class="badge bg-info-10 text-info">
@@ -226,13 +194,12 @@
                   </td>
                   <td>
                     <span class="badge"
-                          [ngClass]="fee.type === 'FLAT' ? 'bg-primary-transparent' : 'bg-secondary-transparent'">
+                          [ngClass]="fee.type === 'FLAT' ? 'bg-secondary-transparent' : 'bg-dark'">
                       {{ getTypeLabel(fee.type) }}
                     </span>
                   </td>
                   <td>
-                    <span class="fw-semibold">{{ fee.amount }}</span>
-                    <small class="text-muted ms-1">MAD</small>
+                    <span class="fw-semibold">{{ fee.amount | number:'1.2-2' }}</span>
                   </td>
                 </tr>
               }

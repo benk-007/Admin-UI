@@ -74,25 +74,29 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
   selectedFeeIds: string[] = [];
   selectedFees: FeeGetModel[] = [];
 
+  // Unit selection for fees (Step 1)
+  selectedSourceUnits: UnitItemGetModel[] = [];
+  selectedSourceUnitIds: string[] = [];
+
   // Fees pagination
   currentFeesPage = 0;
-  feesPageSize = 10;
+  feesPageSize = 5;
   totalFeesElements = 0;
   feesSearchTerm = '';
   feesSearchSubject = new Subject<string>();
 
-  // Step 2: Units selection
-  units: UnitItemGetModel[] = [];
-  isLoadingUnits = false;
-  selectedUnitIds: string[] = [];
-  selectedUnits: UnitItemGetModel[] = [];
+  // Step 2: Target units selection
+  targetUnits: UnitItemGetModel[] = [];
+  isLoadingTargetUnits = false;
+  selectedTargetUnitIds: string[] = [];
+  selectedTargetUnits: UnitItemGetModel[] = [];
 
-  // Units pagination
-  currentUnitsPage = 0;
-  unitsPageSize = 10;
-  totalUnitsElements = 0;
-  unitsSearchTerm = '';
-  unitsSearchSubject = new Subject<string>();
+  // Target units pagination
+  currentTargetUnitsPage = 0;
+  targetUnitsPageSize = 5;
+  totalTargetUnitsElements = 0;
+  targetUnitsSearchTerm = '';
+  targetUnitsSearchSubject = new Subject<string>();
 
   // Math reference for template
   Math = Math;
@@ -108,11 +112,48 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setupSearchSubscriptions();
-    this.loadFees();
-  }
+    this.initializeWithCurrentUnit();
 
+    // Pre-populate the selectedSourceUnits for the unit-select component
+    this.subscriptions.push(
+      this.unitApiService.getUnitById(this.sourceUnitId).subscribe({
+        next: (unit) => {
+          const unitItem: UnitItemGetModel = {
+            id: unit.id,
+            name: unit.name,
+            subtitle: unit.subtitle,
+            beds: 0,
+            bathrooms: 0,
+            audit: unit.audit,
+            readiness: unit.readiness,
+            nature: unit.nature,
+            contact: unit.contact,
+            address: unit.address,
+            parent: unit.parent,
+            priority: 0,
+            subUnits: []
+          };
+
+          this.selectedSourceUnits = [unitItem];
+        },
+        error: (error) => {
+          console.error('Error loading current unit:', error);
+        }
+      })
+    );
+  }
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  /**
+   * Initialize with current unit selected by default
+   */
+  private initializeWithCurrentUnit(): void {
+    // Set the current unit ID as pre-selected without fetching it again
+    // The unit-select component will handle the display
+    this.selectedSourceUnitIds = [this.sourceUnitId];
+    this.loadFeesFromSelectedUnits();
   }
 
   /**
@@ -127,27 +168,49 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
       ).subscribe(searchTerm => {
         this.feesSearchTerm = searchTerm;
         this.currentFeesPage = 0;
-        this.loadFees();
+        this.loadFeesFromSelectedUnits();
       })
     );
 
-    // Units search
+    // Target units search
     this.subscriptions.push(
-      this.unitsSearchSubject.pipe(
+      this.targetUnitsSearchSubject.pipe(
         debounceTime(300),
         distinctUntilChanged()
       ).subscribe(searchTerm => {
-        this.unitsSearchTerm = searchTerm;
-        this.currentUnitsPage = 0;
-        this.loadUnits();
+        this.targetUnitsSearchTerm = searchTerm;
+        this.currentTargetUnitsPage = 0;
+        this.loadTargetUnits();
       })
     );
   }
 
   /**
-   * Load fees from current unit (exclude the source unit)
+   * Handle unit selection change from unit-select component
    */
-  private loadFees(): void {
+  onUnitSelectionChange(selectedUnits: UnitItemGetModel[]): void {
+    this.selectedSourceUnits = selectedUnits || [];
+    this.selectedSourceUnitIds = this.selectedSourceUnits.map(unit => unit.id);
+
+    // Reset fees selection when units change
+    this.selectedFeeIds = [];
+    this.selectedFees = [];
+    this.currentFeesPage = 0;
+
+    this.loadFeesFromSelectedUnits();
+  }
+
+  /**
+   * Load fees from selected source units
+   */
+  private loadFeesFromSelectedUnits(): void {
+    if (this.selectedSourceUnitIds.length === 0) {
+      this.fees = [];
+      this.totalFeesElements = 0;
+      this.isLoadingFees = false;
+      return;
+    }
+
     this.isLoadingFees = true;
 
     this.subscriptions.push(
@@ -156,11 +219,11 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
         this.feesPageSize,
         'name',
         'asc',
-        this.feesSearchTerm
+        this.feesSearchTerm,
+        this.selectedSourceUnitIds
       ).subscribe({
         next: (response) => {
-          // Filter out fees from the current unit
-          this.fees = response.content.filter(fee => fee.unit.id !== this.sourceUnitId);
+          this.fees = response.content;
           this.totalFeesElements = response.totalElements;
           this.isLoadingFees = false;
         },
@@ -174,17 +237,17 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Load units (MULTI_UNIT and single units without parent)
+   * Load target units (MULTI_UNIT and single units without parent, excluding source units)
    */
-  private loadUnits(): void {
-    this.isLoadingUnits = true;
+  private loadTargetUnits(): void {
+    this.isLoadingTargetUnits = true;
 
     const pageFilter: PageFilterModel = {
-      page: this.currentUnitsPage,
-      size: this.unitsPageSize,
+      page: this.currentTargetUnitsPage,
+      size: this.targetUnitsPageSize,
       sort: 'name',
       sortDirection: 'asc',
-      search: this.unitsSearchTerm,
+      search: this.targetUnitsSearchTerm,
       advancedSearchFormValue: {
         withParent: false // Only units without parent or MULTI_UNIT
       }
@@ -193,15 +256,14 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.unitApiService.getUnitsByPage(pageFilter).subscribe({
         next: (response) => {
-          // Filter out the current unit
-          this.units = response.content.filter(unit => unit.id !== this.sourceUnitId);
-          this.totalUnitsElements = response.totalElements;
-          this.isLoadingUnits = false;
+          this.targetUnits = response.content;
+          this.totalTargetUnitsElements = response.totalElements;
+          this.isLoadingTargetUnits = false;
         },
         error: (error) => {
-          console.error('Error loading units:', error);
-          this.toastrService.error('Error loading units', 'Loading Error');
-          this.isLoadingUnits = false;
+          console.error('Error loading target units:', error);
+          this.toastrService.error('Error loading target units', 'Loading Error');
+          this.isLoadingTargetUnits = false;
         }
       })
     );
@@ -216,11 +278,11 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Handle units selection change
+   * Handle target units selection change
    */
-  onUnitsSelectionChange(selectedIndices: string[]): void {
-    this.selectedUnitIds = selectedIndices.map(index => this.units[parseInt(index)].id);
-    this.selectedUnits = this.units.filter(unit => this.selectedUnitIds.includes(unit.id));
+  onTargetUnitsSelectionChange(selectedIndices: string[]): void {
+    this.selectedTargetUnitIds = selectedIndices.map(index => this.targetUnits[parseInt(index)].id);
+    this.selectedTargetUnits = this.targetUnits.filter(unit => this.selectedTargetUnitIds.includes(unit.id));
   }
 
   /**
@@ -232,11 +294,11 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Search units
+   * Search target units
    */
-  searchUnits(event: Event): void {
+  searchTargetUnits(event: Event): void {
     const searchTerm = (event.target as HTMLInputElement).value;
-    this.unitsSearchSubject.next(searchTerm);
+    this.targetUnitsSearchSubject.next(searchTerm);
   }
 
   /**
@@ -245,7 +307,7 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
   nextStep(): void {
     if (this.currentStep === 1 && this.selectedFeeIds.length > 0) {
       this.currentStep = 2;
-      this.loadUnits();
+      this.loadTargetUnits();
     }
   }
 
@@ -259,10 +321,10 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Copy fees to selected units
+   * Copy fees to selected target units
    */
   copyFees(overwrite: boolean): void {
-    if (this.selectedFeeIds.length === 0 || this.selectedUnitIds.length === 0) {
+    if (this.selectedFeeIds.length === 0 || this.selectedTargetUnitIds.length === 0) {
       return;
     }
 
@@ -271,23 +333,24 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
 
     const payload = {
       feeIds: this.selectedFeeIds,
-      unitIds: this.selectedUnitIds
+      unitIds: this.selectedTargetUnitIds
     };
 
     this.subscriptions.push(
       this.feeApiService.copyFeesToUnits(payload, overwrite).subscribe({
         next: () => {
+          this.isSubmitting = false; // Reset loading state
           this.actionConfirmed.emit();
           this.closeModal();
 
           const action = overwrite ? 'overwritten' : 'copied';
-          const message = `${this.selectedFeeIds.length} fee(s) ${action} to ${this.selectedUnitIds.length} unit(s)`;
+          const message = `${this.selectedFeeIds.length} fee(s) ${action} to ${this.selectedTargetUnitIds.length} unit(s)`;
 
           this.toastrService.success(message, 'Fees Copied Successfully');
         },
         error: (error) => {
           console.error('Error copying fees:', error);
-          this.isSubmitting = false;
+          this.isSubmitting = false; // Reset loading state
           this.actionType = null;
 
           const errorMessage = error?.error?.detail ||
@@ -318,10 +381,14 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
     this.actionType = null;
     this.selectedFeeIds = [];
     this.selectedFees = [];
-    this.selectedUnitIds = [];
-    this.selectedUnits = [];
+    this.selectedTargetUnitIds = [];
+    this.selectedTargetUnits = [];
+    this.selectedSourceUnits = [];
+    this.selectedSourceUnitIds = [];
     this.feesSearchTerm = '';
-    this.unitsSearchTerm = '';
+    this.targetUnitsSearchTerm = '';
+    this.fees = [];
+    this.targetUnits = [];
   }
 
   /**
@@ -356,5 +423,13 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
    */
   getAvatarColor(name: string): string {
     return UtilsService.getAvatarColor(name);
+  }
+
+  /**
+   * Get unit name by ID from selected source units
+   */
+  getUnitNameById(unitId: string): string {
+    const unit = this.selectedSourceUnits.find(u => u.id === unitId);
+    return unit ? unit.name : 'Unknown Unit';
   }
 }

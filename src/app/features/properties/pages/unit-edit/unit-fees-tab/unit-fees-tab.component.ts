@@ -28,6 +28,8 @@ import { EmptyDataComponent } from '../../../../../shared/components/empty-data/
 import { FeeCreateModalComponent } from './fee-create-modal/fee-create-modal.component';
 import { CopyFeesToModalComponent } from './copy-fees-to-modal/copy-fees-to-modal.component';
 import { CopyFeesFromModalComponent } from './copy-fees-from-modal/copy-fees-from-modal.component';
+import { FeeEditModalComponent } from './fee-edit-modal/fee-edit-modal.component';
+import { ConfirmModalComponent } from '../../../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-unit-fees-tab',
@@ -127,11 +129,13 @@ export class UnitFeesTabComponent implements OnInit, OnDestroy {
    */
   openFeeCreateModal(): void {
     const initialState = {
-      unitId: this.unitId,
-      class: 'modal-md'
+      unitId: this.unitId
     };
 
-    const modalRef = this.modalService.show(FeeCreateModalComponent, { initialState });
+    const modalRef = this.modalService.show(FeeCreateModalComponent, {
+      initialState,
+      class: 'modal-lg' // Use large modal size
+    });
 
     this.subscriptions.push(
       (modalRef.content as FeeCreateModalComponent).actionConfirmed.subscribe((createdFee) => {
@@ -145,11 +149,13 @@ export class UnitFeesTabComponent implements OnInit, OnDestroy {
    */
   openCopyFromModal(): void {
     const initialState = {
-      targetUnitId: this.unitId,
-      class: 'modal-lg'
+      targetUnitId: this.unitId
     };
 
-    const modalRef = this.modalService.show(CopyFeesFromModalComponent, { initialState });
+    const modalRef = this.modalService.show(CopyFeesFromModalComponent, {
+      initialState,
+      class: 'modal-xl' // Use extra large modal size
+    });
 
     this.subscriptions.push(
       (modalRef.content as CopyFeesFromModalComponent).actionConfirmed.subscribe(() => {
@@ -163,11 +169,13 @@ export class UnitFeesTabComponent implements OnInit, OnDestroy {
    */
   openCopyToModal(): void {
     const initialState = {
-      sourceUnitId: this.unitId,
-      class: 'modal-lg'
+      sourceUnitId: this.unitId
     };
 
-    const modalRef = this.modalService.show(CopyFeesToModalComponent, { initialState });
+    const modalRef = this.modalService.show(CopyFeesToModalComponent, {
+      initialState,
+      class: 'modal-xl' // Use extra large modal size
+    });
 
     this.subscriptions.push(
       (modalRef.content as CopyFeesToModalComponent).actionConfirmed.subscribe(() => {
@@ -181,18 +189,63 @@ export class UnitFeesTabComponent implements OnInit, OnDestroy {
    * Edit fee
    */
   editFee(fee: FeeGetModel): void {
-    // TODO: Implement edit functionality
-    console.log('Edit fee:', fee);
-    this.toastrService.info('Edit fee feature coming soon!', 'Feature Preview');
+    const initialState = {
+      feeToEdit: fee
+    };
+
+    const modalRef = this.modalService.show(FeeEditModalComponent, {
+      initialState,
+      class: 'modal-lg' // Use large modal size
+    });
+
+    this.subscriptions.push(
+      (modalRef.content as FeeEditModalComponent).actionConfirmed.subscribe((updatedFee) => {
+        this.loadFees(); // Reload the list
+      })
+    );
   }
 
   /**
    * Delete fee
    */
   deleteFee(fee: FeeGetModel): void {
-    // TODO: Implement delete functionality
-    console.log('Delete fee:', fee);
-    this.toastrService.info('Delete fee feature coming soon!', 'Feature Preview');
+    const initialState = {
+      title: 'Delete Fee',
+      message: `Are you sure you want to delete the fee "${fee.name}"? This action cannot be undone.`
+    };
+
+    const confirmModalRef = this.modalService.show(ConfirmModalComponent, { initialState });
+
+    this.subscriptions.push(
+      (confirmModalRef.content as ConfirmModalComponent).actionConfirmed.subscribe(() => {
+        this.performDeleteFee(fee);
+      })
+    );
+  }
+
+  /**
+   * Perform the actual fee deletion
+   */
+  private performDeleteFee(fee: FeeGetModel): void {
+    this.subscriptions.push(
+      this.feeApiService.deleteFee(fee.id).subscribe({
+        next: () => {
+          this.loadFees(); // Reload the list
+          this.toastrService.success(
+            `Fee "${fee.name}" has been successfully deleted`,
+            'Fee Deleted'
+          );
+        },
+        error: (error) => {
+          console.error('Error deleting fee:', error);
+
+          const errorMessage = error?.error?.detail ||
+            'An error occurred while deleting the fee. Please try again.';
+
+          this.toastrService.error(errorMessage, 'Delete Failed');
+        }
+      })
+    );
   }
 
   /**

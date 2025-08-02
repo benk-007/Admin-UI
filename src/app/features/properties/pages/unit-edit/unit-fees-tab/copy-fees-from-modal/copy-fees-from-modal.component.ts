@@ -27,7 +27,6 @@ import { FeeTypeEnum } from '../../../../models/fee/enum/fee-type.enum';
 import { FeeModalityEnum } from '../../../../models/fee/enum/fee-modality.enum';
 import {EmptyDataComponent} from '../../../../../../shared/components/empty-data/empty-data.component';
 import { SelectableTableDirective } from 'src/app/shared/directives/selectable-table.directive';
-import {UnitSelectComponent} from '../../../../../../shared/components/unit-select/unit-select.component';
 import {PageFilterModel} from '../../../../../../shared/models/page-filter.model';
 import {UtilsService} from '../../../../../../shared/services/utils.service';
 
@@ -50,7 +49,6 @@ import {UtilsService} from '../../../../../../shared/services/utils.service';
     IconDirective,
     AvatarComponent,
     EmptyDataComponent,
-    UnitSelectComponent,
     SelectableTableDirective
   ],
   templateUrl: './copy-fees-from-modal.component.html',
@@ -76,12 +74,12 @@ export class CopyFeesFromModalComponent implements OnInit, OnDestroy {
 
   // Units pagination
   currentUnitsPage = 0;
-  unitsPageSize = 10;
+  unitsPageSize = 5;
   totalUnitsElements = 0;
   unitsSearchTerm = '';
   unitsSearchSubject = new Subject<string>();
 
-  // Step 2: Fees selection
+  // Step 2: Fees selection from selected units
   fees: FeeGetModel[] = [];
   isLoadingFees = false;
   selectedFeeIds: string[] = [];
@@ -89,7 +87,7 @@ export class CopyFeesFromModalComponent implements OnInit, OnDestroy {
 
   // Fees pagination
   currentFeesPage = 0;
-  feesPageSize = 10;
+  feesPageSize = 5;
   totalFeesElements = 0;
   feesSearchTerm = '';
   feesSearchSubject = new Subject<string>();
@@ -179,12 +177,13 @@ export class CopyFeesFromModalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Load fees from selected units
+   * Load fees from selected units only
    */
   private loadFeesFromSelectedUnits(): void {
     if (this.selectedUnitIds.length === 0) {
       this.fees = [];
       this.totalFeesElements = 0;
+      this.isLoadingFees = false;
       return;
     }
 
@@ -197,7 +196,7 @@ export class CopyFeesFromModalComponent implements OnInit, OnDestroy {
         'name',
         'asc',
         this.feesSearchTerm,
-        this.selectedUnitIds
+        this.selectedUnitIds  // Only fees from selected units
       ).subscribe({
         next: (response) => {
           this.fees = response.content;
@@ -290,6 +289,7 @@ export class CopyFeesFromModalComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.feeApiService.copyFeesToUnits(payload, overwrite).subscribe({
         next: () => {
+          this.isSubmitting = false; // Reset loading state
           this.actionConfirmed.emit();
           this.closeModal();
 
@@ -300,7 +300,7 @@ export class CopyFeesFromModalComponent implements OnInit, OnDestroy {
         },
         error: (error) => {
           console.error('Error copying fees:', error);
-          this.isSubmitting = false;
+          this.isSubmitting = false; // Reset loading state
           this.actionType = null;
 
           const errorMessage = error?.error?.detail ||
