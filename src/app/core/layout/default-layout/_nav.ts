@@ -26,7 +26,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Reservations',
-    url: '/theme/colors',
+    url: '/bookings/reservations',
     iconComponent: {name: 'cil-list-rich'}
   },
   {

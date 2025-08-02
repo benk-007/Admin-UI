@@ -1,0 +1,72 @@
+@use '../../../../../scss/variables' as *;
+
+table {
+  thead {
+    tr {
+      th {
+        &.reservation-type {
+          width: 30px;
+        }
+
+        &.expand {
+          width: 10px;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+
+      &.sub-reservation-row {
+        background-color: $table-body-hover-color;
+
+        td {
+          background-color: $table-body-hover-color;
+        }
+      }
+
+      td {
+        &.reservation-type {
+          width: 30px;
+          padding: 0 !important;
+          position: relative;
+          vertical-align: middle;
+
+          span {
+            &.vertical-badge {
+              position: absolute;
+              transform: translateY(-50%) rotate(-90deg);
+              font-size: 0.5rem;
+              padding: 0.125rem 0.25rem;
+              border-radius: 2px;
+              font-weight: 600;
+              letter-spacing: 0.5px;
+
+              &.bg-secondary-transparent {
+                background-color: $secondary-10 !important;
+                color: $secondary !important;
+              }
+
+              &.bg-dark {
+                background-color: $dark-10 !important;
+                color: $dark !important;
+              }
+            }
+          }
+        }
+
+        &.expand {
+          width: 10px;
+
+          button.expand {
+            padding: 0;
+            background-color: transparent;
+            color: $body-color !important;
+            border: 0;
+          }
+        }
+      }
+    }
+  }
+}

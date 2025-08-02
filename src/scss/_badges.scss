@@ -24,4 +24,35 @@ span.badge {
     background-color: $danger-40;
     color: $danger;
   }
+
+  &.bg-secondary-transparent {
+    background-color: $secondary-10 !important;
+    color: $secondary !important;
+  }
+
+  &.bg-dark {
+    background-color: $dark-10 !important;
+    color: $dark !important;
+  }
+
+  &.bg-success-transparent {
+    background-color: $success !important;
+    color: $success-10 !important;
+  }
+
+  &.bg-info-transparent {
+    background-color: $info !important;
+    color: $info-10 !important;
+  }
+
+  &.bg-canceled {
+    background-color: $danger !important;
+    color: $danger-10 !important;
+  }
+
+  &.bg-mauve-transparent {
+    background-color: #6366F1 !important;
+    color: #E6E3FF !important;
+  }
+
 }

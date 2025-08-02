@@ -1,0 +1,238 @@
+<app-page-title title="Reservations">
+  <c-button-group>
+    <button cButton color="primary" size="sm" variant="outline">
+      Add Reservation
+    </button>
+    <c-dropdown variant="btn-group">
+      <button cButton color="primary" cDropdownToggle size="sm"></button>
+      <ul cDropdownMenu>
+        <li>
+          <button cButton cDropdownItem color="secondary">Bulk Reservation</button>
+        </li>
+      </ul>
+    </c-dropdown>
+  </c-button-group>
+</app-page-title>
+
+<c-row class="mb-3">
+  <c-col [md]="2">
+    <c-input-group sizing="sm" class="search-input">
+        <span cInputGroupText>
+          <svg [cIcon]="icons.cilSearch"></svg>
+        </span>
+      <input id="searchBar" cFormControl (input)="triggerBasicSearch($event)"
+             placeholder="Search reservations..."/>
+    </c-input-group>
+  </c-col>
+</c-row>
+
+<app-table-control (nextClicked)="next()" (previousClicked)="previous()" (sizeChanged)="changeSize($event)"
+                   [currentNumberElements]="currentNumberOfElements" [hasNext]="hasNext"
+                   [hasPrevious]="hasPrevious"
+                   [size]="size"
+                   [totalElements]="totalElements"></app-table-control>
+
+@if (!firstCallDone) {
+  <c-row class="d-flex justify-content-center mt-5">
+    <c-spinner color="secondary"/>
+  </c-row>
+  <c-row class="d-flex justify-content-center mt-1">
+    <c-col [md]="4" class="d-flex justify-content-center text-center">
+      Loading reservations...
+    </c-col>
+  </c-row>
+} @else {
+
+  @if (!isListEmpty) {
+    <div class="table-responsive">
+      <table cTable [responsive]="true">
+        <thead>
+        <tr>
+          <th class="reservation-type"></th>
+          <th class="expand"></th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+          <th>Guest</th>
+          <th>Status</th>
+          <th>Guests</th>
+          <th>Payment</th>
+          <th>Segment</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (reservation of listContent; track reservation.id) {
+            <tr>
+              <td class="reservation-type">
+                @if (reservation.type == 'BULK') {
+                  <span class="vertical-badge bg-secondary-transparent">
+                    BULK
+                  </span>
+                } @else {
+                  <span class="vertical-badge bg-dark">
+                    SINGLE
+                  </span>
+                }
+              </td>
+              <td class="expand">
+                @if (reservation.type == 'BULK' && reservation.subReservations) {
+                  <button cButton size="sm" class="expand" type="button" (click)="expandSubReservations(reservation)">
+                    @if (this.expand && this.reservationIdExpanded == reservation.id) {
+                      <i class="bi bi-chevron-down"></i>
+                    } @else {
+                      <i class="bi bi-chevron-right"></i>
+                    }
+                  </button>
+                }
+              </td>
+              <td>
+                {{ reservation.checkInDate | date:'dd-MM-yyyy' }}
+              </td>
+              <td>
+                {{ reservation.checkOutDate | date:'dd-MM-yyyy' }}
+              </td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <c-avatar [size]="'md'" shape="rounded" textColor="white" [color]="UtilsService.getAvatarColor(reservation.guest.fullName)">
+                    {{ getNameInitials(reservation.guest.fullName) }}
+                  </c-avatar>
+                  <div class="d-flex flex-column">
+                    <div>
+                      <span class="me-1">{{ reservation.guest.fullName }}</span>
+                    </div>
+                    <div class="small text-body-secondary text-nowrap">
+                      <span>{{ reservation.guest.email }} | {{ reservation.guest.mobile }}</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <app-badge [color]="getStatusBadgeColor(reservation.status)" [rounded]="true">
+                  {{ reservation.status | titlecase }}
+                </app-badge>
+              </td>
+              <td>
+                <span class="text-muted">
+                  {{ formatOccupancy(reservation.occupancy.adults, reservation.occupancy.children) }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <app-badge [color]="getPaymentBadgeColor(reservation.paymentStatus)" [rounded]="true">
+                    {{ reservation.paymentStatus | titlecase }}
+                  </app-badge>
+                  <span class="text-muted small">
+                    {{ formatPaymentAmount(reservation.payment.amountPaid, reservation.payment.totalAmount, reservation.payment.currency) }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                {{ reservation.segment.name }}
+              </td>
+              <td>
+                <div class="d-flex gap-1">
+                  <button size="sm" cButton class="btn-secondary-light" type="button" (click)="handleEdit(reservation)"
+                          [adaptivePosition]="true" [tooltip]="'Edit'">
+                    <svg [cIcon]="icons.cilPen" size="sm"></svg>
+                  </button>
+                  <button size="sm" cButton class="btn-secondary-light" type="button" (click)="handleView(reservation)"
+                          [adaptivePosition]="true" [tooltip]="'View'">
+                    <svg [cIcon]="icons.cilYen" size="sm"></svg>
+                  </button>
+                  @if (isCheckInToday(reservation.checkInDate)) {
+                    <button size="sm" cButton class="btn-primary" type="button" (click)="handleCheckIn(reservation)"
+                            [adaptivePosition]="true" [tooltip]="'Check-in'">
+                      <svg [cIcon]="icons.cilCalendar" size="sm"></svg>
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+
+            @if (expand && reservationIdExpanded == reservation.id) {
+              @for (subReservation of reservation.subReservations; track subReservation.id) {
+                <tr class="sub-reservation-row">
+                  <td class="reservation-type">
+                  </td>
+                  <td class="expand">
+                  </td>
+                  <td>
+                    {{ subReservation.checkInDate | date:'dd-MM-yyyy' }}
+                  </td>
+                  <td>
+                    {{ subReservation.checkOutDate | date:'dd-MM-yyyy' }}
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <c-avatar [size]="'md'" shape="rounded" textColor="white" color="dark">
+                        {{ getNameInitials(subReservation.guest.fullName) }}
+                      </c-avatar>
+                      <div class="d-flex flex-column">
+                        <div>
+                          <span class="me-1">{{ subReservation.guest.fullName }}</span>
+                        </div>
+                        <div class="small text-body-secondary text-nowrap">
+                          <span>{{ subReservation.guest.email }} | {{ subReservation.guest.mobile }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <app-badge [color]="getStatusBadgeColor(subReservation.status)" [rounded]="true">
+                      {{ subReservation.status | titlecase }}
+                    </app-badge>
+                  </td>
+                  <td>
+                    <span class="text-muted">
+                      {{ formatOccupancy(subReservation.occupancy.adults, subReservation.occupancy.children) }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <app-badge [color]="getPaymentBadgeColor(subReservation.paymentStatus)" [rounded]="true">
+                        {{ subReservation.paymentStatus | titlecase }}
+                      </app-badge>
+                      <span class="text-muted small">
+                        {{ formatPaymentAmount(subReservation.payment.amountPaid, subReservation.payment.totalAmount, subReservation.payment.currency) }}
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    {{ subReservation.segment.name }}
+                  </td>
+                  <td>
+                    <div class="d-flex gap-1">
+                      <button size="sm" cButton class="btn-secondary-light" type="button" (click)="handleEdit(subReservation)"
+                              [adaptivePosition]="true" [tooltip]="'Edit'">
+                        <svg [cIcon]="icons.cilPen" size="sm"></svg>
+                      </button>
+                      <button size="sm" cButton class="btn-secondary-light" type="button" (click)="handleView(subReservation)"
+                              [adaptivePosition]="true" [tooltip]="'View'">
+                        <svg [cIcon]="icons.cilYen" size="sm"></svg>
+                      </button>
+                      @if (isCheckInToday(subReservation.checkInDate)) {
+                        <button size="sm" cButton class="btn-primary" type="button" (click)="handleCheckIn(subReservation)"
+                                [adaptivePosition]="true" [tooltip]="'Check-in'">
+                          <svg [cIcon]="icons.cilCalendar" size="sm"></svg>
+                        </button>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    @if (!isSearchActive) {
+      <app-empty-data imageSrc="assets/images/animations/reservations.gif" message="No reservations found">
+      </app-empty-data>
+    } @else {
+      <app-empty-data imageSrc="assets/images/animations/no-result.gif" message="No results found">
+      </app-empty-data>
+    }
+  }
+
+}

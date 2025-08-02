@@ -30,6 +30,10 @@ export class BadgeComponent {
         return 'bg-info-transparent';
       case 'danger':
         return 'bg-danger-transparent';
+      case 'success':
+        return 'bg-success-transparent';
+      case 'mauve':
+        return 'bg-mauve-transparent';
       default:
         return 'bg-primary-transparent';
     }
