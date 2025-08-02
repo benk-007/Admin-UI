@@ -1,7 +1,152 @@
-:host {
-  .legend {
-    small {
-      font-size: x-small;
+::ng-deep c-widget-stat-f.card {
+  .card-body {
+
+    .me-3 {
+      margin-right: 0.5rem !important;
+      padding: 1.2rem !important;
+    }
+
+    .me-3 > .bg-primary,
+    .me-3 > .bg-info,
+    .me-3 > .bg-warning,
+    .me-3 > .bg-success {
+      padding: 0.8rem !important;
+    }
+
+    // (e.g., "Arrival")
+    .fs-6.fw-semibold {
+      font-size: 1.25rem;
+      color: #343a40;
+    }
+
+    // (e.g., "10/11")
+    .text-body-secondary {
+      font-size: 0.9rem;
+      color: #6c757d;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+  }
+}
+
+// dashboard.component.scss
+.card-body{
+  height: 325px;
+}
+.summary-cards {
+  .summary-card {
+    border-radius: 8px;
+
+    .card-body {
+      padding: 5px !important;
+      height: 70px;
+
+      .card-label {
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+      }
+
+      .card-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 0px;
+      }
+
+      .card-subtitle {
+        font-size: 0.65rem;
+        font-weight: 400;
+        opacity: 0.8;
+      }
+    }
+  }
+
+  // Compact spacing between cards
+  .summary-card:not(:last-child) {
+    margin-bottom: 0.75rem;
+  }
+}
+
+.chart-container {
+  min-height: 370px;
+
+  apx-chart {
+    .apexcharts-canvas {
+      margin: 0 auto;
+    }
+  }
+}
+.card-body{
+  height:350px
+}
+
+.property-overview-charts {
+  .legend-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-left: 25px;
+
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        flex-shrink: 0;
+      }
+
+      .legend-number {
+        font-weight: bold;
+        margin-right: 0.25rem;
+        min-width: 20px;
+      }
+
+      .legend-text {
+        color: #6c757d;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+.card-body2{
+  height: 220px;
+}
+
+.card-body3{
+  height: 150px;
+}
+
+.expenses-row {
+  .expense-item {
+    position: relative;
+
+    &:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2px;
+      height: 100%;
+      background-color: #dee2e6;
+    }
+
+    .expense-amount {
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+
+    .expense-label {
+      font-size: 0.875rem;
     }
   }
 }
