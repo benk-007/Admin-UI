@@ -36,6 +36,13 @@ export const routes: Routes = [
         }
       },
       {
+        path: 'sub-units',
+        loadComponent: () => import('./unit-sub-units-tab/unit-sub-units-tab.component').then(m => m.UnitSubUnitsTabComponent),
+        data: {
+          title: 'Sub-units'
+        }
+      },
+      {
         path: 'rates',
         loadChildren: () => import('./unit-rates-tab/routes').then((m) => m.routes),
         data: {

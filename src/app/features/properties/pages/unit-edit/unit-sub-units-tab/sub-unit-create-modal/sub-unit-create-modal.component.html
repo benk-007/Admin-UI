@@ -1,0 +1,111 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{ 'units.edit-unit.tabs.sub-units.modals.create.title'|translate }}</h5>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="subUnitsForm" (ngSubmit)="onSubmit()" cForm>
+
+    <!-- SubUnits Section -->
+    <c-row>
+      <c-col md="12">
+        <h6 class="section-title underline mb-3">{{ 'units.edit-unit.tabs.sub-units.modals.create.sections.subunits'|translate }}</h6>
+      </c-col>
+    </c-row>
+
+    <!-- New Subunits Form -->
+    @if (newSubUnits.length > 0) {
+      <c-row>
+        <c-col md="12">
+          <div formArrayName="newSubUnits">
+            @for (subUnit of newSubUnits.controls; track $index; let i = $index) {
+              <div [formGroupName]="i">
+                <c-row>
+                  <!-- Name Input -->
+                  <c-col md="6" class="mb-3">
+                    <label cLabel class="required me-2">{{ 'units.create-multi-unit.form.subunit-name.label'|translate }}</label>
+                    <input cFormControl formControlName="name" type="text"
+                           [placeholder]="'units.create-multi-unit.form.subunit-name.placeholder'|translate"/>
+                    @if ((subUnit.get('name')?.touched || subUnit.get('name')?.dirty) && subUnit.get('name')?.hasError('required')) {
+                      <c-form-feedback [valid]="false">
+                        {{ 'commons.errors.required'|translate }}
+                      </c-form-feedback>
+                    }
+                  </c-col>
+
+                  <!-- Priority Input -->
+                  <c-col md="3" class="mb-3">
+                    <label cLabel class="required me-2">{{ 'units.create-multi-unit.form.priority.label'|translate }}</label>
+                    <input cFormControl formControlName="priority" type="number" min="1" max="99"/>
+                    @if ((subUnit.get('priority')?.touched || subUnit.get('priority')?.dirty) && subUnit.get('priority')?.hasError('required')) {
+                      <c-form-feedback [valid]="false">
+                        {{ 'commons.errors.required'|translate }}
+                      </c-form-feedback>
+                    }
+                  </c-col>
+
+                  <!-- Status Toggle -->
+                  <c-col md="1" class="mb-3 d-flex flex-column justify-content-center">
+                    <label cLabel class="me-2">{{ 'units.create-multi-unit.form.status.label'|translate }}</label>
+                    <c-form-check [switch]="true">
+                      <input cFormCheckInput formControlName="readiness" type="checkbox" [id]="'status-' + i"/>
+                      <label cFormCheckLabel [for]="'status-' + i">
+                        {{ 'units.unit-list.table.body.ready'|translate }}
+                      </label>
+                    </c-form-check>
+                  </c-col>
+
+                  <!-- Delete Button -->
+                  <c-col md="2" class="mb-3 d-flex align-items-end justify-content-center">
+                    <button cButton size="sm" color="danger" class="btn-light"
+                            (click)="removeNewSubUnit(i)" type="button"
+                            [attr.aria-label]="'Remove sub-unit ' + (i + 1)">
+                      <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                    </button>
+                  </c-col>
+                </c-row>
+              </div>
+            }
+          </div>
+        </c-col>
+      </c-row>
+    }
+
+    <!-- Add New Subunit Link-->
+    <c-row>
+      <c-col md="12">
+        <span class="add-subunit-link" (click)="addNewSubUnit()" role="button" tabindex="0"
+              (keydown.enter)="addNewSubUnit()" (keydown.space)="addNewSubUnit()">
+          <i class="bi bi-plus me-1"></i>
+          {{ 'units.edit-unit.tabs.sub-units.modals.create.add-new-subunit'|translate }}
+        </span>
+      </c-col>
+    </c-row>
+
+    <!-- Existing Units Selection -->
+    <c-row class="mt-4">
+      <c-col md="12">
+        <h6 class="section-title underline mb-3">{{ 'units.edit-unit.tabs.sub-units.modals.create.sections.existing-units'|translate }}</h6>
+        <label cLabel for="existingUnits">{{ 'units.create-multi-unit.form.existing-units.label'|translate }}</label>
+        <app-unit-select
+          formControlName="existingUnits"
+          id="existingUnits"
+          [allowMultiUnit]="false">
+        </app-unit-select>
+      </c-col>
+    </c-row>
+
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isSubmitting">
+    {{ 'commons.form.buttons.cancel'|translate }}
+  </button>
+  <button type="button" class="btn btn-primary" (click)="onSubmit()"
+          [disabled]="(!hasValidSubUnits() && !subUnitsForm.get('existingUnits')?.value) || isSubmitting">
+    @if (isSubmitting) {
+      <span class="spinner-border spinner-border-sm me-2"></span>
+    }
+    {{ isSubmitting ? ('commons.snippets.loading'|translate) + '...' : ('commons.form.save-btn'|translate) }}
+  </button>
+</div>

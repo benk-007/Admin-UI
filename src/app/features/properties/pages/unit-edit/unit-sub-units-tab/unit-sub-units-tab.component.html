@@ -1,0 +1,149 @@
+<c-row class="mb-3 mt-3">
+  <!-- Search Input -->
+  <c-col [md]="2">
+    <c-input-group sizing="sm" class="search-input">
+      <span cInputGroupText>
+        <svg [cIcon]="icons.cilSearch"></svg>
+      </span>
+      <input id="searchBar" cFormControl (input)="triggerBasicSearch($event)"
+             [placeholder]="'commons.form.search-input.placeholder'|translate"/>
+    </c-input-group>
+  </c-col>
+
+  <!-- Add Button -->
+  <c-col [md]="10" class="d-flex justify-content-end">
+    <button cButton color="secondary" size="sm" (click)="onAddNewSubUnit()">
+      {{ 'units.edit-unit.tabs.sub-units.add-btn'|translate }}
+    </button>
+  </c-col>
+</c-row>
+
+<!-- Loading State -->
+@if (!firstCallDone) {
+  <c-row class="d-flex justify-content-center mt-5">
+    <c-spinner color="secondary"/>
+  </c-row>
+  <c-row class="d-flex justify-content-center mt-1">
+    <c-col [md]="4" class="d-flex justify-content-center text-center">
+      {{ 'commons.snippets.loading'|translate }}
+    </c-col>
+  </c-row>
+}
+
+<!-- Content State -->
+@if (firstCallDone) {
+  <!-- Sub-units Table -->
+  @if (!isListEmpty) {
+    <div class="table-responsive">
+      <table cTable hover responsive="true">
+        <thead>
+        <tr>
+          <th>{{ 'units.unit-list.table.header.name'|translate }}</th>
+          <th>{{ 'units.edit-unit.tabs.sub-units.table.header.priority'|translate }}</th>
+          <th>{{ 'units.edit-unit.tabs.sub-units.table.header.status'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.contact'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.city'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.country'|translate }}</th>
+          <th>{{ 'units.unit-list.table.header.actions'|translate }}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+          @for (subUnit of subUnits; track subUnit.id) {
+            <tr>
+              <!-- Name Column with Avatar -->
+              <td>
+                <div class="d-flex align-items-center">
+                  <c-avatar [size]="'md'" shape="rounded" textColor="white" color="primary">
+                    {{ getNameInitials(subUnit.name) }}
+                  </c-avatar>
+                  <div class="ms-3">
+                    <div class="me-1">{{ subUnit.name }}</div>
+                    @if (subUnit.subtitle) {
+                      <div class="small text-muted">{{ subUnit.subtitle }}</div>
+                    }
+                    <div class="small text-body-secondary text-nowrap">
+                      <span>{{ 'commons.snippets.audit.created-by'|translate }} {{ subUnit.audit.createdBy | auditName }}</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Priority Column -->
+              <td>
+                <span class="badge bg-info">{{ subUnit.priority || 'N/A' }}</span>
+              </td>
+
+              <!-- Status Column -->
+              <td>
+                @if (subUnit.readiness) {
+                  <span class="text-success">
+                    <i class="bi bi-check-square-fill"></i> {{ 'units.unit-list.table.body.ready'|translate }}
+                  </span>
+                } @else {
+                  <span class="text-danger">
+                    <i class="bi bi-x-square-fill"></i> {{ 'units.unit-list.table.body.not-ready'|translate }}
+                  </span>
+                }
+              </td>
+
+              <!-- Contact Column -->
+              <td>
+                <div class="d-flex flex-column">
+                  <div>
+                    <span class="me-1">{{ subUnit.contact.mobile }}</span>
+                  </div>
+                  @if (subUnit.contact.email) {
+                    <div class="small text-body-secondary text-nowrap">
+                      {{ subUnit.contact.email }}
+                    </div>
+                  }
+                </div>
+              </td>
+
+              <!-- City Column -->
+              <td>
+                {{ subUnit.address.city }}
+              </td>
+
+              <!-- Country Column -->
+              <td>
+                {{ 'commons.countries.' + subUnit.address.country|translate }}
+              </td>
+
+              <!-- Actions Column -->
+              <td>
+                <button cButton size="sm" color="primary" class="btn-light me-2"
+                        (click)="onEditSubUnit(subUnit)"
+                        [attr.aria-label]="'Edit ' + subUnit.name">
+                  <svg [cIcon]="icons.cilPen" size="sm"></svg>
+                </button>
+                <button cButton size="sm" color="danger" class="btn-light"
+                        (click)="onRemoveSubUnit(subUnit)"
+                        [attr.aria-label]="'Remove ' + subUnit.name">
+                  <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (isListEmpty) {
+    <!-- No Data State -->
+    @if (!isSearchActive) {
+      <app-empty-data
+        imageSrc="assets/images/animations/units.gif"
+        [message]="'units.edit-unit.tabs.sub-units.empty-data'|translate">
+      </app-empty-data>
+    } @else {
+      <!-- No Search Results State -->
+      <app-empty-data
+        imageSrc="assets/images/animations/no-result.gif">
+      </app-empty-data>
+    }
+  }
+}
