@@ -12,7 +12,16 @@
       <svg cIcon name="cilMenu" size="lg"></svg>
     </button>
 
-    <div class="d-md-flex">
+
+    <c-header-nav class="d-none d-md-flex">
+      <c-nav-item>
+        <a cNavLink routerLink="/bookings/reservations" routerLinkActive="active" >
+          {{ 'availability.title' | translate }}
+        </a>
+      </c-nav-item>
+    </c-header-nav>
+
+    <!--<div class="d-md-flex">
       <input cFormControl
              type="text"
              ngxDaterangepickerBootstrap
@@ -30,7 +39,7 @@
       </button>
     </div>
 
-    <!--    <c-header-nav class="d-none d-md-flex">
+        <c-header-nav class="d-none d-md-flex">
           <c-nav-item>
             <a cNavLink routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
           </c-nav-item>

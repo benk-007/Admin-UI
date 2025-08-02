@@ -4,6 +4,7 @@ export const GUEST_SERVICE = 'guestMgtApi/';
 export const MEDIA_SERVICE = 'mediaMgtApi/';
 export const PRICING_SERVICE = 'rateMgtApi/'
 export const CRM_SERVICE = 'guestMgtApi/';
+export const Booking_SERVICE = 'bookingMgtApi/';
 
 export const commonProperties = {
   /*===========UAA Service===========*/
@@ -34,14 +35,21 @@ export const commonProperties = {
   unitImages: UNIT_SERVICE + 'images',
   unitImageById: UNIT_SERVICE + 'images/:imageId',
 
-  /*===========Rates===========*/
+  /*===========Booking===========*/
+  inventory: UNIT_SERVICE + 'inventory',
+  booking: Booking_SERVICE + 'bookings',
+  bookingByid: Booking_SERVICE + 'bookings/:bookingId',
+  bookingItems: Booking_SERVICE + 'bookings/:parentId/items',
+  bookingDrafts: Booking_SERVICE + 'bookings/drafts',
+
+
+  /*===========PRICING Service===========*/
   // Default resource
   unitBaseRateById: PRICING_SERVICE + 'default-rates',
   // Rate plans
   RatePlan: PRICING_SERVICE + 'rate-plans',
   // Rate plans
   RateTable: PRICING_SERVICE + 'rate-tables',
-
 
   /*===========Guest Service===========*/
   // Guest resource
@@ -62,6 +70,9 @@ export const commonProperties = {
 
   /*===========CRM Service===========*/
   segmentList: CRM_SERVICE + 'segments',
-  segmentById: CRM_SERVICE + 'segments/:segmentId'
+  segmentById: CRM_SERVICE + 'segments/:segmentId',
+
+  partyList: CRM_SERVICE + 'parties'
+
 
 }

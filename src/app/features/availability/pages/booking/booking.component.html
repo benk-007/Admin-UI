@@ -1,0 +1,290 @@
+<!-- Page Title -->
+<c-row class="mb-3">
+  <c-col>
+    <h4 class="page-title mb-0">{{ 'booking.title' | translate }}</h4>
+  </c-col>
+</c-row>
+
+<form [formGroup]="bookingForm">
+
+  <!-- Client Informations -->
+  <c-card class="mb-4">
+    <c-card-header>
+      <h6 class="section-title underline mb-0">{{ 'booking.clientInformation.title' | translate }}</h6>
+    </c-card-header>
+    <c-card-body>
+      <c-row>
+        <c-col [md]="6" class="mb-3" *ngIf="selectedParty">
+          <label cLabel class="form-label" for="party">{{ 'booking.clientInformation.party' | translate }}</label>
+          <input
+            id="party"
+            type="text"
+            cFormControl
+            class="form-control"
+            [value]="selectedParty.name"
+            disabled />
+        </c-col>
+
+        <!-- Name Field -->
+        <c-col [md]="selectedParty ? 6 : 12" class="mb-3">
+        <label cLabel class="form-label required" for="guestName">{{ 'booking.clientInformation.name' | translate }}</label>
+          <input
+            cFormControl
+            formControlName="guestName"
+            id="guestName"
+            type="text"
+            placeholder="{{'booking.clientInformation.namePlaceholder' | translate}}"  />
+          @if (bookingForm.get('guestName')?.touched && bookingForm.get('guestName')?.invalid) {
+            <div class="invalid-feedback">
+              {{ 'booking.clientInformation.name' | translate }}
+            </div>
+          }
+        </c-col>
+      </c-row>
+
+      <c-row>
+        <!-- Email Field -->
+        <c-col [md]="6" class="mb-3">
+          <label cLabel class="form-label" for="email">{{ 'booking.clientInformation.email' | translate }}</label>
+          <input
+            cFormControl
+            formControlName="email"
+            id="email"
+            type="email"
+            placeholder="{{'booking.clientInformation.emailPlaceholder' | translate}}"/>
+        </c-col>
+
+        <!-- Mobile Field -->
+        <c-col [md]="6" class="mb-3">
+          <label cLabel class="form-label" for="mobile">{{ 'booking.clientInformation.mobile' | translate }}</label>
+          <input
+            cFormControl
+            formControlName="mobile"
+            id="mobile"
+            type="tel"
+            placeholder="{{'booking.clientInformation.mobilePlaceholder' | translate}}"
+          />
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </c-card>
+
+  <!-- Reservation Details -->
+  <c-card class="mb-4">
+    <c-card-header>
+      <h6 class="section-title underline mb-0">{{ 'booking.reservationDetails.title' | translate }}</h6>
+    </c-card-header>
+    <c-card-body>
+      @for (item of selectedItems; track item.unit.unitId + $index) {
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>{{ 'booking.reservationDetails.room' | translate }}:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            {{ item.unit.unitName }}
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>{{ 'booking.reservationDetails.dates' | translate }}:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            {{ formatDate(item.checkinDate) }} → {{ formatDate(item.checkoutDate) }}
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>{{ 'booking.reservationDetails.duration' | translate }}:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            {{ item.nights }} {{ 'booking.reservationDetails.nights' | translate }}
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>{{ 'booking.reservationDetails.quantity' | translate }}:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            {{ item.quantity }}
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>{{ 'booking.reservationDetails.rate' | translate }}:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            <span
+              contenteditable="true"
+              class="editable-rate"
+              (blur)="onRateChange(item.id, $event)"
+              (keydown.enter)="onRateChange(item.id, $event)"
+              [attr.data-item-id]="item.id">
+              {{ item.nightlyRate }}
+            </span>
+            {{ 'booking.reservationDetails.perNight' | translate }}
+          </c-col>
+        </c-row>
+
+        <c-row class="mb-2">
+          <c-col [md]="2">
+            <strong>{{ 'booking.reservationDetails.supplements' | translate }}:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+          <span
+            class="clickable"
+            style="cursor: pointer"
+            (click)="openSupplementsModal(item)">
+            {{ getSupplementsTotal(item) }} {{ 'booking.reservationDetails.perNight' | translate }}
+          </span>
+          </c-col>
+        </c-row>
+
+
+        <c-row class="mb-3 pb-3 border-bottom">
+          <c-col [md]="2">
+            <strong>{{ 'booking.reservationDetails.total' | translate }}:</strong>
+          </c-col>
+          <c-col [md]="10" class="text-end">
+            <strong>{{ item.total }} MAD</strong>
+          </c-col>
+        </c-row>
+      }
+
+      <!-- General Total -->
+      <c-row class="mt-4">
+        <c-col [md]="8">
+          <h5 class="mb-0"><strong>{{ 'booking.reservationDetails.grandTotal' | translate }}:</strong></h5>
+        </c-col>
+        <c-col [md]="4" class="text-end">
+          <h5 class="mb-0 text-primary"><strong>{{ getTotalAmount() }} MAD</strong></h5>
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </c-card>
+
+  <!-- Guarantee Method -->
+  <c-card class="mb-4">
+    <c-card-header>
+      <h6 class="section-title underline">{{ 'booking.guaranteeMethod.title' | translate }}</h6>
+    </c-card-header>
+    <c-card-body>
+      @for (method of paymentMethods; track method.value) {
+        <c-row class="mb-3 align-items-center">
+          <c-col [md]="2">
+            <c-form-check>
+              <input
+                cFormCheckInput
+                type="radio"
+                [id]="'payment_' + method.value"
+                [value]="method.value"
+                formControlName="paymentMethod" />
+              <label cFormCheckLabel [for]="'payment_' + method.value">
+                {{ method.key | translate }}
+              </label>
+            </c-form-check>
+          </c-col>
+          <c-col [md]="6">
+            @if (bookingForm.get('paymentMethod')?.value === method.value) {
+              <div class="d-flex align-items-start gap-2">
+              <input
+                cFormControl
+                formControlName="guaranteeAmount"
+                type="text"
+                class="amount-input"
+                placeholder="{{'booking.guaranteeMethod.amountPlaceholder' | translate}}" />
+              </div>
+            }
+          </c-col>
+        </c-row>
+      }
+    </c-card-body>
+  </c-card>
+
+  <!-- Special Notes -->
+  <c-card class="mb-4">
+    <c-card-header>
+      <h6 class="section-title underline mb-0">{{ 'booking.specialNotes.title' | translate }}</h6>
+    </c-card-header>
+    <c-card-body>
+      <c-row>
+        <c-col>
+          <textarea
+            cFormControl
+            formControlName="specialNotes"
+            rows="5"
+            placeholder="{{'booking.specialNotes.placeholder' | translate}}">
+          </textarea>
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </c-card>
+
+  <!-- Actions Button -->
+  <c-row class="mt-4 mb-4">
+    <c-col class="d-flex justify-content-end">
+      <div class="d-flex gap-2">
+<!--        <button-->
+<!--          cButton-->
+<!--          color="secondary"-->
+<!--          variant="outline"-->
+<!--          type="button"-->
+<!--          (click)="saveAsQuote()">-->
+<!--          {{ 'booking.actions.saveAsQuote' | translate }}-->
+<!--        </button>-->
+
+        <button
+          cButton
+          color="primary"
+          type="button"
+          (click)="confirmReservation()">
+          {{ 'booking.actions.confirmReservation' | translate }}
+        </button>
+      </div>
+    </c-col>
+  </c-row>
+
+  <ng-template #supplementsModalTemplate let-modal>
+    <div class="modal-header">
+      <h6 class="modal-title">{{ 'availability.list.supplementsAvailable' | translate }}</h6>
+    </div>
+
+    <div class="modal-body">
+      <div *ngFor="let item of supplementsForEdit; let i = index"
+           class="border rounded p-2 mb-2 d-flex justify-content-between align-items-start">
+        <div>
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [checked]="item.selected"
+              (change)="item.selected = !item.selected"
+              [id]="'supplement-' + i" />
+            <label class="form-check-label fw-bold" [for]="'supplement-' + i">{{ item.label }}</label>
+          </div>
+          <div class="text-muted small ms-4">{{ item.description }}</div>
+        </div>
+        <input
+          type="number"
+          min="0"
+          class="form-control form-control-sm mt-1 price"
+          [(ngModel)]="item.price"
+          [ngModelOptions]="{ standalone: true }" />
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button cButton color="light" variant="ghost" size="sm" (click)="modalRef?.hide()">
+        {{ 'commons.form.cancel-btn' | translate }}
+      </button>
+      <button cButton class="ms-3" color="primary" size="sm" (click)="validateSupplements()">
+        {{ 'commons.form.save-btn' | translate }}
+      </button>
+    </div>
+  </ng-template>
+
+
+</form>

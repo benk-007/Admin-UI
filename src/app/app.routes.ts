@@ -60,6 +60,10 @@ export const routes: Routes = [
       {
         path: 'pages',
         loadChildren: () => import('./views/pages/routes').then((m) => m.routes)
+      },
+      {
+        path: 'bookings/reservations',
+        loadChildren: () => import('./features/availability/routes').then((m) => m.routes)
       }
     ]
   },

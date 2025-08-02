@@ -1,0 +1,22 @@
+<ng-select class="custom"
+           (change)="valueChanged($event)"
+           (scrollToEnd)="onScrollToEnd()"
+           (search)="searchParties($event)"
+           [(ngModel)]="selectedParty"
+           [multiple]="false"
+           [disabled]="disable"
+           [items]="partySearchList"
+           [placeholder]="'Select party ...'"
+           [typeahead]="$partySearch"
+           [virtualScroll]="true"
+           [compareWith]="compareParties">
+
+  <ng-template ng-label-tmp let-item="item" let-clear="clear">
+    <span>{{ item.name }}</span>
+    <span class="ng-value-icon right ms-1" (click)="clear(item)" aria-hidden="true">x</span>
+  </ng-template>
+
+  <ng-template let-item="item" ng-option-tmp>
+    <span>{{ item.name }}</span>
+  </ng-template>
+</ng-select>
