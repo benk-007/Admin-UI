@@ -1,6 +1,6 @@
 import {NgTemplateOutlet} from '@angular/common';
-import {Component, computed, inject, input} from '@angular/core';
-import {RouterLink, RouterLinkActive} from '@angular/router';
+import {Component, inject, input} from '@angular/core';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 
 import {
   AvatarComponent,
@@ -14,29 +14,29 @@ import {
   DropdownItemDirective,
   DropdownMenuDirective,
   DropdownToggleDirective,
-  FormControlDirective,
   HeaderComponent,
   HeaderNavComponent,
-  HeaderTogglerDirective, NavItemComponent, NavLinkDirective,
+  HeaderTogglerDirective,
+  NavItemComponent,
+  NavLinkDirective,
   SidebarToggleDirective
 } from '@coreui/angular';
 
 import {IconDirective} from '@coreui/icons-angular';
 import {AuthService} from '../../../services/auth.service';
-import {NgxDaterangepickerBootstrapDirective} from 'ngx-daterangepicker-bootstrap';
 import {FormsModule} from '@angular/forms';
 import {Dayjs} from "dayjs";
-import {cilSearch} from '@coreui/icons';
+import {cilPlus, cilSearch} from '@coreui/icons';
 import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-default-header',
   templateUrl: './default-header.component.html',
-  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, RouterLink, NgTemplateOutlet, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective, ButtonDirective, NgxDaterangepickerBootstrapDirective, FormsModule, FormControlDirective, NavLinkDirective, NavItemComponent, TranslatePipe, RouterLinkActive]
+  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, RouterLink, NgTemplateOutlet, DropdownComponent, DropdownToggleDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective, ButtonDirective, FormsModule, NavLinkDirective, NavItemComponent, TranslatePipe, RouterLinkActive]
 })
 export class DefaultHeaderComponent extends HeaderComponent {
 
-  readonly icons = {cilSearch}
+  readonly icons = {cilSearch, cilPlus}
 
 
   readonly #colorModeService = inject(ColorModeService);
@@ -48,10 +48,10 @@ export class DefaultHeaderComponent extends HeaderComponent {
     {name: 'auto', text: 'Auto', icon: 'cilContrast'}
   ];
 
-/*  readonly icons = computed(() => {
-    const currentMode = this.colorMode();
-    return this.colorModes.find(mode => mode.name === currentMode)?.icon ?? 'cilSun';
-  });*/
+  /*  readonly icons = computed(() => {
+      const currentMode = this.colorMode();
+      return this.colorModes.find(mode => mode.name === currentMode)?.icon ?? 'cilSun';
+    });*/
 
   sidebarId = input('sidebar1');
 
@@ -132,7 +132,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   selected!: { start: Dayjs, end: Dayjs };
 
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly authService: AuthService, private readonly router: Router) {
     super();
   }
 
@@ -140,4 +140,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
     this.authService.logout();
   }
 
+  goToNewBooking() {
+    this.router.navigate(['/bookings/reservations']).then(()=>console.log('Routed to new booking page'))
+  }
 }

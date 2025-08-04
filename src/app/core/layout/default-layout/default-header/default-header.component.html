@@ -14,9 +14,13 @@
 
 
     <c-header-nav class="d-none d-md-flex">
+      <button cButton type="button" (click)="goToNewBooking()">
+        <svg [cIcon]="icons.cilPlus" class="me-2"></svg>
+        {{ 'header.new-booking' | translate }}
+      </button>
       <c-nav-item>
-        <a cNavLink routerLink="/bookings/reservations" routerLinkActive="active" >
-          {{ 'availability.title' | translate }}
+        <a cNavLink routerLink="/bookings/reservations" routerLinkActive="active">
+
         </a>
       </c-nav-item>
     </c-header-nav>
@@ -53,15 +57,15 @@
 
 
     <c-header-nav class="d-none d-md-flex ms-auto ">
-            <a cNavLink>
-              <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
-            </a>
-            <a cNavLink>
-              <svg cIcon class="my-1" name="cilList" size="lg"></svg>
-            </a>
-            <a cNavLink>
-              <svg cIcon class="my-1" name="cilEnvelopeOpen" size="lg"></svg>
-            </a>
+      <a cNavLink>
+        <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
+      </a>
+      <a cNavLink>
+        <svg cIcon class="my-1" name="cilList" size="lg"></svg>
+      </a>
+      <a cNavLink>
+        <svg cIcon class="my-1" name="cilEnvelopeOpen" size="lg"></svg>
+      </a>
     </c-header-nav>
 
     <!--    <c-header-nav class="ms-auto ms-md-0">
