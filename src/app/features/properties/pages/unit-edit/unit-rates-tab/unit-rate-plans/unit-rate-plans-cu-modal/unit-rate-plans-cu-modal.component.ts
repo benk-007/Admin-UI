@@ -40,6 +40,7 @@ import {SegmentSelectComponent} from '../../../../../../../shared/components/seg
 export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   @Input() unitId!: string;
   @Input() ratePlanToEdit?: RatePlanGetModel;
+  @Input() existingRatePlans: RatePlanGetModel[] = [];
   @Output() actionConfirmed = new EventEmitter<void>();
 
   ratePlanForm: FormGroup;
@@ -61,6 +62,8 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.updateSegmentsValidation();
+
     if (this.ratePlanToEdit) {
       this.ratePlanForm.patchValue({
         name: this.ratePlanToEdit.name,
@@ -72,6 +75,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
 
   submit(): void {
     if (this.ratePlanForm.invalid) {
+      this.ratePlanForm.markAllAsTouched();
       this.toastrService.error(
         this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
         this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
@@ -146,6 +150,29 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
         })
       );
     }
+  }
+
+  private updateSegmentsValidation(): void {
+    const hasNameOnlyRatePlan = this.existingRatePlans.some(ratePlan => {
+      if (this.ratePlanToEdit && ratePlan.id === this.ratePlanToEdit.id) {
+        return false;
+      }
+      return !ratePlan.segments || ratePlan.segments.length === 0;
+    });
+
+    const segmentsControl = this.ratePlanForm.get('segments');
+
+    if (hasNameOnlyRatePlan) {
+      segmentsControl?.setValidators([Validators.required, Validators.minLength(1)]);
+    } else {
+      segmentsControl?.clearValidators();
+    }
+
+    segmentsControl?.updateValueAndValidity();
+  }
+
+  isSegmentsRequired(): boolean {
+    return this.ratePlanForm.get('segments')?.hasValidator(Validators.required) || false;
   }
 
 

@@ -123,8 +123,8 @@ export class UnitRatePlansListComponent extends ListContentComponent {
 
   openRatePlanCuModal(ratePlanToEdit?: RatePlanGetModel): void {
     const initialState = ratePlanToEdit
-      ? {unitId: this.unitId, ratePlanToEdit}
-      : {unitId: this.unitId};
+      ? {unitId: this.unitId, ratePlanToEdit, existingRatePlans: this.listContent }
+      : {unitId: this.unitId, existingRatePlans: this.listContent };
 
     const modalRef = this.modalService.show(UnitRatePlansCuModalComponent, {
       initialState

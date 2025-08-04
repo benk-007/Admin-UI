@@ -13,7 +13,7 @@ import {IconDirective} from '@coreui/icons-angular';
 import {
   ButtonDirective,
   ButtonGroupComponent,
-  ColComponent,
+  ColComponent, DropdownComponent, DropdownItemDirective, DropdownMenuDirective, DropdownToggleDirective,
   FormCheckLabelDirective,
   FormControlDirective,
   FormDirective,
@@ -56,7 +56,11 @@ import dayjs from 'dayjs';
     InputGroupTextDirective,
     NgxDaterangepickerBootstrapDirective,
     NgIf,
-    JsonPipe
+    JsonPipe,
+    DropdownComponent,
+    DropdownToggleDirective,
+    DropdownMenuDirective,
+    DropdownItemDirective
   ],
   templateUrl: './unit-rate-table-cu-modal.component.html',
   styleUrl: './unit-rate-table-cu-modal.component.scss'
@@ -99,7 +103,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       lowestOccupancy: [null, Validators.min(1)],
       maxRate: [null, Validators.min(1)],
       maxOccupancy: [null, Validators.min(1)],
-      minStay: [null, [Validators.required, Validators.min(1)]],
+      minStay: [null, [Validators.min(1)]],
       maxStay: [null, [Validators.min(1)]],
       daySpecificRates: this.fb.array([]),
       additionalGuestFees: this.fb.array([], [noChildAgeOverlapValidator])
@@ -171,7 +175,7 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
             'ageBucket',
             this.fb.group({
               fromAge: [fee.ageBucket?.fromAge, [Validators.required, Validators.min(0)]],
-              toAge: [fee.ageBucket?.toAge, [Validators.required, Validators.min(1)]]
+              toAge: [fee.ageBucket?.toAge, [Validators.required, Validators.min(0)]]
             }, {validators: ageRangeValidator()})
           );
         }
@@ -278,6 +282,11 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
     );
   }
 
+  setAmountType(index: number, amountType: string): void {
+    const feeGroup = this.additionalGuestFees.at(index);
+    feeGroup.get('amountType')?.setValue(amountType);
+  }
+
   addAdditionalGuestFee(): void {
     const additionalGuestFees = this.additionalGuestFees;
 
@@ -299,8 +308,8 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
       (feeGroup as FormGroup).addControl(
         'ageBucket',
         this.fb.group({
-          fromAge: [null, [Validators.required, Validators.min(0)]],
-          toAge: [null, [Validators.required, Validators.min(1)]]
+          fromAge: [0, [Validators.required, Validators.min(0)]],
+          toAge: [0, [Validators.required, Validators.min(0)]]
         }, {validators: ageRangeValidator()})
       );
     }
@@ -310,8 +319,8 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
         (feeGroup as FormGroup).addControl(
           'ageBucket',
           this.fb.group({
-            fromAge: [null, [Validators.required, Validators.min(0)]],
-            toAge: [null, [Validators.required, Validators.min(1)]]
+            fromAge: [0, [Validators.required, Validators.min(0)]],
+            toAge: [0, [Validators.required, Validators.min(0)]]
           }, {validators: ageRangeValidator()})
         );
       } else if (type === 'ADULT' && feeGroup.get('ageBucket')) {

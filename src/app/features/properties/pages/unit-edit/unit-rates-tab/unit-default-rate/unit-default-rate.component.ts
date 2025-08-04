@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   ButtonDirective,
-  ColComponent,
+  ColComponent, DropdownComponent, DropdownItemDirective, DropdownMenuDirective, DropdownToggleDirective,
   FormControlDirective,
   FormDirective,
   FormFeedbackComponent,
@@ -45,7 +45,11 @@ import {ageRangeValidator} from '../../../../validators/ageBucket.validator';
     FormFeedbackComponent,
     FormSelectDirective,
     InputGroupComponent,
-    InputGroupTextDirective
+    InputGroupTextDirective,
+    DropdownComponent,
+    DropdownToggleDirective,
+    DropdownMenuDirective,
+    DropdownItemDirective
   ],
   templateUrl: './unit-default-rate.component.html',
   styleUrl: './unit-default-rate.component.scss'
@@ -75,7 +79,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   ) {
     this.ratesForm = this.fb.group({
       nightly: [null, [Validators.required, Validators.min(1)]],
-      minStay: [null, [Validators.required, Validators.min(1)]],
+      minStay: [null, [Validators.min(1)]],
       maxStay: [null, [Validators.min(1)]],
       daySpecificRates: this.fb.array([]),
       additionalGuestFees: this.fb.array([], [noChildAgeOverlapValidator])
@@ -198,6 +202,11 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     );
   }
 
+  setAmountType(index: number, amountType: string): void {
+    const feeGroup = this.additionalGuestFees.at(index);
+    feeGroup.get('amountType')?.setValue(amountType);
+  }
+
   addAdditionalGuestFee(): void {
     const additionalGuestFees = this.additionalGuestFees;
 
@@ -221,7 +230,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
         this.fb.group(
           {
             fromAge: [0, [Validators.required, Validators.min(0)]],
-            toAge: [1, [Validators.required, Validators.min(1)]]
+            toAge: [0, [Validators.required, Validators.min(0)]]
           },
           {validators: ageRangeValidator()}
         )
@@ -235,7 +244,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
           'ageBucket',
           this.fb.group({
             fromAge: [0, [Validators.required, Validators.min(0)]],
-            toAge: [1, [Validators.required, Validators.min(1)]]
+            toAge: [0, [Validators.required, Validators.min(0)]]
           }, {validators: ageRangeValidator()})
         );
       } else if (type === 'ADULT' && feeGroup.get('ageBucket')) {
