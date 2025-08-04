@@ -31,7 +31,7 @@ export const navItems: INavData[] = [
   },
   {
     name: 'Calendar',
-    url: '/calendars/multi',
+    url: '/bookings/calendar',
     iconComponent: {name: 'cil-calendar'}
   },
   {

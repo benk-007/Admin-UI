@@ -64,6 +64,10 @@ export const routes: Routes = [
       {
         path: 'bookings/reservations',
         loadChildren: () => import('./features/availability/routes').then((m) => m.routes)
+      },
+      {
+        path: 'bookings/calendar',
+        loadComponent: () => import('./features/booking/calendar/calendar.component').then((m) => m.CalendarComponent)
       }
     ]
   },
