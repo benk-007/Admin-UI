@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,12 @@ import {
   FormCheckComponent,
   FormCheckInputDirective,
   FormCheckLabelDirective,
-  RowComponent
+  RowComponent,
+  InputGroupComponent,
+  DropdownComponent,
+  DropdownToggleDirective,
+  DropdownMenuDirective,
+  DropdownItemDirective, InputGroupTextDirective
 } from '@coreui/angular';
 
 import { FeeApiService } from '../../../../services/fee-api.service';
@@ -24,6 +29,10 @@ import { FeeGetModel } from '../../../../models/fee/get/fee-get.model';
 import { FeeTypeEnum } from '../../../../models/fee/enum/fee-type.enum';
 import { FeeModalityEnum } from '../../../../models/fee/enum/fee-modality.enum';
 import {TranslatePipe} from '@ngx-translate/core';
+import {cilPlus, cilTrash} from '@coreui/icons';
+import {noChildAgeOverlapValidator} from '../../../../validators/no-age-overlap.validator';
+import {ageRangeValidator} from '../../../../validators/ageBucket.validator';
+import {IconDirective} from '@coreui/icons-angular';
 
 @Component({
   selector: 'app-fee-edit-modal',
@@ -42,12 +51,20 @@ import {TranslatePipe} from '@ngx-translate/core';
     FormCheckInputDirective,
     FormCheckLabelDirective,
     RowComponent,
-    TranslatePipe
+    TranslatePipe,
+    IconDirective,
+    InputGroupComponent,
+    DropdownComponent,
+    DropdownToggleDirective,
+    DropdownMenuDirective,
+    DropdownItemDirective,
+    InputGroupTextDirective
   ],
   templateUrl: './fee-edit-modal.component.html',
   styleUrl: './fee-edit-modal.component.scss'
 })
 export class FeeEditModalComponent implements OnInit, OnDestroy {
+  icons = { cilTrash, cilPlus };
 
   @Input() feeToEdit!: FeeGetModel;
   @Output() actionConfirmed = new EventEmitter<FeeGetModel>();
@@ -84,14 +101,24 @@ export class FeeEditModalComponent implements OnInit, OnDestroy {
    * Create the reactive form
    */
   private createForm(): FormGroup {
-    return this.fb.group({
+    const form = this.fb.group({
       name: ['', [Validators.required]],
       amount: [null, [Validators.required, Validators.min(0.01)]],
       type: [FeeTypeEnum.FLAT, [Validators.required]],
       modality: [FeeModalityEnum.PER_STAY, [Validators.required]],
       description: [''],
-      active: [true]
+      active: [true],
+      additionalGuestPrices: this.fb.array([], [noChildAgeOverlapValidator])
     });
+
+    // Watch modality changes to show/hide additional guest prices
+    form.get('modality')?.valueChanges.subscribe(modality => {
+      if (modality) {
+        this.onModalityChange(modality);
+      }
+    });
+
+    return form;
   }
 
   /**
@@ -106,6 +133,159 @@ export class FeeEditModalComponent implements OnInit, OnDestroy {
       description: this.feeToEdit.description || '',
       active: this.feeToEdit.active
     });
+
+    // Populate additional guest prices if they exist
+    if (this.feeToEdit.additionalGuestPrices && this.feeToEdit.additionalGuestPrices.length > 0) {
+      const additionalGuestPrices = this.feeForm.get('additionalGuestPrices') as FormArray;
+      this.feeToEdit.additionalGuestPrices.forEach((price: any) => {
+        const priceGroup = this.fb.group({
+          id: [price.id],
+          guestCount: [price.guestCount, [Validators.required, Validators.min(1)]],
+          guestType: [price.guestType, [Validators.required]],
+          amountType: [price.amountType, [Validators.required]],
+          value: [price.value, [Validators.required, Validators.min(0)]]
+        });
+
+        if (price.guestType === 'CHILD' && price.ageBucket) {
+          (priceGroup as FormGroup).addControl(
+            'ageBucket',
+            this.fb.group(
+              {
+                fromAge: [price.ageBucket.fromAge, [Validators.required, Validators.min(0)]],
+                toAge: [price.ageBucket.toAge, [Validators.required, Validators.min(0)]]
+              },
+              { validators: ageRangeValidator() }
+            )
+          );
+        }
+
+        // Add guest type change listener
+        const guestTypeControl = priceGroup.get('guestType');
+        guestTypeControl?.valueChanges.subscribe(type => {
+          if (type === 'CHILD' && !priceGroup.get('ageBucket')) {
+            (priceGroup as FormGroup).addControl(
+              'ageBucket',
+              this.fb.group({
+                fromAge: [0, [Validators.required, Validators.min(0)]],
+                toAge: [0, [Validators.required, Validators.min(0)]]
+              }, { validators: ageRangeValidator() })
+            );
+          } else if (type === 'ADULT' && priceGroup.get('ageBucket')) {
+            (priceGroup as FormGroup).removeControl('ageBucket');
+          }
+        });
+
+        additionalGuestPrices.push(priceGroup);
+      });
+    }
+  }
+
+  /**
+   * Get additional guest prices form array
+   */
+  get additionalGuestPrices(): FormArray {
+    return this.feeForm.get('additionalGuestPrices') as FormArray;
+  }
+
+  /**
+   * Check if modality supports additional guest prices
+   */
+  shouldShowAdditionalGuestPrices(): boolean {
+    const modality = this.feeForm.get('modality')?.value;
+    return modality === FeeModalityEnum.PER_PERSON ||
+      modality === FeeModalityEnum.PER_PERSON_PER_NIGHT;
+  }
+
+  /**
+   * Handle modality change
+   */
+  onModalityChange(modality: FeeModalityEnum | null): void {
+    if (!this.shouldShowAdditionalGuestPrices()) {
+      this.additionalGuestPrices.clear();
+    }
+  }
+
+  /**
+   * Add additional guest price
+   */
+  addAdditionalGuestPrice(): void {
+    const additionalGuestPrices = this.additionalGuestPrices;
+
+    const hasAdult = additionalGuestPrices.controls.some(
+      group => group.get('guestType')?.value === 'ADULT'
+    );
+
+    const defaultGuestType = hasAdult ? 'CHILD' : 'ADULT';
+
+    const priceGroup = this.fb.group({
+      id: [null],
+      guestCount: [1, [Validators.required, Validators.min(1)]],
+      guestType: [defaultGuestType, [Validators.required]],
+      amountType: ['FLAT', [Validators.required]],
+      value: [0, [Validators.required, Validators.min(0)]]
+    });
+
+    if (defaultGuestType === 'CHILD') {
+      (priceGroup as FormGroup).addControl(
+        'ageBucket',
+        this.fb.group(
+          {
+            fromAge: [0, [Validators.required, Validators.min(0)]],
+            toAge: [0, [Validators.required, Validators.min(0)]]
+          },
+          { validators: ageRangeValidator() }
+        )
+      );
+    }
+
+    const guestTypeControl = priceGroup.get('guestType');
+    guestTypeControl?.valueChanges.subscribe(type => {
+      if (type === 'CHILD' && !priceGroup.get('ageBucket')) {
+        (priceGroup as FormGroup).addControl(
+          'ageBucket',
+          this.fb.group({
+            fromAge: [0, [Validators.required, Validators.min(0)]],
+            toAge: [0, [Validators.required, Validators.min(0)]]
+          }, { validators: ageRangeValidator() })
+        );
+      } else if (type === 'ADULT' && priceGroup.get('ageBucket')) {
+        (priceGroup as FormGroup).removeControl('ageBucket');
+      }
+    });
+
+    additionalGuestPrices.push(priceGroup);
+  }
+
+  /**
+   * Remove additional guest price
+   */
+  removeAdditionalGuestPrice(index: number): void {
+    if (this.additionalGuestPrices.length > 0) {
+      this.additionalGuestPrices.removeAt(index);
+    }
+  }
+
+  /**
+   * Check if there's already an adult guest type (excluding current index)
+   */
+  hasAdult(currentIndex: number): boolean {
+    return this.additionalGuestPrices.controls
+      .some((group, index) => index !== currentIndex && group.get('guestType')?.value === 'ADULT');
+  }
+
+  /**
+   * Set amount type for a specific price group
+   */
+  setAmountType(index: number, amountType: string): void {
+    const priceGroup = this.additionalGuestPrices.at(index);
+    priceGroup.get('amountType')?.setValue(amountType);
+  }
+
+  /**
+   * Get amount type label for display
+   */
+  getAmountTypeLabel(amountType: string): string {
+    return amountType === 'FLAT' ? 'MAD' : '%';
   }
 
   /**

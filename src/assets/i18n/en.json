@@ -1454,6 +1454,14 @@
             },
             "active": {
               "label": "Active"
+            },
+            "additional-guest-prices": {
+              "title": "Additional Guest Price",
+              "hint": "Set different prices based on guest count and type for this fee"
+            },
+            "errors": {
+              "invalid-age-range": "To age must be greater than or equal to from age",
+              "child-age-overlap": "Age ranges for children cannot overlap"
             }
           },
           "copy-to": {
@@ -1535,7 +1543,8 @@
               }
             }
           }
-        }      }
+        }
+      }
     }
   },
   "crm": {
