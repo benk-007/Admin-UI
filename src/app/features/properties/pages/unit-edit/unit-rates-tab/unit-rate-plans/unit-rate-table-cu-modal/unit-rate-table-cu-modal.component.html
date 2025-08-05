@@ -89,15 +89,9 @@
             }
           </c-col>
           <c-col [md]="4">
-            <label cLabel class="required"
-                   for="minStay">{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}</label>
+            <label cLabel for="minStay">{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}</label>
             <input cFormControl formControlName="minStay" id="minStay" type="number" min="1"/>
             @if (rateTableForm.get('minStay')?.touched && rateTableForm.get('minStay')?.invalid) {
-              @if (rateTableForm.get('minStay')?.errors?.['required']) {
-                <c-form-feedback [valid]="false">
-                  {{ 'commons.errors.required' | translate }}
-                </c-form-feedback>
-              }
               @if (rateTableForm.get('minStay')?.errors?.['min']) {
                 <c-form-feedback [valid]="false">
                   {{ 'commons.errors.strictly-positive' | translate }}
@@ -194,14 +188,11 @@
 
           <!-- Min Stay -->
           <c-col [md]="4">
-            <label cLabel class="required" for="minStay">
+            <label cLabel for="minStay">
               {{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}
             </label>
             <input cFormControl formControlName="minStay" id="minStay" type="number" min="1"/>
             @if (rateTableForm.get('minStay')?.touched && rateTableForm.get('minStay')?.invalid) {
-              @if (rateTableForm.get('minStay')?.errors?.['required']) {
-                <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
-              }
               @if (rateTableForm.get('minStay')?.errors?.['min']) {
                 <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
               }
@@ -270,6 +261,7 @@
                          (add)="onDaySelect($event, i)"
                          (remove)="onDayRemove($event, i)"
                          [closeOnSelect]="false"
+                         [clearSearchOnAdd]="true"
                          class="ng-select-sm">
                 <ng-template ng-option-tmp let-item="item">
                                 <span [ngClass]="getDayClass(item.value, i)">
@@ -358,7 +350,7 @@
                          [placeholder]="'commons.form.age-bucket-input.placeholder.from'|translate"/>
 
                   <span cInputGroupText><i class="bi bi-arrow-right"></i></span>
-                  <input cFormControl type="number" formControlName="toAge" min="1"
+                  <input cFormControl type="number" formControlName="toAge" min="0"
                          [placeholder]="'commons.form.age-bucket-input.placeholder.to'|translate"/>
                   @if ((feeGroup.get('ageBucket.fromAge')?.touched &&
                     feeGroup.get('ageBucket.fromAge')?.invalid) ||
@@ -381,30 +373,27 @@
               </c-col>
             }
 
-            <!--AmountType input-->
-            <c-col [md]="2">
-              <label cLabel [for]="'amountType'+i" class="required">
-                {{ 'commons.form.amount-type-select.label' | translate }}
-              </label>
-              <select cSelect [id]="'amountType'+i" formControlName="amountType">
-                <option value="FLAT">{{ 'commons.form.amount-type-select.values.flat'|translate }}</option>
-                <option value="PERCENT">
-                  {{ 'commons.form.amount-type-select.values.percent' | translate }}
-                </option>
-              </select>
-              @if (feeGroup.get('amountType')?.touched && feeGroup.get('amountType')?.invalid) {
-                @if (feeGroup.get('amountType')?.errors?.['required']) {
-                  <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
-                }
-              }
-            </c-col>
-
-            <!--Value input-->
-            <c-col [md]="2">
+            <!--Value with Amount Type-->
+            <c-col [md]="3">
               <label cLabel [for]="'value'+i" class="required">
                 {{ 'commons.form.value-input.label' | translate }}
               </label>
-              <input [id]="'value'+i" cFormControl type="number" formControlName="value" min="0"/>
+              <c-input-group>
+                <input [id]="'value'+i" cFormControl type="number" formControlName="value" min="0"/>
+                <c-dropdown>
+                  <button cButton cDropdownToggle color="secondary" variant="outline">
+                    {{ feeGroup.get('amountType')?.value === 'FLAT' ? 'MAD' : '%' }}
+                  </button>
+                  <div cDropdownMenu>
+                    <button type="button" cDropdownItem (click)="setAmountType(i, 'FLAT')">
+                      MAD
+                    </button>
+                    <button type="button" cDropdownItem (click)="setAmountType(i, 'PERCENT')">
+                      %
+                    </button>
+                  </div>
+                </c-dropdown>
+              </c-input-group>
               @if (feeGroup.get('value')?.touched && feeGroup.get('value')?.invalid) {
                 @if (feeGroup.get('value')?.errors?.['required']) {
                   <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>

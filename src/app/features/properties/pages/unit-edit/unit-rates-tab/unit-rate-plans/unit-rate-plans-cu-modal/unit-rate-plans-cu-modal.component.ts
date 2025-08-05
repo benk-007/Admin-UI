@@ -40,6 +40,7 @@ import {SegmentSelectComponent} from '../../../../../../../shared/components/seg
 export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   @Input() unitId!: string;
   @Input() ratePlanToEdit?: RatePlanGetModel;
+  @Input() existingRatePlans: RatePlanGetModel[] = [];
   @Output() actionConfirmed = new EventEmitter<void>();
 
   ratePlanForm: FormGroup;
@@ -55,7 +56,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   ) {
     this.ratePlanForm = this.fb.group({
       name: [null, [Validators.required]],
-      segments: [[]],
+      segments: [[], [Validators.required, Validators.minLength(1)]],
       enabled: [false, [Validators.required]]
     });
   }
@@ -72,6 +73,7 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
 
   submit(): void {
     if (this.ratePlanForm.invalid) {
+      this.ratePlanForm.markAllAsTouched();
       this.toastrService.error(
         this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.message'),
         this.translateService.instant('units.edit-unit.tabs.rates.ratesPlans.create.notifications.error.title')
@@ -147,7 +149,6 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
       );
     }
   }
-
 
   closeModal(): void {
     this.modalRef.hide();

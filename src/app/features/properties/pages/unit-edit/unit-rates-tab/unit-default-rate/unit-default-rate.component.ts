@@ -2,6 +2,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   ButtonDirective,
   ColComponent,
+  DropdownComponent,
+  DropdownItemDirective,
+  DropdownMenuDirective,
+  DropdownToggleDirective,
   FormControlDirective,
   FormDirective,
   FormFeedbackComponent,
@@ -45,7 +49,11 @@ import {ageRangeValidator} from '../../../../validators/ageBucket.validator';
     FormFeedbackComponent,
     FormSelectDirective,
     InputGroupComponent,
-    InputGroupTextDirective
+    InputGroupTextDirective,
+    DropdownComponent,
+    DropdownToggleDirective,
+    DropdownMenuDirective,
+    DropdownItemDirective
   ],
   templateUrl: './unit-default-rate.component.html',
   styleUrl: './unit-default-rate.component.scss'
@@ -75,7 +83,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   ) {
     this.ratesForm = this.fb.group({
       nightly: [null, [Validators.required, Validators.min(1)]],
-      minStay: [null, [Validators.required, Validators.min(1)]],
+      minStay: [null],
       maxStay: [null, [Validators.min(1)]],
       daySpecificRates: this.fb.array([]),
       additionalGuestFees: this.fb.array([], [noChildAgeOverlapValidator])
@@ -90,12 +98,8 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     if (this.unitId) {
       const sub = this.rateApiService.getDefaultRate(this.unitId).subscribe({
         next: (data) => {
-          if (data) {
-            this.existingRateId = data.id ?? null;
-            this.populateForm(data);
-          } else {
-            console.log("No existing default rate for this unit.");
-          }
+          this.existingRateId = data.id as string;
+          this.populateForm(data);
         },
         error: (err) => {
           if (err.status === 404) {
@@ -114,7 +118,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   private populateForm(data: any): void {
     this.ratesForm.patchValue({
       nightly: data.nightly,
-      minStay: data.minStay,
+      minStay: data.minStay || null,
       maxStay: data.maxStay
     });
 
@@ -198,6 +202,11 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     );
   }
 
+  setAmountType(index: number, amountType: string): void {
+    const feeGroup = this.additionalGuestFees.at(index);
+    feeGroup.get('amountType')?.setValue(amountType);
+  }
+
   addAdditionalGuestFee(): void {
     const additionalGuestFees = this.additionalGuestFees;
 
@@ -221,7 +230,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
         this.fb.group(
           {
             fromAge: [0, [Validators.required, Validators.min(0)]],
-            toAge: [1, [Validators.required, Validators.min(1)]]
+            toAge: [0, [Validators.required, Validators.min(0)]]
           },
           {validators: ageRangeValidator()}
         )
@@ -235,7 +244,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
           'ageBucket',
           this.fb.group({
             fromAge: [0, [Validators.required, Validators.min(0)]],
-            toAge: [1, [Validators.required, Validators.min(1)]]
+            toAge: [0, [Validators.required, Validators.min(0)]]
           }, {validators: ageRangeValidator()})
         );
       } else if (type === 'ADULT' && feeGroup.get('ageBucket')) {
