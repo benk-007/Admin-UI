@@ -73,7 +73,6 @@ export class FeeCreateModalComponent implements OnDestroy {
   isSubmitting = false;
 
   // Enum values for template
-  feeTypes = Object.values(FeeTypeEnum);
   feeModalities = Object.values(FeeModalityEnum);
 
   private subscriptions: Subscription[] = [];
@@ -109,10 +108,10 @@ export class FeeCreateModalComponent implements OnDestroy {
     const form = this.fb.group({
       name: ['', [Validators.required]],
       amount: [null, [Validators.required, Validators.min(0.01)]],
-      type: [FeeTypeEnum.FLAT, [Validators.required]],
       modality: [FeeModalityEnum.PER_STAY, [Validators.required]],
       description: [''],
       active: [true],
+      required: [false],
       additionalGuestPrices: this.fb.array([], [noChildAgeOverlapValidator])
     });
 
@@ -246,10 +245,10 @@ export class FeeCreateModalComponent implements OnDestroy {
     const payload: FeePostModel = {
       name: formValue.name.trim(),
       amount: parseFloat(formValue.amount),
-      type: formValue.type,
       modality: formValue.modality,
       description: formValue.description?.trim() || undefined,
       active: formValue.active,
+      required: formValue.required,
       unit: { id: this.unitId }
     };
 

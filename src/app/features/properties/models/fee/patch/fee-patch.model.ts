@@ -5,10 +5,10 @@ import {AdditionalGuestFeeModel} from '../../../../../shared/models/additional-g
 export interface FeePatchModel {
   name?: string;
   amount?: number;
-  type?: FeeTypeEnum;
   modality?: FeeModalityEnum;
   description?: string;
   active?: boolean;
+  required: boolean;
   unitIds?: string[];
   additionalGuestPrices?: AdditionalGuestFeeModel[];
 }

@@ -6,10 +6,10 @@ import {AdditionalGuestFeeModel} from '../../../../../shared/models/additional-g
 export interface FeePostModel {
   name: string;
   amount: number;
-  type: FeeTypeEnum;
   modality: FeeModalityEnum;
   description?: string;
   active?: boolean;
+  required: boolean;
   unit: UnitRefModel;
   additionalGuestPrices?: AdditionalGuestFeeModel[];
 }

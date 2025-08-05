@@ -9,10 +9,10 @@ export interface FeeGetModel {
   id: string;
   name: string;
   amount: number;
-  type: FeeTypeEnum;
   modality: FeeModalityEnum;
   description?: string;
   active: boolean;
+  required: boolean;
   unit: UnitRefModel;
   audit: AuditGetModel;
   additionalGuestPrices?: AdditionalGuestFeeModel[];

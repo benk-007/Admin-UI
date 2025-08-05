@@ -73,7 +73,6 @@ export class FeeEditModalComponent implements OnInit, OnDestroy {
   isSubmitting = false;
 
   // Enum values for template
-  feeTypes = Object.values(FeeTypeEnum);
   feeModalities = Object.values(FeeModalityEnum);
 
   private subscriptions: Subscription[] = [];
@@ -104,10 +103,10 @@ export class FeeEditModalComponent implements OnInit, OnDestroy {
     const form = this.fb.group({
       name: ['', [Validators.required]],
       amount: [null, [Validators.required, Validators.min(0.01)]],
-      type: [FeeTypeEnum.FLAT, [Validators.required]],
       modality: [FeeModalityEnum.PER_STAY, [Validators.required]],
       description: [''],
       active: [true],
+      required:[false],
       additionalGuestPrices: this.fb.array([], [noChildAgeOverlapValidator])
     });
 
@@ -128,15 +127,18 @@ export class FeeEditModalComponent implements OnInit, OnDestroy {
     this.feeForm.patchValue({
       name: this.feeToEdit.name,
       amount: this.feeToEdit.amount,
-      type: this.feeToEdit.type,
       modality: this.feeToEdit.modality,
       description: this.feeToEdit.description || '',
-      active: this.feeToEdit.active
+      active: this.feeToEdit.active,
+      required: this.feeToEdit.required || false
     });
 
     // Populate additional guest prices if they exist
-    if (this.feeToEdit.additionalGuestPrices && this.feeToEdit.additionalGuestPrices.length > 0) {
+    if (this.shouldShowAdditionalGuestPrices() &&
+      this.feeToEdit.additionalGuestPrices &&
+      this.feeToEdit.additionalGuestPrices.length > 0) {
       const additionalGuestPrices = this.feeForm.get('additionalGuestPrices') as FormArray;
+
       this.feeToEdit.additionalGuestPrices.forEach((price: any) => {
         const priceGroup = this.fb.group({
           id: [price.id],
@@ -302,10 +304,10 @@ export class FeeEditModalComponent implements OnInit, OnDestroy {
     const payload: FeePatchModel = {
       name: formValue.name.trim(),
       amount: parseFloat(formValue.amount),
-      type: formValue.type,
       modality: formValue.modality,
       description: formValue.description?.trim() || undefined,
-      active: formValue.active
+      active: formValue.active,
+      required: formValue.required
     };
 
     this.subscriptions.push(

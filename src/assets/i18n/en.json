@@ -1414,7 +1414,7 @@
             "header": {
               "name": "Name",
               "amount": "Amount (MAD)",
-              "type": "Type",
+              "required": "Required",
               "modality": "Modality",
               "status": "Status"
             },
@@ -1429,8 +1429,8 @@
               "placeholder": "Name"
             },
             "amount": {
-              "label": "Amount (MAD)",
-              "placeholder": "Amount (MAD)"
+              "label": "Amount",
+              "placeholder": "Amount"
             },
             "type": {
               "label": "Type",
@@ -1454,6 +1454,9 @@
             },
             "active": {
               "label": "Active"
+            },
+            "required": {
+              "label": "Required"
             },
             "additional-guest-prices": {
               "title": "Additional Guest Price",
