@@ -76,23 +76,23 @@
             <tr>
               <td>
                 <div class="d-flex flex-column">
-                  <span class="fw-semibold">{{ fee.name }}</span>
+                  <span>{{ fee.name }}</span>
                   @if (fee.description) {
                     <small class="text-muted">{{ fee.description }}</small>
                   }
                 </div>
               </td>
               <td>
-                <span class="fw-semibold">{{ fee.amount | number:'1.2-2' }}</span>
+                <span>{{ fee.amount | number:'1.2-2' }}</span>
               </td>
               <td>
                 @if (fee.required) {
                   <span class="text-success">
-                    {{ 'commons.boolean.true' | translate }}
-                   </span>
+                  {{ 'commons.boolean.true' | translate }}
+                  </span>
                 } @else {
                   <span class="text-muted">
-                    {{ 'commons.boolean.false' | translate }}
+                  {{ 'commons.boolean.false' | translate }}
                   </span>
                 }
               </td>

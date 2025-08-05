@@ -223,7 +223,7 @@
                     {{ 'commons.form.value-input.label' | translate }}
                   </label>
                   <c-input-group>
-                    <input [id]="'value'+i" cFormControl type="number" formControlName="value" min="0" step="0.01"/>
+                    <input [id]="'value'+i" cFormControl type="number" formControlName="value" min="0" step="5"/>
                     <c-dropdown>
                       <button cButton cDropdownToggle color="secondary" variant="outline" class="dropdown-toggle-aligned">
                         {{ getAmountTypeLabel(priceGroup.get('amountType')?.value) }}

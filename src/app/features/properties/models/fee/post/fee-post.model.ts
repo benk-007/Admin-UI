@@ -1,4 +1,3 @@
-import {FeeTypeEnum} from '../enum/fee-type.enum';
 import {FeeModalityEnum} from '../enum/fee-modality.enum';
 import {UnitRefModel} from '../commons/unit-ref.model';
 import {AdditionalGuestFeeModel} from '../../../../../shared/models/additional-guest-fee.model';
@@ -11,5 +10,4 @@ export interface FeePostModel {
   active?: boolean;
   required: boolean;
   unit: UnitRefModel;
-  additionalGuestPrices?: AdditionalGuestFeeModel[];
-}
+  additionalGuestPrices?: any[];}

@@ -23,7 +23,6 @@ import { FeeApiService } from '../../../../services/fee-api.service';
 import { UnitApiService } from '../../../../services/unit-api.service';
 import { FeeGetModel } from '../../../../models/fee/get/fee-get.model';
 import { UnitItemGetModel } from '../../../../models/unit/get/unit-item-get.model';
-import { FeeTypeEnum } from '../../../../models/fee/enum/fee-type.enum';
 import { FeeModalityEnum } from '../../../../models/fee/enum/fee-modality.enum';
 import {SelectableTableDirective} from '../../../../../../shared/directives/selectable-table.directive';
 import {EmptyDataComponent} from '../../../../../../shared/components/empty-data/empty-data.component';
@@ -402,13 +401,6 @@ export class CopyFeesToModalComponent implements OnInit, OnDestroy {
       [FeeModalityEnum.PER_PERSON_PER_NIGHT]: 'PP/PN'
     };
     return modalityLabels[modality] || modality;
-  }
-
-  /**
-   * Get type display label
-   */
-  getTypeLabel(type: FeeTypeEnum): string {
-    return type === FeeTypeEnum.FLAT ? 'Flat' : 'Percent';
   }
 
   /**

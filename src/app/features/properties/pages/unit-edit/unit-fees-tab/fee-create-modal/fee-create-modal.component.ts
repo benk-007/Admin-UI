@@ -26,7 +26,6 @@ import {
 import { FeeApiService } from '../../../../services/fee-api.service';
 import { FeePostModel } from '../../../../models/fee/post/fee-post.model';
 import { FeeGetModel } from '../../../../models/fee/get/fee-get.model';
-import { FeeTypeEnum } from '../../../../models/fee/enum/fee-type.enum';
 import { FeeModalityEnum } from '../../../../models/fee/enum/fee-modality.enum';
 import {TranslatePipe} from '@ngx-translate/core';
 import {cilPlus, cilTrash} from '@coreui/icons';
@@ -76,17 +75,6 @@ export class FeeCreateModalComponent implements OnDestroy {
   feeModalities = Object.values(FeeModalityEnum);
 
   private subscriptions: Subscription[] = [];
-  // Options for guest types
-  guestTypeOptions = [
-    { label: 'ADULT', value: 'ADULT' },
-    { label: 'CHILD', value: 'CHILD' }
-  ];
-
-  // Options for amount types
-  amountTypeOptions = [
-    { label: 'FLAT', value: 'FLAT' },
-    { label: 'PERCENT', value: 'PERCENT' }
-  ];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -249,7 +237,8 @@ export class FeeCreateModalComponent implements OnDestroy {
       description: formValue.description?.trim() || undefined,
       active: formValue.active,
       required: formValue.required,
-      unit: { id: this.unitId }
+      unit: { id: this.unitId },
+      additionalGuestPrices: formValue.additionalGuestPrices || []
     };
 
     this.subscriptions.push(
@@ -285,9 +274,9 @@ export class FeeCreateModalComponent implements OnDestroy {
 
     this.modalRef.hide();
     this.feeForm.reset({
-      type: FeeTypeEnum.FLAT,
       modality: FeeModalityEnum.PER_STAY,
-      active: true
+      active: true,
+      required: false
     });
     this.isSubmitting = false;
   }

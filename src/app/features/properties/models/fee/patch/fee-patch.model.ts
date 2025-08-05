@@ -1,4 +1,3 @@
-import {FeeTypeEnum} from '../enum/fee-type.enum';
 import {FeeModalityEnum} from '../enum/fee-modality.enum';
 import {AdditionalGuestFeeModel} from '../../../../../shared/models/additional-guest-fee.model';
 

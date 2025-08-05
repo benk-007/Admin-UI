@@ -85,7 +85,6 @@
             <tr>
               <th>{{ 'units.edit-unit.tabs.fees.table.header.name' | translate }}</th>
               <th>{{ 'units.edit-unit.tabs.fees.table.header.modality' | translate }}</th>
-              <th>{{ 'units.edit-unit.tabs.fees.table.header.type' | translate }}</th>
               <th>{{ 'units.edit-unit.tabs.fees.table.header.amount' | translate }}</th>
             </tr>
             </thead>
@@ -98,12 +97,6 @@
                   <td>
                     <span class="badge bg-info-10 text-info">
                       {{ getModalityLabel(fee.modality) }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="badge"
-                          [ngClass]="fee.type === 'FLAT' ? 'bg-secondary-transparent' : 'bg-dark'">
-                      {{ getTypeLabel(fee.type) }}
                     </span>
                   </td>
                   <td>

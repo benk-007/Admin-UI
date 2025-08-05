@@ -34,14 +34,26 @@
             <label cLabel class="required" for="feeAmount">
               {{ 'units.edit-unit.tabs.fees.form.amount.label' | translate }}
             </label>
-            <input
-              cFormControl
-              formControlName="amount"
-              id="feeAmount"
-              type="number"
-              step="0.01"
-              min="0"
-              [placeholder]="'units.edit-unit.tabs.fees.form.amount.placeholder' | translate">
+            <c-input-group>
+              <input
+                cFormControl
+                formControlName="amount"
+                id="feeAmount"
+                type="number"
+                step="100"
+                min="0"
+                [placeholder]="'units.edit-unit.tabs.fees.form.amount.placeholder' | translate">
+              <c-dropdown>
+                <button cButton cDropdownToggle color="secondary" variant="outline" class="dropdown-toggle-aligned">
+                  MAD
+                </button>
+                <div cDropdownMenu>
+                  <button type="button" cDropdownItem>
+                    MAD
+                  </button>
+                </div>
+              </c-dropdown>
+            </c-input-group>
             @if (feeForm.get('amount')?.touched) {
               @if (feeForm.get('amount')?.hasError('required')) {
                 <c-form-feedback [valid]="false">
@@ -59,7 +71,7 @@
 
         <!-- Second Row: Modality, Active, Required -->
         <c-row class="mb-3">
-          <c-col md="">
+          <c-col md="6">
             <label cLabel for="feeModality" class="required">
               {{ 'units.edit-unit.tabs.fees.form.modality.label' | translate }}
             </label>
@@ -75,7 +87,7 @@
             }
           </c-col>
 
-          <c-col md="4" class="d-flex align-items-center">
+          <c-col md="3" class="d-flex align-items-end">
             <c-form-check [switch]="true">
               <input
                 cFormCheckInput
@@ -88,8 +100,8 @@
             </c-form-check>
           </c-col>
 
-          <c-col md="4" class="d-flex align-items-center">
-            <c-form-check [switch]="true">
+          <c-col md="3" class="d-flex align-items-end">
+            <c-form-check>
               <input
                 cFormCheckInput
                 formControlName="required"
@@ -211,7 +223,7 @@
                     {{ 'commons.form.value-input.label' | translate }}
                   </label>
                   <c-input-group>
-                    <input [id]="'value'+i" cFormControl type="number" formControlName="value" min="0" step="0.01"/>
+                    <input [id]="'value'+i" cFormControl type="number" formControlName="value" min="0" step="5"/>
                     <c-dropdown>
                       <button cButton cDropdownToggle color="secondary" variant="outline" class="dropdown-toggle-aligned">
                         {{ getAmountTypeLabel(priceGroup.get('amountType')?.value) }}

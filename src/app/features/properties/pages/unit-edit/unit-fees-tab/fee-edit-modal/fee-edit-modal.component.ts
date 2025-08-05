@@ -26,7 +26,6 @@ import {
 import { FeeApiService } from '../../../../services/fee-api.service';
 import { FeePatchModel } from '../../../../models/fee/patch/fee-patch.model';
 import { FeeGetModel } from '../../../../models/fee/get/fee-get.model';
-import { FeeTypeEnum } from '../../../../models/fee/enum/fee-type.enum';
 import { FeeModalityEnum } from '../../../../models/fee/enum/fee-modality.enum';
 import {TranslatePipe} from '@ngx-translate/core';
 import {cilPlus, cilTrash} from '@coreui/icons';
@@ -137,9 +136,12 @@ export class FeeEditModalComponent implements OnInit, OnDestroy {
     if (this.shouldShowAdditionalGuestPrices() &&
       this.feeToEdit.additionalGuestPrices &&
       this.feeToEdit.additionalGuestPrices.length > 0) {
+
       const additionalGuestPrices = this.feeForm.get('additionalGuestPrices') as FormArray;
 
       this.feeToEdit.additionalGuestPrices.forEach((price: any) => {
+        console.log('Adding price:', price);
+
         const priceGroup = this.fb.group({
           id: [price.id],
           guestCount: [price.guestCount, [Validators.required, Validators.min(1)]],
@@ -307,7 +309,8 @@ export class FeeEditModalComponent implements OnInit, OnDestroy {
       modality: formValue.modality,
       description: formValue.description?.trim() || undefined,
       active: formValue.active,
-      required: formValue.required
+      required: formValue.required,
+      additionalGuestPrices: formValue.additionalGuestPrices
     };
 
     this.subscriptions.push(
