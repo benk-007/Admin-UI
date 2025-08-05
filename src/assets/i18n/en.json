@@ -1382,7 +1382,7 @@
           }
         },
         "fees": {
-          "title": "Booking Fees",
+          "title": "Fees",
           "hint": "Manage additional fees that apply to bookings for this unit",
           "add-btn": "Add Fee",
           "copy-btn": "Copy",
