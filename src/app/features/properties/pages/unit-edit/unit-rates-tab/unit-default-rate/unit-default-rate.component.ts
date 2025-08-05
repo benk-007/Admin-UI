@@ -79,7 +79,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   ) {
     this.ratesForm = this.fb.group({
       nightly: [null, [Validators.required, Validators.min(1)]],
-      minStay: [null, [Validators.min(1)]],
+      minStay: [null],
       maxStay: [null, [Validators.min(1)]],
       daySpecificRates: this.fb.array([]),
       additionalGuestFees: this.fb.array([], [noChildAgeOverlapValidator])
@@ -118,7 +118,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   private populateForm(data: any): void {
     this.ratesForm.patchValue({
       nightly: data.nightly,
-      minStay: data.minStay,
+      minStay: data.minStay || null,
       maxStay: data.maxStay
     });
 

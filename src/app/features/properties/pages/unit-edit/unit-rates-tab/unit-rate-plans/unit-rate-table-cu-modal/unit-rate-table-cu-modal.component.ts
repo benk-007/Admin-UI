@@ -238,11 +238,15 @@ export class UnitRateTableCuModalComponent implements OnInit, OnDestroy {
 
     request$.subscribe({
       next: () => {
-        const successKey = this.rateTableToEdit
-          ? 'units.edit-unit.tabs.rates.rateTable.edit.notifications.success'
-          : 'units.edit-unit.tabs.rates.rateTable.create.notifications.success';
-
-        this.toastrService.success(this.translateService.instant(successKey));
+        if (this.rateTableToEdit) {
+          this.toastrService.info(
+            this.translateService.instant('units.edit-unit.tabs.rates.rateTable.edit.notifications.success')
+          );
+        } else {
+          this.toastrService.success(
+            this.translateService.instant('units.edit-unit.tabs.rates.rateTable.create.notifications.success')
+          );
+        }
         this.actionConfirmed.emit();
         this.modalRef.hide();
       },

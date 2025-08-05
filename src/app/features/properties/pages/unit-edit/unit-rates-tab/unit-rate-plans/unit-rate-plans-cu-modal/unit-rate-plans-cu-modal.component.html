@@ -27,17 +27,12 @@
     <!-- Segment -->
     <c-row>
       <c-col [md]="12" sm="12" class="mb-3">
-        <label cLabel [class.required]="isSegmentsRequired()" for="segment">
+        <label cLabel class="required" for="segment">
           {{ 'units.edit-unit.tabs.rates.ratesPlans.create.form.segment.select.label' | translate }}
         </label>
         <app-segment-select formControlName="segments" [multiple]="true" [showEnabledOnly]="true"></app-segment-select>
         @if (ratePlanForm.get('segments')?.touched && ratePlanForm.get('segments')?.invalid) {
-          @if (ratePlanForm.get('segments')?.errors?.['required']) {
-            <c-form-feedback [valid]="false">
-              {{ 'commons.errors.required' | translate }}
-            </c-form-feedback>
-          }
-          @if (ratePlanForm.get('segments')?.errors?.['minlength']) {
+          @if (ratePlanForm.get('segments')?.errors?.['required'] || ratePlanForm.get('segments')?.errors?.['minlength']) {
             <c-form-feedback [valid]="false">
               {{ 'commons.errors.required' | translate }}
             </c-form-feedback>

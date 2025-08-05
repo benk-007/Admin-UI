@@ -56,14 +56,12 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
   ) {
     this.ratePlanForm = this.fb.group({
       name: [null, [Validators.required]],
-      segments: [[]],
+      segments: [[], [Validators.required, Validators.minLength(1)]],
       enabled: [false, [Validators.required]]
     });
   }
 
   ngOnInit(): void {
-    this.updateSegmentsValidation();
-
     if (this.ratePlanToEdit) {
       this.ratePlanForm.patchValue({
         name: this.ratePlanToEdit.name,
@@ -151,30 +149,6 @@ export class UnitRatePlansCuModalComponent implements OnInit, OnDestroy {
       );
     }
   }
-
-  private updateSegmentsValidation(): void {
-    const hasNameOnlyRatePlan = this.existingRatePlans.some(ratePlan => {
-      if (this.ratePlanToEdit && ratePlan.id === this.ratePlanToEdit.id) {
-        return false;
-      }
-      return !ratePlan.segments || ratePlan.segments.length === 0;
-    });
-
-    const segmentsControl = this.ratePlanForm.get('segments');
-
-    if (hasNameOnlyRatePlan) {
-      segmentsControl?.setValidators([Validators.required, Validators.minLength(1)]);
-    } else {
-      segmentsControl?.clearValidators();
-    }
-
-    segmentsControl?.updateValueAndValidity();
-  }
-
-  isSegmentsRequired(): boolean {
-    return this.ratePlanForm.get('segments')?.hasValidator(Validators.required) || false;
-  }
-
 
   closeModal(): void {
     this.modalRef.hide();

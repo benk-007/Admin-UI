@@ -29,7 +29,7 @@
 
             <c-col [md]="4">
               <label cLabel for="minStay">{{ 'units.edit-unit.tabs.rates.settings.minStay' | translate }}</label>
-              <input cFormControl formControlName="minStay" id="minStay" type="number" min="1"/>
+              <input cFormControl formControlName="minStay" id="minStay" type="number" min="1" placeholder=""/>
               @if (ratesForm.get('minStay')?.touched && ratesForm.get('minStay')?.invalid) {
                 @if (ratesForm.get('minStay')?.errors?.['min']) {
                   <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}
@@ -224,10 +224,10 @@
                     {{ feeGroup.get('amountType')?.value === 'FLAT' ? 'MAD' : '%' }}
                   </button>
                   <div cDropdownMenu>
-                    <button cDropdownItem (click)="setAmountType(i, 'FLAT')">
+                    <button type="button" cDropdownItem (click)="setAmountType(i, 'FLAT')">
                       MAD
                     </button>
-                    <button cDropdownItem (click)="setAmountType(i, 'PERCENT')">
+                    <button type="button" cDropdownItem (click)="setAmountType(i, 'PERCENT')">
                       %
                     </button>
                   </div>

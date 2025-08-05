@@ -374,7 +374,7 @@
             }
 
             <!--Value with Amount Type-->
-            <c-col [md]="2">
+            <c-col [md]="3">
               <label cLabel [for]="'value'+i" class="required">
                 {{ 'commons.form.value-input.label' | translate }}
               </label>
@@ -385,10 +385,10 @@
                     {{ feeGroup.get('amountType')?.value === 'FLAT' ? 'MAD' : '%' }}
                   </button>
                   <div cDropdownMenu>
-                    <button cDropdownItem (click)="setAmountType(i, 'FLAT')">
+                    <button type="button" cDropdownItem (click)="setAmountType(i, 'FLAT')">
                       MAD
                     </button>
-                    <button cDropdownItem (click)="setAmountType(i, 'PERCENT')">
+                    <button type="button" cDropdownItem (click)="setAmountType(i, 'PERCENT')">
                       %
                     </button>
                   </div>
