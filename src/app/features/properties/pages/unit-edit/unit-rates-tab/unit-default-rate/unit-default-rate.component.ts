@@ -1,7 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {
   ButtonDirective,
-  ColComponent, DropdownComponent, DropdownItemDirective, DropdownMenuDirective, DropdownToggleDirective,
+  ColComponent,
+  DropdownComponent,
+  DropdownItemDirective,
+  DropdownMenuDirective,
+  DropdownToggleDirective,
   FormControlDirective,
   FormDirective,
   FormFeedbackComponent,
@@ -94,12 +98,8 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     if (this.unitId) {
       const sub = this.rateApiService.getDefaultRate(this.unitId).subscribe({
         next: (data) => {
-          if (data) {
-            this.existingRateId = data.id ?? null;
-            this.populateForm(data);
-          } else {
-            console.log("No existing default rate for this unit.");
-          }
+          this.existingRateId = data.id as string;
+          this.populateForm(data);
         },
         error: (err) => {
           if (err.status === 404) {
