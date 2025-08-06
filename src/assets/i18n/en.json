@@ -113,6 +113,7 @@
       "email": "Enter a valid email address",
       "no-numbers": "Numbers are not allowed",
       "strictly-positive": "The value must be strictly positive.",
+      "positive": "The value must be positive.",
       "min-max-stay": "Maximum stay must be greater than or equal to minimum stay.",
       "invalidDateRange": "The 'From Date' must be earlier than the 'Until Date'.",
       "session-expired": "Your session has expired. Please sign in again to continue!",

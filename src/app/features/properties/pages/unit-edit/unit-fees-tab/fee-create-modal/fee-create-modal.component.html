@@ -43,16 +43,9 @@
                 step="100"
                 min="0"
                 [placeholder]="'units.edit-unit.tabs.fees.form.amount.placeholder' | translate">
-              <c-dropdown>
-                <button cButton cDropdownToggle color="secondary" variant="outline" class="dropdown-toggle-aligned">
+                <button cButton color="secondary" variant="outline" type="button">
                   MAD
                 </button>
-                <div cDropdownMenu>
-                  <button type="button" cDropdownItem>
-                    MAD
-                  </button>
-                </div>
-              </c-dropdown>
             </c-input-group>
             @if (feeForm.get('amount')?.touched) {
               @if (feeForm.get('amount')?.hasError('required')) {
@@ -62,7 +55,7 @@
               }
               @if (feeForm.get('amount')?.hasError('min')) {
                 <c-form-feedback [valid]="false">
-                  {{ 'commons.errors.strictly-positive' | translate }}
+                  {{ 'commons.errors.positive' | translate }}
                 </c-form-feedback>
               }
             }

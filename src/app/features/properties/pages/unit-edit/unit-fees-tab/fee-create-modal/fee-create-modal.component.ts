@@ -95,7 +95,7 @@ export class FeeCreateModalComponent implements OnDestroy {
   private createForm(): FormGroup {
     const form = this.fb.group({
       name: ['', [Validators.required]],
-      amount: [null, [Validators.required, Validators.min(0.01)]],
+      amount: [null, [Validators.required, Validators.min(0)]],
       modality: [FeeModalityEnum.PER_STAY, [Validators.required]],
       description: [''],
       active: [true],
