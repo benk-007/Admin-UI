@@ -1,0 +1,302 @@
+<!-- Modal title -->
+<div class="modal-header justify-content-center align-items-center">
+  <h6 class="modal-title">
+    {{ 'units.edit-unit.tabs.fees.copy-from.title' | translate }}
+  </h6>
+</div>
+
+<!-- Modal body -->
+<div class="modal-body">
+  <!-- Wizard stepper -->
+  <c-row class="mb-4 wizard-navigation">
+    <c-col md="12">
+      <div class="d-flex align-items-center justify-content-center">
+        <!-- Step 1 -->
+        <div class="d-flex align-items-center me-4">
+          <div class="step-indicator me-2" [ngClass]="{'active': currentStep === 1, 'completed': currentStep > 1}">
+            @if (currentStep === 1) {
+              <span>1</span>
+            }
+            @if (currentStep > 1) {
+              <i class="bi bi-check-circle-fill"></i>
+            }
+          </div>
+          <span class="step-title">
+            {{ 'units.edit-unit.tabs.fees.copy-from.steps.select-rentals.title' | translate }}
+          </span>
+        </div>
+
+        <!-- Step connector -->
+        <div class="step-connector me-4"></div>
+
+        <!-- Step 2 -->
+        <div class="d-flex align-items-center">
+          <div class="step-indicator me-2" [ngClass]="{'active': currentStep === 2}">2</div>
+          <span class="step-title">
+            {{ 'units.edit-unit.tabs.fees.copy-from.steps.select-fees.title' | translate }}
+          </span>
+        </div>
+      </div>
+    </c-col>
+  </c-row>
+
+  <!-- Step 1: Select Rentals -->
+  @if (currentStep === 1) {
+    <div class="step1">
+      <!-- Search bar only (no unit select) -->
+      <c-row class="mb-3">
+        <c-col md="6">
+          <c-input-group sizing="sm" class="search-input">
+            <span cInputGroupText>
+              <svg [cIcon]="icons.cilSearch"></svg>
+            </span>
+            <input
+              cFormControl
+              (input)="searchUnits($event)"
+              [placeholder]="'commons.form.search-input.placeholder' | translate"/>
+          </c-input-group>
+        </c-col>
+      </c-row>
+
+      <!-- Loading Spinner -->
+      @if (isLoadingUnits) {
+        <c-row class="d-flex justify-content-center mt-4">
+          <c-spinner color="secondary"></c-spinner>
+        </c-row>
+        <c-row class="d-flex justify-content-center mt-2">
+          <c-col md="4" class="d-flex justify-content-center text-center">
+            {{ 'commons.snippets.loading' | translate }}
+          </c-col>
+        </c-row>
+      }
+
+      <!-- Units Table with Selection - Only Name column -->
+      @if (!isLoadingUnits && units.length > 0) {
+        <div class="table-responsive">
+          <table cTable [responsive]="true" appSelectableTable (selectionChange)="onUnitsSelectionChange($event)">
+            <thead>
+            <tr>
+              <th>{{ 'units.unit-list.table.header.name' | translate }}</th>
+            </tr>
+            </thead>
+            <tbody>
+              @for (unit of units; track unit.id; let i = $index) {
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      @if (unit.nature === 'MULTI_UNIT') {
+                        <c-avatar [size]="'md'" shape="rounded" textColor="white" [color]="getAvatarColor(unit.name)" class="multi-unit-avatar">
+                          {{ getNameInitials(unit.name) }}
+                        </c-avatar>
+                      } @else {
+                        <c-avatar [size]="'md'" shape="rounded" textColor="white" color="primary">
+                          {{ getNameInitials(unit.name) }}
+                        </c-avatar>
+                      }
+                      <div class="d-flex flex-column">
+                        <div>
+                          <span class="me-1">{{ unit.name }}</span>
+                          @if (unit.nature === 'MULTI_UNIT') {
+                            <span class="text-muted small">
+                              ({{ unit.subUnits?.length || 0 }} units)
+                            </span>
+                          }
+                        </div>
+                        @if (unit.subtitle) {
+                          <div class="small text-body-secondary">
+                            {{ unit.subtitle }}
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination info -->
+        <c-row class="mt-2">
+          <c-col md="12" class="text-center">
+            <small class="text-muted">
+              {{ currentUnitsPage * unitsPageSize + 1 }} -
+              {{ Math.min((currentUnitsPage + 1) * unitsPageSize, totalUnitsElements) }}
+              {{ 'commons.labels.of' | translate }}
+              {{ totalUnitsElements }}
+            </small>
+          </c-col>
+        </c-row>
+      }
+
+      <!-- Empty state for units -->
+      @if (!isLoadingUnits && units.length === 0) {
+        <app-empty-data
+          imageSrc="assets/images/animations/units.gif"
+          [message]="'units.edit-unit.tabs.fees.copy-from.no-units' | translate">
+        </app-empty-data>
+      }
+    </div>
+  }
+
+  <!-- Step 2: Select Fees from Selected Units -->
+  @if (currentStep === 2) {
+    <div class="step2">
+      <!-- Search bar -->
+      <c-row class="mb-3">
+        <c-col md="6">
+          <c-input-group sizing="sm" class="search-input">
+            <span cInputGroupText>
+              <svg [cIcon]="icons.cilSearch"></svg>
+            </span>
+            <input
+              cFormControl
+              (input)="searchFees($event)"
+              [placeholder]="'commons.form.search-input.placeholder' | translate"/>
+          </c-input-group>
+        </c-col>
+      </c-row>
+
+      <!-- Loading Spinner -->
+      @if (isLoadingFees) {
+        <c-row class="d-flex justify-content-center mt-4">
+          <c-spinner color="secondary"></c-spinner>
+        </c-row>
+        <c-row class="d-flex justify-content-center mt-2">
+          <c-col md="4" class="d-flex justify-content-center text-center">
+            {{ 'commons.snippets.loading' | translate }}
+          </c-col>
+        </c-row>
+      }
+
+      <!-- Fees Table with Selection -->
+      @if (!isLoadingFees && fees.length > 0) {
+        <div class="table-responsive">
+          <table cTable [responsive]="true" appSelectableTable (selectionChange)="onFeesSelectionChange($event)">
+            <thead>
+            <tr>
+              <th>{{ 'units.edit-unit.tabs.fees.table.header.name' | translate }}</th>
+              <th>{{ 'units.edit-unit.tabs.fees.table.header.modality' | translate }}</th>
+              <th>{{ 'units.edit-unit.tabs.fees.table.header.amount' | translate }}</th>
+            </tr>
+            </thead>
+            <tbody>
+              @for (fee of fees; track fee.id; let i = $index) {
+                <tr>
+                  <td>
+                    <span class="fw-semibold">{{ fee.name }}</span>
+                  </td>
+                  <td>
+                    <span class="badge bg-info-10 text-info">
+                      {{ getModalityLabel(fee.modality) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="fw-semibold">{{ fee.amount | number:'1.2-2' }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination info -->
+        <c-row class="mt-2">
+          <c-col md="12" class="text-center">
+            <small class="text-muted">
+              {{ currentFeesPage * feesPageSize + 1 }} -
+              {{ Math.min((currentFeesPage + 1) * feesPageSize, totalFeesElements) }}
+              {{ 'commons.labels.of' | translate }}
+              {{ totalFeesElements }}
+            </small>
+          </c-col>
+        </c-row>
+      }
+
+      <!-- Empty state for fees -->
+      @if (!isLoadingFees && fees.length === 0) {
+        <app-empty-data
+          imageSrc="assets/images/animations/fees.gif"
+          [message]="'units.edit-unit.tabs.fees.copy-from.no-fees' | translate">
+        </app-empty-data>
+      }
+    </div>
+  }
+
+  <!-- Modal footer -->
+  <c-row class="mt-4">
+    <c-col class="d-flex justify-content-between">
+      <!-- Left side buttons -->
+      <div>
+        @if (currentStep === 2) {
+          <button
+            type="button"
+            cButton
+            color="secondary"
+            size="sm"
+            variant="outline"
+            (click)="previousStep()"
+            [disabled]="isSubmitting">
+            <i class="bi bi-arrow-left me-1"></i>
+            {{ 'commons.form.buttons.previous-btn' | translate }}
+          </button>
+        }
+      </div>
+
+      <!-- Right side buttons -->
+      <div>
+        <button
+          type="button"
+          cButton
+          color="light"
+          size="sm"
+          variant="ghost"
+          (click)="closeModal()"
+          [disabled]="isSubmitting">
+          {{ 'commons.form.buttons.cancel' | translate }}
+        </button>
+
+        @if (currentStep === 1) {
+          <button
+            type="button"
+            cButton
+            color="primary"
+            size="sm"
+            (click)="nextStep()"
+            [disabled]="selectedUnitIds.length === 0">
+            {{ 'commons.form.buttons.next-btn' | translate }}
+            <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        }
+
+        @if (currentStep === 2) {
+          <button
+            type="button"
+            cButton
+            color="secondary"
+            size="sm"
+            (click)="copyFeesToCurrentUnit(true)"
+            [disabled]="selectedFeeIds.length === 0 || isSubmitting"
+            class="me-2">
+            @if (isSubmitting && actionType === 'overwrite') {
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            }
+            {{ 'units.edit-unit.tabs.fees.copy-from.buttons.overwrite' | translate }}
+          </button>
+          <button
+            type="button"
+            cButton
+            color="primary"
+            size="sm"
+            (click)="copyFeesToCurrentUnit(false)"
+            [disabled]="selectedFeeIds.length === 0 || isSubmitting">
+            @if (isSubmitting && actionType === 'copy') {
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            }
+            {{ 'units.edit-unit.tabs.fees.copy-from.buttons.copy' | translate }}
+          </button>
+        }
+      </div>
+    </c-col>
+  </c-row>
+</div>

@@ -42,14 +42,19 @@ export const commonProperties = {
   bookingItems: Booking_SERVICE + 'bookings/:parentId/items',
   bookingDrafts: Booking_SERVICE + 'bookings/drafts',
 
-
-  /*===========PRICING Service===========*/
+  /*===========Rates===========*/
   // Default resource
   unitBaseRateById: PRICING_SERVICE + 'default-rates',
   // Rate plans
   RatePlan: PRICING_SERVICE + 'rate-plans',
   // Rate plans
   RateTable: PRICING_SERVICE + 'rate-tables',
+
+  /*===========Fees===========*/
+  // Fee resource
+  fees: PRICING_SERVICE + 'fees',
+  feesApply: PRICING_SERVICE + 'fees/copyTo',
+
 
   /*===========Guest Service===========*/
   // Guest resource

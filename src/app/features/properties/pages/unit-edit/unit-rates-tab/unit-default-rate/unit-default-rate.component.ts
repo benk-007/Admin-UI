@@ -148,9 +148,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.ratesForm.invalid) return;
-
-    const formValue = structuredClone(this.ratesForm.value);
+    const formValue = this.ratesForm.value
 
     // Clean up ageBucket for ADULT entries
     formValue.additionalGuestFees = formValue.additionalGuestFees.map((fee: any) => {
@@ -161,7 +159,7 @@ export class UnitDefaultRateComponent implements OnInit, OnDestroy {
     });
     const payload = {
       ...formValue,
-      unit: {id: this.unitId}
+      unitId: this.unitId
     };
 
     const request$ = this.existingRateId

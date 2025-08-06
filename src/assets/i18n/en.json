@@ -69,6 +69,7 @@
         "update": "Update",
         "create": "Create",
         "confirm": "Confirm",
+        "save": "Save",
         "cancel": "Cancel",
         "delete": "Delete",
         "previous-btn": "Previous",
@@ -97,6 +98,11 @@
       },
       "body": {
         "n-a": "N/A"
+      },
+      "actions": {
+        "edit": "Edit",
+        "delete": "Delete",
+        "view": "View"
       }
     },
     "labels": {
@@ -111,6 +117,7 @@
       "email": "Enter a valid email address",
       "no-numbers": "Numbers are not allowed",
       "strictly-positive": "The value must be strictly positive.",
+      "positive": "The value must be positive.",
       "min-max-stay": "Maximum stay must be greater than or equal to minimum stay.",
       "invalidDateRange": "The 'From Date' must be earlier than the 'Until Date'.",
       "session-expired": "Your session has expired. Please sign in again to continue!",
@@ -1376,6 +1383,172 @@
             },
             "edit": {
               "title": "Edit SubUnit"
+            }
+          }
+        },
+        "fees": {
+          "title": "Fees",
+          "hint": "Manage additional fees that apply to bookings for this unit",
+          "add-btn": "Add Fee",
+          "copy-btn": "Copy",
+          "copy-from-rental": "Copy from Rental",
+          "copy-to-rental": "Copy to Rental",
+          "create": {
+            "title": "Add Fee"
+          },
+          "edit": {
+            "title": "Edit Fee"
+          },
+          "delete": {
+            "modal": {
+              "title": "Delete Fee",
+              "message": "Are you sure you want to delete the fee \"{{name}}\"? This action cannot be undone."
+            },
+            "notifications": {
+              "success": {
+                "title": "Fee Deleted",
+                "message": "Fee \"{{name}}\" has been successfully deleted"
+              },
+              "error": {
+                "title": "Delete Failed",
+                "message": "An error occurred while deleting the fee. Please try again."
+              }
+            }
+          },
+          "table": {
+            "header": {
+              "name": "Name",
+              "amount": "Amount (MAD)",
+              "required": "Required",
+              "modality": "Modality",
+              "status": "Status"
+            },
+            "body": {
+              "active": "Active",
+              "inactive": "Inactive"
+            }
+          },
+          "form": {
+            "name": {
+              "label": "Name",
+              "placeholder": "Name"
+            },
+            "amount": {
+              "label": "Amount",
+              "placeholder": "Amount"
+            },
+            "type": {
+              "label": "Type",
+              "values": {
+                "flat": "Flat",
+                "percent": "Percent"
+              }
+            },
+            "modality": {
+              "label": "Modality",
+              "values": {
+                "per-stay": "Per Stay",
+                "per-night": "Per Night",
+                "per-person": "Per Person",
+                "per-person-per-night": "Per Person/Per Night (PP/PN)"
+              }
+            },
+            "description": {
+              "label": "Description",
+              "placeholder": "Description"
+            },
+            "active": {
+              "label": "Active"
+            },
+            "required": {
+              "label": "Required"
+            },
+            "additional-guest-prices": {
+              "title": "Additional Guest Price",
+              "hint": "Set different prices based on guest count and type for this fee"
+            },
+            "errors": {
+              "invalid-age-range": "To age must be greater than or equal to from age",
+              "child-age-overlap": "Age ranges for children cannot overlap"
+            }
+          },
+          "copy-to": {
+            "title": "Copy Fees to Rentals",
+            "steps": {
+              "select-fees": {
+                "title": "Select Fees to Copy"
+              },
+              "select-rentals": {
+                "title": "Select Rentals to Copy to"
+              }
+            },
+            "buttons": {
+              "overwrite": "Overwrite",
+              "copy": "Copy"
+            },
+            "no-fees": "No fees found for copying. Please create fees first.",
+            "no-units": "No units available for copying. Please check your unit list.",
+            "select-units": {
+              "placeholder": "Select units to copy fees to..."
+            }
+          },
+          "copy-from": {
+            "title": "Copy Fees from Rentals",
+            "steps": {
+              "select-rentals": {
+                "title": "Select Rentals"
+              },
+              "select-fees": {
+                "title": "Select Fees to Copy"
+              }
+            },
+            "buttons": {
+              "overwrite": "Overwrite",
+              "copy": "Copy"
+            },
+            "no-units": "No units available. Please check your unit list.",
+            "no-fees": "No fees found in selected units. Please select units with existing fees.",
+            "select-units": {
+              "placeholder": "Select units to copy fees from..."
+            }
+          },
+          "empty-data": "No booking fees found. Click 'Add Fee' to create your first fee.",
+          "notifications": {
+            "create": {
+              "success": {
+                "title": "Fee Created",
+                "message": "Fee '{{name}}' has been successfully created"
+              },
+              "error": {
+                "title": "Creation Failed",
+                "message": "An error occurred while creating the fee. Please try again."
+              }
+            },
+            "load": {
+              "error": {
+                "title": "Loading Error",
+                "message": "An error occurred while loading fees"
+              }
+            },
+            "copy": {
+              "success": {
+                "title": "Fees Copied Successfully",
+                "message": "{{count}} fee(s) have been successfully copied"
+              },
+              "error": {
+                "title": "Copy Failed",
+                "message": "An error occurred while copying fees. Please try again."
+              }
+            },
+            "update": {
+              "success": {
+                "title": "Fee Updated",
+                "message": "Fee \"{{name}}\" has been successfully updated"
+              },
+              "error": {
+                "title": "Update Failed",
+                "message": "An error occurred while updating the fee. Please try again."
+              }
             }
           }
         }

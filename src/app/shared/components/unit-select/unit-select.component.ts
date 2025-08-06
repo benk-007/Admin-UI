@@ -16,6 +16,7 @@ import {UnitItemGetModel} from '../../../features/properties/models/unit/get/uni
   ],
   templateUrl: './unit-select.component.html',
   styleUrl: './unit-select.component.scss',
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -27,7 +28,7 @@ import {UnitItemGetModel} from '../../../features/properties/models/unit/get/uni
 export class UnitSelectComponent implements OnInit, OnDestroy, ControlValueAccessor {
 
   @Input() disable = false;
-  @Input() allowMultiUnit = false;  // Nouveau paramètre pour permettre les MULTI_UNIT si nécessaire
+  @Input() allowMultiUnit = false;
   @Output() updatedUnits = new EventEmitter<UnitItemGetModel[] | null>();
 
   unitSearchList: UnitItemGetModel[] = [];
@@ -69,7 +70,7 @@ export class UnitSelectComponent implements OnInit, OnDestroy, ControlValueAcces
       sortDirection: 'asc',
       search: searchValue,
       advancedSearchFormValue: {
-        nature: 'SINGLE',
+        nature: this.allowMultiUnit ? undefined : 'SINGLE',
         withParent: false,
       }
     }

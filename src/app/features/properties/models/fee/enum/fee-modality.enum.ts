@@ -1,0 +1,6 @@
+export enum FeeModalityEnum {
+  PER_STAY = 'PER_STAY',
+  PER_NIGHT = 'PER_NIGHT',
+  PER_PERSON = 'PER_PERSON',
+  PER_PERSON_PER_NIGHT = 'PER_PERSON_PER_NIGHT'
+}

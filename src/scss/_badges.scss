@@ -24,4 +24,15 @@ span.badge {
     background-color: $danger-40;
     color: $danger;
   }
+
+  &.bg-secondary-transparent {
+    background-color: $secondary-10 !important;
+    color: $secondary !important;
+  }
+
+  &.bg-dark {
+    background-color: $dark-10 !important;
+    color: $dark !important;
+  }
+
 }

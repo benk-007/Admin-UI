@@ -1,0 +1,308 @@
+<!-- Modal title -->
+<div class="modal-header justify-content-center align-items-center">
+  <h6 class="modal-title">
+    {{ 'units.edit-unit.tabs.fees.create.title' | translate }}
+  </h6>
+</div>
+
+<!-- Modal body -->
+<div class="modal-body">
+  <form (submit)="submit()" [formGroup]="feeForm" cForm>
+    <c-row>
+      <!-- Left Column: Name, Amount, Type, Modality, Active -->
+      <c-col md="6">
+        <!-- First Row: Name and Amount -->
+        <c-row class="mb-3">
+          <c-col md="6">
+            <label cLabel class="required" for="feeName">
+              {{ 'units.edit-unit.tabs.fees.form.name.label' | translate }}
+            </label>
+            <input
+              cFormControl
+              formControlName="name"
+              id="feeName"
+              type="text"
+              [placeholder]="'units.edit-unit.tabs.fees.form.name.placeholder' | translate">
+            @if (feeForm.get('name')?.touched && feeForm.get('name')?.hasError('required')) {
+              <c-form-feedback [valid]="false">
+                {{ 'commons.errors.required' | translate }}
+              </c-form-feedback>
+            }
+          </c-col>
+
+          <c-col md="6">
+            <label cLabel class="required" for="feeAmount">
+              {{ 'units.edit-unit.tabs.fees.form.amount.label' | translate }}
+            </label>
+            <c-input-group>
+              <input
+                cFormControl
+                formControlName="amount"
+                id="feeAmount"
+                type="number"
+                step="100"
+                min="0"
+                [placeholder]="'units.edit-unit.tabs.fees.form.amount.placeholder' | translate">
+                <button cButton color="secondary" variant="outline" type="button">
+                  MAD
+                </button>
+            </c-input-group>
+            @if (feeForm.get('amount')?.touched) {
+              @if (feeForm.get('amount')?.hasError('required')) {
+                <c-form-feedback [valid]="false">
+                  {{ 'commons.errors.required' | translate }}
+                </c-form-feedback>
+              }
+              @if (feeForm.get('amount')?.hasError('min')) {
+                <c-form-feedback [valid]="false">
+                  {{ 'commons.errors.positive' | translate }}
+                </c-form-feedback>
+              }
+            }
+          </c-col>
+        </c-row>
+
+        <!-- Second Row: Modality, Active, Required -->
+        <c-row class="mb-3">
+          <c-col md="6">
+            <label cLabel for="feeModality" class="required">
+              {{ 'units.edit-unit.tabs.fees.form.modality.label' | translate }}
+            </label>
+            <select cSelect id="feeModality" formControlName="modality">
+              <option *ngFor="let modality of feeModalities" [value]="modality">
+                {{ ('units.edit-unit.tabs.fees.form.modality.values.' + getModalityKey(modality)) | translate }}
+              </option>
+            </select>
+            @if ((feeForm.get('modality')?.touched || feeForm.get('modality')?.dirty) && feeForm.controls['modality'].hasError('required')) {
+              <c-form-feedback [valid]="false">
+                {{ 'commons.errors.required' | translate }}
+              </c-form-feedback>
+            }
+          </c-col>
+
+          <c-col md="3" class="d-flex align-items-end">
+            <c-form-check [switch]="true">
+              <input
+                cFormCheckInput
+                formControlName="active"
+                type="checkbox"
+                id="feeActive">
+              <label cFormCheckLabel for="feeActive">
+                {{ 'units.edit-unit.tabs.fees.form.active.label' | translate }}
+              </label>
+            </c-form-check>
+          </c-col>
+
+          <c-col md="3" class="d-flex align-items-end">
+            <c-form-check>
+              <input
+                cFormCheckInput
+                formControlName="required"
+                type="checkbox"
+                id="feeRequired">
+              <label cFormCheckLabel for="feeRequired">
+                {{ 'units.edit-unit.tabs.fees.form.required.label' | translate }}
+              </label>
+            </c-form-check>
+          </c-col>
+        </c-row>
+      </c-col>
+
+      <!-- Right Column: Description -->
+      <c-col md="6">
+        <label cLabel for="feeDescription">
+          {{ 'units.edit-unit.tabs.fees.form.description.label' | translate }}
+        </label>
+        <textarea
+          cFormControl
+          formControlName="description"
+          id="feeDescription"
+          rows="6"
+          [placeholder]="'units.edit-unit.tabs.fees.form.description.placeholder' | translate">
+        </textarea>
+      </c-col>
+    </c-row>
+
+    <!-- Additional Guest Prices Section -->
+    @if (shouldShowAdditionalGuestPrices()) {
+      <c-row class="mt-4">
+        <c-col md="12">
+          <h6 class="section-title underline mb-0">
+            <span class="me-2">{{ 'units.edit-unit.tabs.fees.form.additional-guest-prices.title' | translate }}</span>
+            <span class="text-primary add-btn" (click)="addAdditionalGuestPrice()">
+              <i class="bi bi-plus-circle-fill"></i>
+            </span>
+          </h6>
+          <div class="form-text mb-3">
+            {{ 'units.edit-unit.tabs.fees.form.additional-guest-prices.hint' | translate }}
+          </div>
+
+          <!-- Additional Guest Prices Form Array -->
+          <ng-container formArrayName="additionalGuestPrices">
+            @for (priceGroup of additionalGuestPrices.controls; track priceGroup; let i = $index) {
+              <c-row class="mb-3" [formGroupName]="i">
+
+                <!-- Guest Count -->
+                <c-col md="2">
+                  <label cLabel [for]="'guestCount'+i" class="required">
+                    {{ 'commons.form.guest-count-input.placeholder' | translate }}
+                  </label>
+                  <input cFormControl [id]="'guestCount'+i" type="number" formControlName="guestCount" min="1"/>
+                  @if (priceGroup.get('guestCount')?.touched && priceGroup.get('guestCount')?.invalid) {
+                    @if (priceGroup.get('guestCount')?.errors?.['required']) {
+                      <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                    }
+                    @if (priceGroup.get('guestCount')?.errors?.['min']) {
+                      <c-form-feedback [valid]="false">{{ 'commons.errors.strictly-positive' | translate }}</c-form-feedback>
+                    }
+                  }
+                </c-col>
+
+                <!-- Guest Type -->
+                <c-col md="2">
+                  <label cLabel [for]="'guestType'+i" class="required">
+                    {{ 'commons.form.guest-type-select.label' | translate }}
+                  </label>
+                  <select cSelect [id]="'guestType'+i" formControlName="guestType">
+                    <option value="ADULT" [disabled]="hasAdult(i)">
+                      {{ 'commons.form.guest-type-select.values.adult' | translate }}
+                    </option>
+                    <option value="CHILD">
+                      {{ 'commons.form.guest-type-select.values.child' | translate }}
+                    </option>
+                  </select>
+                  @if (priceGroup.get('guestType')?.touched && priceGroup.get('guestType')?.invalid) {
+                    @if (priceGroup.get('guestType')?.errors?.['required']) {
+                      <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                    }
+                  }
+                </c-col>
+
+                <!-- Age Bucket (only for CHILD) -->
+                @if (priceGroup.get('guestType')?.value === 'CHILD') {
+                  <c-col md="3" [formGroupName]="'ageBucket'">
+                    <label cLabel [for]="'ageBucket'+i" class="required">
+                      {{ 'commons.form.age-bucket-input.label' | translate }}
+                    </label>
+                    <c-input-group>
+                      <input cFormControl [id]="'ageBucket'+i" type="number" formControlName="fromAge" min="0"
+                             [placeholder]="'commons.form.age-bucket-input.placeholder.from' | translate"/>
+                      <span cInputGroupText><i class="bi bi-arrow-right"></i></span>
+                      <input cFormControl type="number" formControlName="toAge" min="0"
+                             [placeholder]="'commons.form.age-bucket-input.placeholder.to' | translate"/>
+                    </c-input-group>
+                    @if ((priceGroup.get('ageBucket.fromAge')?.touched && priceGroup.get('ageBucket.fromAge')?.invalid) ||
+                    (priceGroup.get('ageBucket.toAge')?.touched && priceGroup.get('ageBucket.toAge')?.invalid)) {
+                      @if (priceGroup.get('ageBucket.fromAge')?.errors?.['required'] ||
+                      priceGroup.get('ageBucket.toAge')?.errors?.['required']) {
+                        <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                      }
+                      @if (priceGroup.get('ageBucket.fromAge')?.errors?.['min'] ||
+                      priceGroup.get('ageBucket.toAge')?.errors?.['min']) {
+                        <c-form-feedback [valid]="false">{{ 'commons.errors.positive' | translate }}</c-form-feedback>
+                      }
+                    }
+                    @if (priceGroup.get('ageBucket')?.errors?.['invalidAgeRange']) {
+                      <c-form-feedback [valid]="false">
+                        {{ 'units.edit-unit.tabs.fees.form.errors.invalid-age-range' | translate }}
+                      </c-form-feedback>
+                    }
+                  </c-col>
+                }
+
+                <!-- Value with Amount Type Dropdown -->
+                <c-col md="3">
+                  <label cLabel [for]="'value'+i" class="required">
+                    {{ 'commons.form.value-input.label' | translate }}
+                  </label>
+                  <c-input-group>
+                    <input [id]="'value'+i" cFormControl type="number" formControlName="value" min="0" step="5"/>
+                    <c-dropdown>
+                      <button cButton cDropdownToggle color="secondary" variant="outline" class="dropdown-toggle-aligned">
+                        {{ getAmountTypeLabel(priceGroup.get('amountType')?.value) }}
+                      </button>
+                      <div cDropdownMenu>
+                        <button type="button" cDropdownItem (click)="setAmountType(i, 'FLAT')">
+                          MAD
+                        </button>
+                        <button type="button" cDropdownItem (click)="setAmountType(i, 'PERCENT')">
+                          %
+                        </button>
+                      </div>
+                    </c-dropdown>
+                  </c-input-group>
+                  @if (priceGroup.get('value')?.touched && priceGroup.get('value')?.invalid) {
+                    @if (priceGroup.get('value')?.errors?.['required']) {
+                      <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                    }
+                    @if (priceGroup.get('value')?.errors?.['min']) {
+                      <c-form-feedback [valid]="false">{{ 'commons.errors.positive' | translate }}</c-form-feedback>
+                    }
+                  }
+                  @if (priceGroup.get('amountType')?.touched && priceGroup.get('amountType')?.invalid) {
+                    @if (priceGroup.get('amountType')?.errors?.['required']) {
+                      <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                    }
+                  }
+                </c-col>
+
+                <!-- Remove Button -->
+                <c-col md="1" class="d-flex align-items-end">
+                  <button cButton type="button" class="btn-danger-light mb-0"
+                          (click)="removeAdditionalGuestPrice(i)">
+                    <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                  </button>
+                </c-col>
+
+              </c-row>
+            }
+          </ng-container>
+
+          <!-- Age overlap error -->
+          @if (additionalGuestPrices.errors?.['childAgeOverlap']) {
+            <c-form-feedback [valid]="false">
+              {{ 'units.edit-unit.tabs.fees.form.errors.child-age-overlap' | translate }}
+            </c-form-feedback>
+          }
+        </c-col>
+      </c-row>
+    }
+
+    <!-- Loading indicator when submitting -->
+    @if (isSubmitting) {
+      <c-row>
+        <c-col md="12" class="text-center mt-2">
+          <div class="d-flex align-items-center justify-content-center">
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            <small class="text-muted">Creating fee...</small>
+          </div>
+        </c-col>
+      </c-row>
+    }
+
+    <!-- Modal footer -->
+    <c-row class="mt-4">
+      <c-col class="d-flex justify-content-end">
+        <button
+          type="button"
+          cButton
+          color="light"
+          size="sm"
+          variant="ghost"
+          (click)="closeModal()"
+          [disabled]="isSubmitting">
+          {{ 'commons.form.buttons.cancel' | translate }}
+        </button>
+        <button
+          type="submit"
+          cButton
+          class="ms-3"
+          color="primary"
+          size="sm"
+          [disabled]="!feeForm.valid || isSubmitting">
+          {{ 'commons.form.buttons.save' | translate }}
+        </button>
+      </c-col>
+    </c-row>
+  </form>
+</div>
