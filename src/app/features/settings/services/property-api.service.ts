@@ -7,6 +7,7 @@ import {environment} from '../../../../environments/environment';
 import {PropertyPatchModel} from '../models/property/patch/property-patch.model';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,8 +30,9 @@ export class PropertyApiService {
   createProperty(payload: PropertyPostModel, logoFile?: File): Observable<PropertyGetModel> {
     const formData = new FormData();
 
+    const propertyJsonBlob = new Blob([JSON.stringify(payload)], {type: 'application/json'});
     // Add payload as JSON string
-    formData.append('payload', JSON.stringify(payload));
+    formData.append('payload', propertyJsonBlob);
 
     // Add logo file if provided
     if (logoFile) {
@@ -49,8 +51,9 @@ export class PropertyApiService {
   updateProperty(propertyId: string, payload: PropertyPatchModel, logoFile?: File): Observable<PropertyGetModel> {
     const formData = new FormData();
 
+    const propertyJsonBlob = new Blob([JSON.stringify(payload)], {type: 'application/json'});
     // Add payload as JSON string
-    formData.append('payload', JSON.stringify(payload));
+    formData.append('payload', propertyJsonBlob);
 
     // Add logo file if provided
     if (logoFile) {
