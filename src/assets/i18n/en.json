@@ -1584,8 +1584,99 @@
     }
   },
   "settings": {
-    "general": {
-      "title": "General"
+    "property": {
+      "title": "Property",
+      "sections": {
+        "logo": {
+          "title": "Logo"
+        },
+        "address": {
+          "title": "Address"
+        },
+        "contact": {
+          "title": "Contact Information"
+        }
+      },
+      "form": {
+        "logo": {
+          "label": "Property Logo",
+          "hint": "Upload PNG or SVG files only. Maximum size: 2MB",
+          "remove": "Remove Logo"
+        },
+        "name": {
+          "label": "Property Name",
+          "placeholder": "Enter property name"
+        },
+        "type": {
+          "label": "Property Type"
+        },
+        "defaultUnitType": {
+          "label": "Default Unit Type"
+        },
+        "address": {
+          "street1": {
+            "label": "Street Address 1",
+            "placeholder": "Enter street address"
+          },
+          "street2": {
+            "label": "Street Address 2",
+            "placeholder": "Apartment, suite, unit, etc."
+          },
+          "postCode": {
+            "label": "Postal Code",
+            "placeholder": "Enter postal code"
+          },
+          "city": {
+            "label": "City",
+            "placeholder": "Enter city"
+          },
+          "country": {
+            "label": "Country"
+          }
+        },
+        "contact": {
+          "mobile": {
+            "label": "Mobile Number"
+          },
+          "email": {
+            "label": "Email Address",
+            "placeholder": "Enter email address"
+          }
+        },
+        "timezone": {
+          "label": "Timezone",
+          "placeholder": "Select timezone"
+        },
+        "currency": {
+          "label": "Currency"
+        }
+      },
+      "notifications": {
+        "success": {
+          "created": {
+            "title": "Property Created",
+            "message": "Property has been successfully created"
+          },
+          "updated": {
+            "title": "Property Updated",
+            "message": "Property has been successfully updated"
+          }
+        },
+        "error": {
+          "create": {
+            "title": "Creation Failed",
+            "message": "Failed to create property. Please try again."
+          },
+          "update": {
+            "title": "Update Failed",
+            "message": "Failed to update property. Please try again."
+          },
+          "load": {
+            "title": "Loading Failed",
+            "message": "Failed to load property data. Please refresh the page."
+          }
+        }
+      }
     },
     "crm": {
       "title": "CRM",

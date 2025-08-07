@@ -35,6 +35,10 @@ export const commonProperties = {
   unitImages: UNIT_SERVICE + 'images',
   unitImageById: UNIT_SERVICE + 'images/:imageId',
 
+  // Property resource
+  properties: UNIT_SERVICE + 'properties',
+  propertyById: UNIT_SERVICE + 'properties/:propertyId',
+
   /*===========Booking===========*/
   inventory: UNIT_SERVICE + 'inventory',
   booking: Booking_SERVICE + 'bookings',

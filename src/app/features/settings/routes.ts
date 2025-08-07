@@ -10,8 +10,15 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'crm',
+        redirectTo: 'property',
         pathMatch: 'full',
+      },
+      {
+        path: 'property',
+        loadComponent: () => import('./pages/property-tab/property-tab.component').then(m => m.PropertyTabComponent),
+        data: {
+          title: 'Property Settings'
+        }
       },
       {
         path: 'crm',

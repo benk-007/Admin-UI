@@ -5,8 +5,10 @@
   <!--Settings navigation-->
   <c-col [md]="2">
     <ul cListGroup>
-      <li cListGroupItem>
-        {{ 'settings.general.title'|translate }}
+      <li cListGroupItem routerLinkActive="active">
+        <a cNavLink routerLink="/settings/property">
+          {{ 'settings.property.title' | translate }}
+        </a>
       </li>
       <li cListGroupItem routerLinkActive="active">
         <a cNavLink class=" active" routerLink="/settings/crm">
