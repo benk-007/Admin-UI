@@ -36,7 +36,7 @@ export const navItems: INavData[] = [
   },
   {
     title: true,
-    name: 'Guests'
+    name: 'CRM'
   },
   {
     name: 'Guests',
@@ -47,6 +47,11 @@ export const navItems: INavData[] = [
     name: 'Guest Communication',
     url: '/theme/colors',
     iconComponent: {name: 'cil-chat-bubble'}
+  },
+  {
+    name: 'Companies',
+    url: '/companies',
+    iconComponent: {name: 'cil-wc'}
   },
   {
     title: true,

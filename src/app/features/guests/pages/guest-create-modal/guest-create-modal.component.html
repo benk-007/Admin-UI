@@ -1,0 +1,255 @@
+<div class="modal-header justify-content-center align-items-center">
+  <h6 class="modal-title">
+    @if (type === 'COMPANY') {
+      {{ 'guests.create.company-title' | translate }}
+    } @else {
+      {{ 'guests.create.guest-title' | translate }}
+    }
+  </h6>
+</div>
+
+
+<div class="modal-body">
+  <form (submit)="submit()" [formGroup]="guestForm" cForm>
+
+
+    <c-row>
+      @if (type === 'GUEST') {
+        <c-col [md]="4" sm="12" class="mb-3">
+        <label cLabel class="required me-2" for="firstName">
+          {{ 'guests.create.form.firstName-input.label' | translate }}
+        </label>
+        <input cFormControl formControlName="firstName" id="firstName" type="text"/>
+        @if (guestForm.get('firstName')?.touched || guestForm.get('firstName')?.dirty) {
+          @if (guestForm.get('firstName')?.hasError('required')) {
+            <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+          }
+        }
+        </c-col>
+        <c-col [md]="4" sm="12" class="mb-3">
+        <label cLabel class="required me-2" for="lastName">
+          {{ 'guests.create.form.lastName-input.label' | translate }}
+        </label>
+        <input cFormControl formControlName="lastName" id="lastName" type="text"/>
+        @if (guestForm.get('lastName')?.touched || guestForm.get('lastName')?.dirty) {
+          @if (guestForm.get('lastName')?.hasError('required')) {
+            <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+          }
+        }
+      </c-col>
+      }
+
+      @if (type === 'COMPANY') {
+        <c-col [md]="4" sm="12" class="mb-3">
+          <label cLabel class="required me-2" for="name">
+            {{ 'guests.create.form.name-input.label' | translate }}
+          </label>
+          <input cFormControl formControlName="name" id="name" type="text"/>
+          @if (guestForm.get('name')?.touched || guestForm.get('name')?.dirty) {
+            @if (guestForm.get('name')?.hasError('required')) {
+              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+            }
+          }
+        </c-col>
+        <c-col [md]="4" sm="12" class="mb-3">
+          <label cLabel class="required me-2" for="segmentId">
+            {{ 'guests.create.form.segment-input.label' | translate }}
+          </label>
+          <app-segment-select formControlName="segmentId" [showEnabledOnly]="true"></app-segment-select>
+          @if (guestForm.get('segmentId')?.touched || guestForm.get('segmentId')?.dirty) {
+            @if (guestForm.get('segmentId')?.hasError('required')) {
+              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+            }
+          }
+        </c-col>
+      }
+
+      <c-col [md]="4" sm="12" class="mb-3">
+        <label cLabel class="me-2" for="birthDate">
+          {{ 'guests.create.form.birthDate-input.label' | translate }}
+        </label>
+        <div *ngIf="!isNavigating" class="form-group">
+          <input
+            type="text"
+            class="form-control"
+            ngxDaterangepickerBootstrap
+            [locale]="{
+              applyLabel: ('commons.apply' | translate),
+              format: 'DD-MM-YYYY',
+              cancelLabel: ('commons.cancel' | translate)}"
+            [(ngModel)]="birthDateModel"
+            [ngModelOptions]="{ standalone: true }"
+            [singleDatePicker]="true"
+            (datesUpdated)="onBirthDateChange($event)"
+            id="birthDate"
+            autocomplete="off"
+          />
+        </div>
+      </c-col>
+    </c-row>
+
+    <c-row class="mt-2">
+      <c-col md="7">
+        <h6 class="section-title underline mb-3">{{ 'guests.create.form.address.label'|translate }}</h6>
+
+        <c-row>
+          <c-col md="12" class="mb-3">
+            <label cLabel for="street1">{{ 'guests.create.form.street1-input.label' | translate }}</label>
+            <input cFormControl formControlName="street1" id="street1" type="text"/>
+          </c-col>
+        </c-row>
+
+        <c-row>
+
+          <c-col md="8" class="mb-3">
+            <label cLabel for="street2">{{ 'guests.create.form.street2-input.label' | translate }}</label>
+            <input cFormControl formControlName="street2" id="street2" type="text"/>
+          </c-col>
+
+          <c-col md="4" class="mb-3">
+            <label cLabel for="postCode">{{ 'guests.create.form.postCode-input.label' | translate }}</label>
+            <input cFormControl formControlName="postCode" id="postCode" type="text"/>
+          </c-col>
+        </c-row>
+
+        <c-row>
+
+          <c-col md="6" class="mb-3">
+            <label cLabel for="city">{{ 'guests.create.form.city-input.label' | translate }}</label>
+            <input cFormControl formControlName="city" id="city" type="text"/>
+          </c-col>
+
+          <c-col md="6" class="mb-3">
+            <label cLabel class="me-2" for="country">
+              {{ 'guests.create.form.country-input.label' | translate }}
+            </label>
+            <app-country-select formControlName="country" id="country"></app-country-select>
+          </c-col>
+        </c-row>
+
+      </c-col>
+
+      <c-col md="5">
+        <h6 class="section-title underline mb-3">{{ 'guests.create.form.contact.label'|translate }}</h6>
+
+        <c-row>
+          <c-col [md]="6" class="mb-3 w-100">
+            <label cLabel for="mobile">
+              {{ 'guests.create.form.mobile-input.label' | translate }}
+            </label>
+            <ngx-intl-tel-input
+              [enableAutoCountrySelect]="false"
+              [enablePlaceholder]="true"
+              [maxLength]="15"
+              [phoneValidation]="true"
+              [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+              [searchCountryFlag]="true"
+              [selectFirstCountry]="false"
+              [selectedCountryISO]="CountryISO.Morocco"
+              cssClass="form-control"
+              formControlName="mobile"
+              id="mobile">
+            </ngx-intl-tel-input>
+          </c-col>
+        </c-row>
+
+        <c-row>
+          <c-col md="12" class="mb-3">
+            <label cLabel class="required me-2" for="email">
+              {{ 'guests.create.form.email-input.label' | translate }}
+            </label>
+            <input cFormControl formControlName="email" id="email" type="text"/>
+            @if (guestForm.get('email')?.touched || guestForm.get('email')?.dirty) {
+              @if (guestForm.get('email')?.hasError('required')) {
+                <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+              }
+              @if (guestForm.get('email')?.hasError('email')) {
+                <c-form-feedback [valid]="false">{{ 'commons.errors.email' | translate }}</c-form-feedback>
+              }
+            }
+          </c-col>
+        </c-row>
+
+      </c-col>
+
+    </c-row>
+
+
+    <div [formGroup]="idDocumentGroup">
+      <c-row>
+        <c-col md="12">
+          <h6 class="section-title underline mb-3 mt-2">{{ 'guests.create.form.document.label'|translate }}</h6>
+        </c-col>
+
+        <c-col md="12">
+          <c-row>
+            <c-col md="6" class="mb-3">
+              <label cLabel for="type">{{ 'guests.create.form.type-input.label' | translate }}</label>
+
+              <ng-select id="type" appearance="outline" [searchable]="false" [clearable]="false"
+                         [items]="documentTypes" formControlName="type">
+                <ng-template ng-label-tmp let-item="item">
+                  <span>{{ ('guests.create.form.enums.documentType.' + item) | translate }}</span>
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item">
+                  <span>{{ ('guests.create.form.enums.documentType.' + item) | translate }}</span>
+                </ng-template>
+              </ng-select>
+            </c-col>
+
+            <c-col md="6" class="mb-3">
+              <label cLabel for="value">{{ 'guests.create.form.documentNumber-input.label' | translate }}</label>
+              <input id="value" cFormControl formControlName="value" type="text" class="form-control"/>
+            </c-col>
+          </c-row>
+        </c-col>
+
+        <c-col md="12">
+          <c-row class="mb-3">
+            <c-col [md]="6">
+              <label cLabel
+                     for="expirationDate">{{ 'guests.create.form.expirationDate-input.label' | translate }}</label>
+              <div *ngIf="!isNavigating" class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  ngxDaterangepickerBootstrap
+                  [locale]="{
+                    applyLabel: ('commons.apply' | translate),
+                    format: 'DD-MM-YYYY',
+                    cancelLabel: ('commons.cancel' | translate)}"
+                  [(ngModel)]="expirationDateModel"
+                  [ngModelOptions]="{ standalone: true }"
+                  [singleDatePicker]="true"
+                  (datesUpdated)="onExpirationDateChange($event)"
+                  id="expirationDate"
+                  autocomplete="off"
+                  [drops]="'up'"
+                />
+              </div>
+            </c-col>
+
+            <c-col [md]="6">
+              <label cLabel for="documentImage">{{ 'guests.create.form.documentImage-input.label' | translate }}</label>
+              <input id="documentImage" type="file" (change)="onImageSelected($event)" class="form-control"
+                     accept="image/*"/>
+            </c-col>
+          </c-row>
+        </c-col>
+
+      </c-row>
+    </div>
+
+    <c-row class="mt-3">
+      <c-col class="d-flex justify-content-end">
+        <button cButton class="ms-1" color="light" size="sm" variant="ghost" (click)="closeModal()">
+          {{ 'commons.form.cancel-btn' | translate }}
+        </button>
+        <button cButton class="ms-1" color="primary" size="sm" type="submit" [disabled]="!guestForm.valid">
+          {{ 'commons.form.save-btn' | translate }}
+        </button>
+      </c-col>
+    </c-row>
+
+  </form>
+</div>

@@ -1,0 +1,29 @@
+@use '../../../../../scss/variables' as *;
+
+table {
+  thead {
+    tr {
+      th {
+        &.party-type {
+          width: 40px;
+        }
+      }
+    }
+  }
+}
+
+.segment-badge {
+  background-color: $secondary-10;
+  color: $secondary;
+  font-size: 0.60rem;
+  padding: 2px 6px;
+  border-radius: 0.25rem;
+  font-weight: 420;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+
+
+

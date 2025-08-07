@@ -442,7 +442,8 @@
       "TERRACE": "Terrace",
       "WASHER": "Washer",
       "WATER_VIEW": "Water view"
-    }
+    },
+    "apply": "Ok"
   },
   "authentication": {
     "login": {
@@ -1503,9 +1504,11 @@
   },
   "guests": {
     "list": {
-      "title": "Guests",
+      "guest-title": "Guests",
+      "company-title": "Companies",
       "cta": {
-        "add-btn": "+ Add guest"
+        "add-btn-guest": "+ Add guest",
+        "add-btn-company": "+ Add Company"
       },
       "delete-modal": {
         "title": "Delete Guest",
@@ -1525,7 +1528,9 @@
       },
       "table": {
         "header": {
+          "name": "Name",
           "fullname": "Full name",
+          "segment": "Segment",
           "email": "Email",
           "identity-document": "Identity Document",
           "telephone": "Telephone",
@@ -1541,8 +1546,21 @@
       "empty-data": "Time to bring some life to your <span class=\"text-primary xstay\">xStay</span> account. Add your first guest now!"
     },
     "create": {
-      "title": "Add guest",
+      "guest-title": "Add Guest",
+      "company-title": "Add Company",
       "form": {
+        "partyType": {
+          "label": "Party Type",
+          "guest": "Guest",
+          "company": "Company"
+        },
+        "name-input": {
+          "label": "Company Name"
+        },
+        "segment-input": {
+          "label": "Segment",
+          "placeholder": "Select a segment"
+        },
         "fullname-input": {
           "label": "Full Name",
           "placeholder": {
@@ -1646,6 +1664,13 @@
       "form": {
         "general": {
           "title": "General Information"
+        },
+        "name": {
+          "label": "Company Name",
+          "placeholder": "Enter the company name"
+        },
+        "segment": {
+          "label": "Segment"
         },
         "firstName": {
           "label": "First Name",

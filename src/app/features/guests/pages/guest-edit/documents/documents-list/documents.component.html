@@ -1,0 +1,99 @@
+<c-row class="mb-3">
+  <c-col [md]="2">
+    <c-input-group sizing="sm" class="search-input">
+        <span cInputGroupText>
+          <svg [cIcon]="icons.cilSearch"></svg>
+        </span>
+      <input id="searchBar" cFormControl (input)="triggerBasicSearch($event)"
+             [placeholder]="'commons.form.search-input.placeholder'|translate"/>
+    </c-input-group>
+  </c-col>
+  <c-col [md]="10" class="d-flex justify-content-end">
+    <button cButton size="sm" color="primary" variant="outline" type="button" (click)="openIdentityDocumentCuModal()">
+      {{ 'documents.list.cta.add-btn' | translate }}
+    </button>
+  </c-col>
+</c-row>
+
+<app-table-control></app-table-control>
+
+@if (!firstCallDone) {
+  <c-row class="d-flex justify-content-center mt-5">
+    <c-spinner color="secondary"/>
+  </c-row>
+  <c-row class="d-flex justify-content-center mt-1">
+    <c-col [md]="4" class="d-flex justify-content-center text-center">
+      {{ 'commons.snippets.loading' | translate }}
+    </c-col>
+  </c-row>
+} @else {
+
+  @if (!isListEmpty) {
+
+    <div class="table-responsive">
+      <table cTable hover [responsive]="true">
+        <thead>
+        <tr>
+          <th>{{ 'documents.list.table.header.type' | translate }}</th>
+          <th>{{ 'documents.list.table.header.documentNumber' | translate }}</th>
+          <th>{{ 'documents.list.table.header.expirationDate' | translate }}</th>
+          <th>{{ 'documents.list.table.header.actions' | translate }}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+          @for (identityDocument of listContent; track identityDocument.id) {
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <c-avatar [size]="'md'" shape="rounded" textColor="white"
+                            color="primary">
+                    <i class="bi fs-6"
+                       [ngClass]="{'bi-person-vcard': identityDocument.type=='IDENTITY_CARD', 'bi-passport': identityDocument.type=='PASSPORT', 'bi-car-front': identityDocument.type=='DRIVER_LICENCE', 'bi-person-bounding-box': identityDocument.type=='OTHER'}"></i>
+                  </c-avatar>
+                  <div class="d-flex flex-column">
+                    <div>
+                      <span
+                        class="me-1">{{ 'guests.create.form.enums.documentType.' + identityDocument.type | translate }}</span>
+                    </div>
+                    <div class="small text-body-secondary text-nowrap">
+                      <span>{{ 'commons.snippets.audit.created-by'|translate }} {{ identityDocument.audit.createdBy | auditName }} </span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ identityDocument.value }}</td>
+              <td>
+                <app-badge>
+                  <i class="bi bi-clock me-1"></i>
+                  {{ identityDocument.expirationDate | date: 'mediumDate' }}
+                </app-badge>
+              </td>
+              <td>
+                <button cButton size="sm" color="primary" type="button" class="btn-light me-2"
+                        (click)="openIdentityDocumentCuModal(identityDocument)">
+                  <svg [cIcon]="icons.cilPen" size="sm"></svg>
+                </button>
+
+                <button cButton size="sm" color="danger" type="button" class="btn-light"
+                        (click)="confirmDeletion(identityDocument)">
+                  <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+
+      </table>
+    </div>
+
+  } @else {
+    @if (!isSearchActive) {
+      <app-empty-data imageSrc="assets/images/animations/identity-documents.gif"
+                      [message]="'documents.list.empty-data'|translate">
+      </app-empty-data>
+    } @else {
+      <app-empty-data imageSrc="assets/images/animations/no-result.gif"></app-empty-data>
+    }
+  }
+}

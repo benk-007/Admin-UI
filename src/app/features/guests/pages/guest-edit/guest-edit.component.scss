@@ -1,0 +1,18 @@
+@use "../../../../../scss/variables" as vars;
+
+ul.nav.nav-underline {
+  li.nav-item {
+    margin-bottom: -2px;
+    border-bottom: 2px;
+
+    a {
+      padding: 8px;
+      color: vars.$gray !important;
+
+      &.active {
+        color: vars.$info !important;
+      }
+    }
+  }
+}
+

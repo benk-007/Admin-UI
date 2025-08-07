@@ -1,0 +1,194 @@
+<c-row class="mt-3">
+  <c-col md="8">
+    <form (submit)="submit()" [formGroup]="guestForm" cForm>
+      <c-row>
+        <h6 class="section-title underline mb-3 mt-2">{{ 'guests.edit-guest.form.general.title' | translate }}</h6>
+
+        @if (guest?.type === partyTypeEnum.GUEST) {
+          <c-col [md]="6" sm="12" class="mb-3">
+            <label cLabel class="required me-2" for="firstName">
+              {{ 'guests.edit-guest.form.firstName.label' | translate }}
+            </label>
+            <input cFormControl formControlName="firstName" id="firstName" name="firstName"
+                   [placeholder]="'guests.edit-guest.form.firstName.placeholder' | translate" type="text"/>
+            @if (((guestForm.get('firstName')?.touched || guestForm.get('firstName')?.dirty))) {
+              @if (guestForm.get('firstName')?.hasError('required')) {
+                <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+              }
+              @if (guestForm.get('firstName')?.hasError('noNumbers')) {
+                <c-form-feedback [valid]="false">{{ 'commons.errors.no-numbers' | translate }}</c-form-feedback>
+              }
+            }
+          </c-col>
+          <c-col [md]="6" sm="12" class="mb-3">
+            <label cLabel class="required me-2" for="lastName">
+              {{ 'guests.edit-guest.form.lastName.label' | translate }}
+            </label>
+            <input cFormControl formControlName="lastName" id="lastName" name="lastName"
+                   [placeholder]="'guests.edit-guest.form.lastName.placeholder' | translate" type="text"/>
+            @if (((guestForm.get('lastName')?.touched || guestForm.get('lastName')?.dirty))) {
+              @if (guestForm.get('lastName')?.hasError('required')) {
+                <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+              }
+              @if (guestForm.get('lastName')?.hasError('noNumbers')) {
+                <c-form-feedback [valid]="false">{{ 'commons.errors.no-numbers' | translate }}</c-form-feedback>
+              }
+            }
+          </c-col>
+        }
+
+        @else if (guest?.type === partyTypeEnum.COMPANY) {
+          <c-col [md]="6" sm="12" class="mb-3">
+            <label cLabel class="required me-2" for="name">
+              {{ 'guests.edit-guest.form.name.label' | translate }}
+            </label>
+            <input cFormControl formControlName="name" id="name" name="name"
+                   [placeholder]="'guests.edit-guest.form.name.placeholder' | translate" type="text"/>
+          </c-col>
+          <c-col [md]="6" sm="12" class="mb-3">
+            <label cLabel class="required me-2" for="segmentId">
+              {{ 'guests.edit-guest.form.segment.label' | translate }}
+            </label>
+            <app-segment-select formControlName="segmentId" id="segmentId"></app-segment-select>
+          </c-col>
+        }
+
+        <c-col [md]="6" sm="12" class="mb-3">
+          <label cLabel for="birthDate">
+            {{ 'guests.edit-guest.form.birthDate.label' | translate }}
+          </label>
+          <div *ngIf="!isNavigating">
+            <input
+              type="text"
+              class="form-control"
+              ngxDaterangepickerBootstrap
+              [(ngModel)]="birthDate"
+              [ngModelOptions]="{standalone: true}"
+              [locale]="datePickerLocale"
+              [singleDatePicker]="true"
+              (datesUpdated)="onDateChange($event)"
+              id="birthDate"
+            />
+          </div>
+          @if (((guestForm.get('birthDate')?.touched || guestForm.get('birthDate')?.dirty))) {
+            @if (guestForm.get('birthDate')?.hasError('required')) {
+              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+            }
+          }
+        </c-col>
+      </c-row>
+
+      <c-row>
+        <c-col md="8">
+          <div formGroupName="address">
+            <h6 class="section-title underline mb-3 mt-2">{{ 'guests.edit-guest.form.address.title' | translate }}</h6>
+            <c-row>
+              <c-col md="6" class="mb-3">
+                <label cLabel for="street1">{{ 'guests.edit-guest.form.address.street1.label' | translate }}</label>
+                <input cFormControl formControlName="street1" id="street1" name="street1"
+                       [placeholder]="'guests.edit-guest.form.address.street1.placeholder' | translate" type="text"/>
+              </c-col>
+              <c-col md="6" class="mb-3">
+                <label cLabel for="street2">{{ 'guests.edit-guest.form.address.street2.label' | translate }}</label>
+                <input cFormControl formControlName="street2" id="street2" name="street2"
+                       [placeholder]="'guests.edit-guest.form.address.street2.placeholder' | translate" type="text"/>
+              </c-col>
+            </c-row>
+            <c-row>
+              <c-col md="4" class="mb-3">
+                <label cLabel for="postCode">{{ 'guests.edit-guest.form.address.postCode.label' | translate }}</label>
+                <input cFormControl formControlName="postCode" id="postCode" name="postCode"
+                       [placeholder]="'guests.edit-guest.form.address.postCode.placeholder' | translate" type="text"/>
+              </c-col>
+              <c-col md="4" class="mb-3">
+                <label cLabel for="city">{{ 'guests.edit-guest.form.address.city.label' | translate }}</label>
+                <input cFormControl formControlName="city" id="city" name="city"
+                       [placeholder]="'guests.edit-guest.form.address.city.placeholder' | translate" type="text"/>
+                @if (((guestForm.get('address.city')?.touched || guestForm.get('address.city')?.dirty))) {
+                  @if (guestForm.get('address.city')?.hasError('noNumbers')) {
+                    <c-form-feedback [valid]="false">{{ 'commons.errors.no-numbers' | translate }}</c-form-feedback>
+                  }
+                }
+              </c-col>
+              <c-col md="4" class="mb-3">
+                <label cLabel for="country">{{ 'guests.edit-guest.form.address.country.label' | translate }}</label>
+                <app-country-select formControlName="country" id="country"></app-country-select>
+              </c-col>
+            </c-row>
+          </div>
+        </c-col>
+        <c-col md="4">
+          <div formGroupName="contact">
+            <h6 class="section-title underline mb-3 mt-2">{{ 'guests.edit-guest.form.contact.title' | translate }}</h6>
+            <c-row>
+              <c-col md="12" class="mb-3">
+                <label cLabel for="mobile">
+                  {{ 'guests.edit-guest.form.contact.mobile.label' | translate }}
+                </label>
+                <ngx-intl-tel-input
+                  [enableAutoCountrySelect]="false"
+                  [enablePlaceholder]="true"
+                  [phoneValidation]="true"
+                  [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                  [searchCountryFlag]="true"
+                  [selectFirstCountry]="false"
+                  [selectedCountryISO]="CountryISO.Morocco"
+                  cssClass="form-control"
+                  formControlName="mobile"
+                  id="mobile"
+                  inputId="mobile">
+                </ngx-intl-tel-input>
+                @if (((guestForm.get('contact.mobile')?.touched))) {
+                  @if (guestForm.get('contact.mobile')?.hasError('required')) {
+                    <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                  }
+                }
+              </c-col>
+            </c-row>
+            <c-row>
+              <c-col md="12" class="mb-3">
+                <label cLabel class="required me-2" for="email">
+                  {{ 'guests.edit-guest.form.contact.email.label' | translate }}
+                </label>
+                <input cFormControl formControlName="email" id="email" name="email"
+                       [placeholder]="'guests.edit-guest.form.contact.email.placeholder' | translate" type="text"/>
+                @if (((guestForm.get('contact.email')?.touched || guestForm.get('contact.email')?.dirty))) {
+                  @if (guestForm.get('contact.email')?.hasError('required')) {
+                    <c-form-feedback [valid]="false">
+                      {{ 'commons.errors.required' | translate }}
+                    </c-form-feedback>
+                  }
+                }
+              </c-col>
+            </c-row>
+          </div>
+        </c-col>
+      </c-row>
+
+      <c-row class="mt-3">
+        <c-col [md]="12" class="d-flex justify-content-end">
+          <button cButton type="submit" size="sm" [disabled]="guestForm.invalid">
+            {{ 'commons.form.buttons.update' | translate }}
+          </button>
+        </c-col>
+      </c-row>
+    </form>
+  </c-col>
+</c-row>
+
+<!-- Tabs -->
+<ul class="nav nav-underline mb-4 mt-4">
+  <li class="nav-item" [tooltip]="'guests.edit-guest.tabs.documents.hint'|translate" placement="auto">
+    <a class="nav-link" routerLinkActive="active" routerLink="identity-documents">
+      {{ 'guests.edit-guest.tabs.documents.title'|translate }}
+    </a>
+  </li>
+  <li class="nav-item" [tooltip]="'guests.edit-guest.tabs.reservations.hint'|translate" placement="auto">
+    <a class="nav-link" routerLinkActive="active" routerLink="reservations">
+      {{ 'guests.edit-guest.tabs.reservations.title'|translate }}
+    </a>
+  </li>
+
+</ul>
+
+<router-outlet></router-outlet>

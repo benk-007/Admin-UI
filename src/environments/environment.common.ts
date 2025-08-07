@@ -52,14 +52,14 @@ export const commonProperties = {
   RateTable: PRICING_SERVICE + 'rate-tables',
 
   /*===========Guest Service===========*/
-  // Guest resource
-  guestList: GUEST_SERVICE + 'guests',
-  guestById: GUEST_SERVICE + 'guests/:guestId',
+  // Party resource
+  partyList: GUEST_SERVICE + 'parties',
+  partyById: GUEST_SERVICE + 'parties/:partyId',
 
   // Document resource
-  identityDocuments: GUEST_SERVICE + 'identity-documents',
-  identityDocumentById: GUEST_SERVICE + 'identity-documents/:identityDocumentId',
-  identityDocumentImageById: GUEST_SERVICE + 'identity-documents/:identityDocumentId/image',
+  identityDocuments: GUEST_SERVICE + 'documents',
+  identityDocumentById: GUEST_SERVICE + 'documents/:identityDocumentId',
+  identityDocumentImageById: GUEST_SERVICE + 'documents/:identityDocumentId/image',
 
   // Document image resource
   idDocumentImages: GUEST_SERVICE + 'images',
@@ -71,8 +71,6 @@ export const commonProperties = {
   /*===========CRM Service===========*/
   segmentList: CRM_SERVICE + 'segments',
   segmentById: CRM_SERVICE + 'segments/:segmentId',
-
-  partyList: CRM_SERVICE + 'parties'
 
 
 }

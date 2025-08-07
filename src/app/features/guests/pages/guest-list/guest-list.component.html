@@ -1,0 +1,159 @@
+<app-page-title [title]="pageTitleKey | translate">
+  <button
+    cButton
+    size="sm"
+    color="primary"
+    variant="outline"
+    type="button"
+    (click)="openGuestCreateModal()">
+    {{ addButtonLabelKey | translate }}
+  </button>
+</app-page-title>
+
+
+<c-row class="mb-3">
+  <c-col [md]="2">
+    <c-input-group sizing="sm" class="search-input">
+      <span cInputGroupText>
+        <svg [cIcon]="icons.cilSearch"></svg>
+      </span>
+      <input id="searchBar" cFormControl (input)="triggerBasicSearch($event)"
+             [placeholder]="'commons.form.search-input.placeholder' | translate"/>
+    </c-input-group>
+  </c-col>
+</c-row>
+
+<app-table-control (nextClicked)="next()" (previousClicked)="previous()" (sizeChanged)="changeSize($event)"
+                   [currentNumberElements]="currentNumberOfElements" [hasNext]="hasNext"
+                   [hasPrevious]="hasPrevious"
+                   [size]="size"
+                   [totalElements]="totalElements" ></app-table-control>
+
+
+@if (!firstCallDone) {
+  <c-row class="d-flex justify-content-center mt-5">
+    <c-spinner color="secondary"/>
+  </c-row>
+  <c-row class="d-flex justify-content-center mt-1">
+    <c-col [md]="4" class="d-flex justify-content-center text-center">
+      {{ 'commons.snippets.loading' | translate }}
+    </c-col>
+  </c-row>
+} @else {
+
+  @if (!isListEmpty) {
+
+    <div class="table-responsive">
+      <table cTable [responsive]="true">
+        <thead>
+          <tr>
+            <th>
+              @if (isCompanyView) {
+                {{ 'guests.list.table.header.name' | translate }}
+              } @else {
+                {{ 'guests.list.table.header.fullname' | translate }}
+              }
+            </th>
+            @if (isCompanyView) {
+              <th>{{ 'guests.list.table.header.segment' | translate }}</th>
+            }
+            <th>{{ 'guests.list.table.header.email' | translate }}</th>
+            <th>{{ 'guests.list.table.header.telephone' | translate }}</th>
+            <th>{{ 'guests.list.table.header.country' | translate }}</th>
+            <th>{{ 'guests.list.table.header.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (guest of listContent; track guest.id) {
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <c-avatar [size]="'md'" textColor="white" color="primary">
+                    <span>
+                      @if (guest.firstName && guest.lastName) {
+                        {{ guest.firstName[0] }}{{ guest.lastName[0] }}
+                      } @else {
+                        {{ guest.name?.[0] ?? '?' }}
+                      }
+                    </span>
+                  </c-avatar>
+                  <div class="d-flex flex-column">
+                    <div>
+                      @if (guest.firstName && guest.lastName) {
+                        <span class="me-1">{{ guest.firstName }} {{ guest.lastName }}</span>
+                      } @else {
+                        <span class="me-1">{{ guest.name ?? '—' }}</span>
+                      }
+                      @if (!guest.withIdentityDocument) {
+                        <i class="bi bi-patch-plus-fill text-danger"
+                           [adaptivePosition]="true"
+                           [tooltip]="'guests.list.table.body.not-provided'|translate"></i>
+                      } @else {
+                        <i class="bi bi-patch-plus-fill text-success"
+                           [adaptivePosition]="true"
+                           [tooltip]="'guests.list.table.body.provided'|translate"></i>
+                      }
+                    </div>
+                    <div class="small text-body-secondary text-nowrap">
+                    <span>
+                      {{ 'commons.snippets.audit.created-by' | translate }}
+                      {{ guest.audit.createdBy | auditName }}
+                    </span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              @if (isCompanyView) {
+                <td>
+                  @if (guest.segment) {
+                    @if (guest.segment.parent?.name) {
+                      {{ guest.segment.parent.name + ' - ' + guest.segment.name }}
+                    } @else {
+                      {{ guest.segment.name }}
+                    }
+                  } @else {
+                    —
+                  }
+                </td>
+              }
+              <td><span>{{ guest.contact?.email }}</span></td>
+              <td>{{ guest.contact?.mobile ?? ' - ' }}</td>
+              <td>
+                @if (guest.address?.country) {
+                  {{ ('commons.countries.' + guest.address?.country) | translate }}
+                } @else {
+                  {{ ' - ' }}
+                }
+              </td>
+              <td>
+
+                <button
+                  cButton
+                  size="sm"
+                  color="primary"
+                  class="btn-light me-2"
+                  [routerLink]="[isCompanyView ? '/companies' : '/guests', guest.id]">
+                  <svg [cIcon]="icons.cilPen" size="sm"></svg>
+                </button>
+
+
+                <button cButton size="sm" color="danger" class="btn-light" (click)="deleteGuest(guest)">
+                  <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+  } @else {
+    @if (!isSearchActive) {
+      <app-empty-data imageSrc="assets/images/animations/no-guests.gif" [message]="'guests.list.empty-data'|translate">
+      </app-empty-data>
+    } @else {
+      <app-empty-data imageSrc="assets/images/animations/no-result.gif"></app-empty-data>
+    }
+  }
+
+}
