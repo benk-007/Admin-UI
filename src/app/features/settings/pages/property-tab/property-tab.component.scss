@@ -1,0 +1,16 @@
+.property-tab {
+  .logo-preview {
+    .preview-image {
+      max-width: 150px;
+      max-height: 100px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border: 1px solid #dee2e6;
+      border-radius: 0.25rem;
+      padding: 0.5rem;
+      background-color: #f8f9fa;
+      display: block;
+    }
+  }
+}

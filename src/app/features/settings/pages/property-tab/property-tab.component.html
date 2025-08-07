@@ -88,9 +88,9 @@
           {{ 'settings.property.form.defaultUnitType.label' | translate }}
         </label>
         <select cSelect id="defaultUnitType" formControlName="defaultUnitType">
-          @for (type of propertyTypes; track type) {
+          @for (type of unitTypes; track type) {
             <option [value]="type">
-              {{ getPropertyTypeLabel(type) }}
+              {{ getUnitTypeLabel(type) }}
             </option>
           }
         </select>

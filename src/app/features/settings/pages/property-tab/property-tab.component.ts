@@ -22,6 +22,7 @@ import { CountrySelectComponent } from '../../../../shared/components/country-se
 import { emailValidator } from '../../../../shared/validators/email.validator';
 import { TimezoneService, TimezoneOption } from '../../../../shared/services/timezone.service';
 import {UnitTypeEnum} from '../../../properties/models/unit/enums/unit-type.enum';
+import {PropertyTypeEnum} from '../../models/property/enum/property-type.enum';
 import {PropertyApiService} from '../../services/property-api.service';
 import {PropertyGetModel} from '../../models/property/get/property-get.model';
 import {PropertyPatchModel} from '../../models/property/patch/property-patch.model';
@@ -61,7 +62,8 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
   selectedLogoFile?: File;
 
   // Enum options for template
-  propertyTypes = Object.values(UnitTypeEnum);
+  propertyTypes = Object.values(PropertyTypeEnum);
+  unitTypes = Object.values(UnitTypeEnum);
   currencies = Object.values(CurrencyEnum);
   timezones: TimezoneOption[] = [];
 
@@ -97,7 +99,7 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
   private createForm(): FormGroup {
     return this.fb.group({
       name: ['', [Validators.required]],
-      type: [UnitTypeEnum.APARTMENT, [Validators.required]],
+      type: [PropertyTypeEnum.HOTEL, [Validators.required]],
       defaultUnitType: [UnitTypeEnum.ROOM],
       street1: ['', [Validators.required]],
       street2: [''],
@@ -300,7 +302,11 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
     };
   }
 
-  getPropertyTypeLabel(type: UnitTypeEnum): string {
+  getPropertyTypeLabel(type: PropertyTypeEnum): string {
+    return type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+  }
+
+  getUnitTypeLabel(type: UnitTypeEnum): string {
     return type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
   }
 
