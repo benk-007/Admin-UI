@@ -74,7 +74,6 @@
           <c-row class="flex-nowrap align-items-end" [gutter]="2">
             @let minAdultsControl = unitDetailsForm.get('minOccupancy.adults')!;
             @let minChildrenControl = unitDetailsForm.get('minOccupancy.children')!;
-            @let minInfantsControl = unitDetailsForm.get('minOccupancy.infants')!;
 
             <c-col>
               <label cLabel class="invisible" for="min-occupancy">
@@ -82,7 +81,7 @@
               </label>
               <input [plaintext]="true" cFormControl id="min-occupancy" readonly type="text"
                      [value]="'units.edit-unit.tabs.detail-information.sections.occupancy.form.min-occupancy.label' | translate" />
-              @if (minAdultsControl.hasError('required') || minChildrenControl.hasError('required') || minInfantsControl.hasError('required')) {
+              @if (minAdultsControl.hasError('required') || minChildrenControl.hasError('required')) {
                 <c-form-feedback [valid]="false" class="invisible">error</c-form-feedback>
               }
             </c-col>
@@ -93,9 +92,9 @@
               </label>
               <input cFormControl id="min-adults" type="number" formControlName="adults"
                      [placeholder]="'units.edit-unit.tabs.detail-information.sections.occupancy.form.adults-input.placeholder' | translate" />
-              @if (minAdultsControl.hasError('required') || minChildrenControl.hasError('required') || minInfantsControl.hasError('required')) {
+              @if (minAdultsControl.hasError('required') || minChildrenControl.hasError('required')) {
                 <c-form-feedback [valid]="false"
-                                 [ngClass]="{'invisible': !minAdultsControl.hasError('required') && (minChildrenControl.hasError('required') || minInfantsControl.hasError('required'))}">
+                                 [ngClass]="{'invisible': !minAdultsControl.hasError('required') && (minChildrenControl.hasError('required'))}">
                   {{ 'commons.errors.required' | translate }}
                 </c-form-feedback>
               }
@@ -107,23 +106,9 @@
               </label>
               <input cFormControl id="min-children" type="number" formControlName="children"
                      [placeholder]="'units.edit-unit.tabs.detail-information.sections.occupancy.form.children-input.placeholder' | translate" />
-              @if (minAdultsControl.hasError('required') || minChildrenControl.hasError('required') || minInfantsControl.hasError('required')) {
+              @if (minAdultsControl.hasError('required') || minChildrenControl.hasError('required')) {
                 <c-form-feedback [valid]="false"
-                                 [ngClass]="{'invisible': !minChildrenControl.hasError('required') && (minAdultsControl.hasError('required') || minInfantsControl.hasError('required'))}">
-                  {{ 'commons.errors.required' | translate }}
-                </c-form-feedback>
-              }
-            </c-col>
-
-            <c-col class="w-auto">
-              <label cLabel for="min-infants" class="required">
-                {{ 'units.edit-unit.tabs.detail-information.sections.occupancy.form.infants-input.label' | translate }}
-              </label>
-              <input cFormControl id="min-infants" type="number" formControlName="infants"
-                     [placeholder]="'units.edit-unit.tabs.detail-information.sections.occupancy.form.infants-input.placeholder' | translate" />
-              @if (minAdultsControl.hasError('required') || minChildrenControl.hasError('required') || minInfantsControl.hasError('required')) {
-                <c-form-feedback [valid]="false"
-                                 [ngClass]="{'invisible': !minInfantsControl.hasError('required') && (minAdultsControl.hasError('required') || minChildrenControl.hasError('required'))}">
+                                 [ngClass]="{'invisible': !minChildrenControl.hasError('required') && (minAdultsControl.hasError('required'))}">
                   {{ 'commons.errors.required' | translate }}
                 </c-form-feedback>
               }
@@ -136,7 +121,6 @@
           <c-row class="flex-nowrap align-items-end" [gutter]="2">
             @let maxAdultsControl = unitDetailsForm.get('maxOccupancy.adults')!;
             @let maxChildrenControl = unitDetailsForm.get('maxOccupancy.children')!;
-            @let maxInfantsControl = unitDetailsForm.get('maxOccupancy.infants')!;
 
             <c-col>
               <label cLabel class="invisible" for="max-occupancy">
@@ -144,7 +128,7 @@
               </label>
               <input [plaintext]="true" cFormControl id="max-occupancy" readonly type="text"
                      [value]="'units.edit-unit.tabs.detail-information.sections.occupancy.form.max-occupancy.label' | translate" />
-              @if (maxAdultsControl.hasError('required') || maxChildrenControl.hasError('required') || maxInfantsControl.hasError('required')) {
+              @if (maxAdultsControl.hasError('required') || maxChildrenControl.hasError('required')) {
                 <c-form-feedback [valid]="false" class="invisible">error</c-form-feedback>
               }
             </c-col>
@@ -155,9 +139,9 @@
               </label>
               <input cFormControl id="max-adults" type="number" formControlName="adults"
                      [placeholder]="'units.edit-unit.tabs.detail-information.sections.occupancy.form.adults-input.placeholder' | translate" />
-              @if (maxAdultsControl.hasError('required') || maxChildrenControl.hasError('required') || maxInfantsControl.hasError('required')) {
+              @if (maxAdultsControl.hasError('required') || maxChildrenControl.hasError('required')) {
                 <c-form-feedback [valid]="false"
-                                 [ngClass]="{'invisible': !maxAdultsControl.hasError('required') && (maxChildrenControl.hasError('required') || maxInfantsControl.hasError('required'))}">
+                                 [ngClass]="{'invisible': !maxAdultsControl.hasError('required') && (maxChildrenControl.hasError('required'))}">
                   {{ 'commons.errors.required' | translate }}
                 </c-form-feedback>
               }
@@ -169,23 +153,9 @@
               </label>
               <input cFormControl id="max-children" type="number" formControlName="children"
                      [placeholder]="'units.edit-unit.tabs.detail-information.sections.occupancy.form.children-input.placeholder' | translate" />
-              @if (maxAdultsControl.hasError('required') || maxChildrenControl.hasError('required') || maxInfantsControl.hasError('required')) {
+              @if (maxAdultsControl.hasError('required') || maxChildrenControl.hasError('required')) {
                 <c-form-feedback [valid]="false"
-                                 [ngClass]="{'invisible': !maxChildrenControl.hasError('required') && (maxAdultsControl.hasError('required') || maxInfantsControl.hasError('required'))}">
-                  {{ 'commons.errors.required' | translate }}
-                </c-form-feedback>
-              }
-            </c-col>
-
-            <c-col class="w-auto">
-              <label cLabel for="max-infants" class="required">
-                {{ 'units.edit-unit.tabs.detail-information.sections.occupancy.form.infants-input.label' | translate }}
-              </label>
-              <input cFormControl id="max-infants" type="number" formControlName="infants"
-                     [placeholder]="'units.edit-unit.tabs.detail-information.sections.occupancy.form.infants-input.placeholder' | translate" />
-              @if (maxAdultsControl.hasError('required') || maxChildrenControl.hasError('required') || maxInfantsControl.hasError('required')) {
-                <c-form-feedback [valid]="false"
-                                 [ngClass]="{'invisible': !maxInfantsControl.hasError('required') && (maxAdultsControl.hasError('required') || maxChildrenControl.hasError('required'))}">
+                                 [ngClass]="{'invisible': !maxChildrenControl.hasError('required') && (maxAdultsControl.hasError('required'))}">
                   {{ 'commons.errors.required' | translate }}
                 </c-form-feedback>
               }
