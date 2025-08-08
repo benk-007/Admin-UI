@@ -70,6 +70,7 @@
         "create": "Create",
         "confirm": "Confirm",
         "save": "Save",
+        "submit": "Submit",
         "cancel": "Cancel",
         "delete": "Delete",
         "previous-btn": "Previous",
@@ -1595,6 +1596,9 @@
         },
         "contact": {
           "title": "Contact Information"
+        },
+        "configuration": {
+          "title": "Configuration"
         }
       },
       "form": {

@@ -10,4 +10,5 @@ export interface PropertyPatchModel {
   timezone?: string;
   currency?: string;
   defaultUnitType?: UnitTypeEnum;
+  removeLogo?: boolean;
 }

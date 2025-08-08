@@ -16,10 +16,12 @@ import {
 } from '@coreui/angular';
 import { NgxIntlTelInputModule, CountryISO, SearchCountryField } from 'ngx-intl-tel-input';
 import { NgSelectComponent, NgLabelTemplateDirective, NgOptionTemplateDirective } from '@ng-select/ng-select';
-
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import { Icon, icon, latLng, marker, tileLayer } from 'leaflet';
 
 import { CountrySelectComponent } from '../../../../shared/components/country-select/country-select.component';
 import { emailValidator } from '../../../../shared/validators/email.validator';
+import { noNumbersValidator } from '../../../../shared/validators/no-number.validator';
 import { TimezoneService, TimezoneOption } from '../../../../shared/services/timezone.service';
 import {UnitTypeEnum} from '../../../properties/models/unit/enums/unit-type.enum';
 import {PropertyTypeEnum} from '../../models/property/enum/property-type.enum';
@@ -48,7 +50,8 @@ import {PropertyPostModel} from '../../models/property/post/property-post.model'
     NgSelectComponent,
     NgLabelTemplateDirective,
     NgOptionTemplateDirective,
-    CountrySelectComponent
+    CountrySelectComponent,
+    LeafletModule
   ],
   templateUrl: './property-tab.component.html',
   styleUrls: ['./property-tab.component.scss']
@@ -60,6 +63,7 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   logoPreviewUrl?: string;
   selectedLogoFile?: File;
+  removeLogoFlag = false;
 
   // Enum options for template
   propertyTypes = Object.values(PropertyTypeEnum);
@@ -70,6 +74,16 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
   // Phone input configuration
   protected readonly SearchCountryField = SearchCountryField;
   protected readonly CountryISO = CountryISO;
+
+  // Map configuration
+  options = {
+    layers: [
+      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom: 18})
+    ],
+    zoom: 4,
+    center: latLng(33.835345855552134, -7.61279)
+  };
+  layers!: any;
 
   private subscriptions: Subscription[] = [];
 
@@ -101,13 +115,21 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
       name: ['', [Validators.required]],
       type: [PropertyTypeEnum.HOTEL, [Validators.required]],
       defaultUnitType: [UnitTypeEnum.ROOM],
-      street1: ['', [Validators.required]],
-      street2: [''],
-      postCode: [''],
-      city: ['', [Validators.required]],
-      country: ['', [Validators.required]],
-      mobile: [''],
-      email: ['', [emailValidator()]],
+      address: this.fb.group({
+        street1: ['', [Validators.required]],
+        street2: [''],
+        postCode: [''],
+        city: ['', [Validators.required, noNumbersValidator()]],
+        country: ['', [Validators.required]],
+        location: this.fb.group({
+          lat: [null],
+          lng: [null],
+        })
+      }),
+      contact: this.fb.group({
+        mobile: [''],
+        email: ['', [emailValidator()]]
+      }),
       timezone: ['Africa/Casablanca'],
       currency: [CurrencyEnum.MAD]
     });
@@ -146,21 +168,50 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
       name: property.name,
       type: property.type,
       defaultUnitType: property.defaultUnitType,
-      street1: property.address?.street1 || '',
-      street2: property.address?.street2 || '',
-      postCode: property.address?.postCode || '',
-      city: property.address?.city || '',
-      country: property.address?.country || '',
-      mobile: property.contact?.mobile || '',
-      email: property.contact?.email || '',
+      address: {
+        street1: property.address?.street1 || '',
+        street2: property.address?.street2 || '',
+        postCode: property.address?.postCode || '',
+        city: property.address?.city || '',
+        country: property.address?.country || '',
+        location: {
+          lat: property.address?.location?.lat || null,
+          lng: property.address?.location?.lng || null
+        }
+      },
+      contact: {
+        mobile: property.contact?.mobile || '',
+        email: property.contact?.email || ''
+      },
       timezone: property.timezone,
       currency: property.currency
     });
+
+    // Recharger le logo si il existe
+    if (property.logoId && !this.logoPreviewUrl) {
+      this.loadLogo(property.logoId);
+    }
+
+    // Set up map if coordinates exist
+    if (property.address?.location?.lat && property.address?.location?.lng) {
+      this.layers = [
+        marker([property.address.location.lat, property.address.location.lng], {
+          icon: icon({
+            ...Icon.Default.prototype.options,
+            iconUrl: 'assets/marker-icon.png',
+            iconRetinaUrl: 'assets/marker-icon-2x.png',
+            shadowUrl: 'assets/marker-shadow.png'
+          })
+        })
+      ];
+    }
   }
 
   private loadLogo(logoId?: string): void {
-    if (!logoId) return;
-
+    if (!logoId) {
+      this.logoPreviewUrl = undefined;
+      return;
+    }
     this.subscriptions.push(
       this.propertyApiService.getMediaById(logoId).subscribe({
         next: (blob) => {
@@ -189,6 +240,7 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
       }
 
       this.selectedLogoFile = file;
+      this.removeLogoFlag = false;
 
       // Create preview URL
       if (this.logoPreviewUrl) {
@@ -205,6 +257,8 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
 
   removeLogo(): void {
     this.selectedLogoFile = undefined;
+    this.removeLogoFlag = true; // Set flag for backend
+
     if (this.logoPreviewUrl) {
       URL.revokeObjectURL(this.logoPreviewUrl);
       this.logoPreviewUrl = undefined;
@@ -215,6 +269,29 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
     if (fileInput) {
       fileInput.value = '';
     }
+  }
+
+  setMarker(event: any): void {
+    console.log('Marker event:', event);
+    this.layers = [
+      marker([event.latlng.lat, event.latlng.lng], {
+        icon: icon({
+          ...Icon.Default.prototype.options,
+          iconUrl: 'assets/marker-icon.png',
+          iconRetinaUrl: 'assets/marker-icon-2x.png',
+          shadowUrl: 'assets/marker-shadow.png'
+        })
+      })
+    ];
+
+    this.propertyForm.patchValue({
+      address: {
+        location: {
+          lat: event.latlng.lat,
+          lng: event.latlng.lng
+        }
+      }
+    });
   }
 
   submit(): void {
@@ -228,9 +305,12 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
 
     const payload = this.property ? this.createPatchPayload(formValue) : this.createPostPayload(formValue);
 
+    // Si c'est une mise à jour avec logo ET qu'on a un logo sélectionné OU qu'on veut le supprimer
+    const logoFileToSend = this.selectedLogoFile || (this.removeLogoFlag ? undefined : undefined);
+
     const request$ = this.property
-      ? this.propertyApiService.updateProperty(this.property.id, payload as PropertyPatchModel, this.selectedLogoFile)
-      : this.propertyApiService.createProperty(payload as PropertyPostModel, this.selectedLogoFile);
+      ? this.propertyApiService.updateProperty(this.property.id, payload as PropertyPatchModel, logoFileToSend)
+      : this.propertyApiService.createProperty(payload as PropertyPostModel, logoFileToSend);
 
     this.subscriptions.push(
       request$.subscribe({
@@ -238,6 +318,11 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
           this.isSubmitting = false;
           this.property = updatedProperty;
           this.selectedLogoFile = undefined;
+          this.removeLogoFlag = false;
+          if (this.logoPreviewUrl) {
+            URL.revokeObjectURL(this.logoPreviewUrl);
+            this.logoPreviewUrl = undefined;
+          }
           this.loadLogo(updatedProperty.logoId);
 
           const message = this.property
@@ -266,15 +351,19 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
       type: formValue.type,
       defaultUnitType: formValue.defaultUnitType,
       address: {
-        street1: formValue.street1?.trim(),
-        street2: formValue.street2?.trim(),
-        postCode: formValue.postCode?.trim(),
-        city: formValue.city?.trim(),
-        country: formValue.country
+        street1: formValue.address.street1?.trim(),
+        street2: formValue.address.street2?.trim(),
+        postCode: formValue.address.postCode?.trim(),
+        city: formValue.address.city?.trim(),
+        country: formValue.address.country,
+        location: {
+          lat: formValue.address.location?.lat,
+          lng: formValue.address.location?.lng
+        }
       },
       contact: {
-        mobile: formValue.mobile?.e164Number || formValue.mobile,
-        email: formValue.email?.trim()
+        mobile: formValue.contact.mobile?.e164Number || formValue.contact.mobile,
+        email: formValue.contact.email?.trim()
       },
       timezone: formValue.timezone,
       currency: formValue.currency
@@ -287,18 +376,23 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
       type: formValue.type,
       defaultUnitType: formValue.defaultUnitType,
       address: {
-        street1: formValue.street1?.trim(),
-        street2: formValue.street2?.trim(),
-        postCode: formValue.postCode?.trim(),
-        city: formValue.city?.trim(),
-        country: formValue.country
+        street1: formValue.address.street1?.trim(),
+        street2: formValue.address.street2?.trim(),
+        postCode: formValue.address.postCode?.trim(),
+        city: formValue.address.city?.trim(),
+        country: formValue.address.country,
+        location: {
+          lat: formValue.address.location?.lat,
+          lng: formValue.address.location?.lng
+        }
       },
       contact: {
-        mobile: formValue.mobile?.e164Number || formValue.mobile,
-        email: formValue.email?.trim()
+        mobile: formValue.contact.mobile?.e164Number || formValue.contact.mobile,
+        email: formValue.contact.email?.trim()
       },
       timezone: formValue.timezone,
-      currency: formValue.currency
+      currency: formValue.currency,
+      removeLogo: this.removeLogoFlag
     };
   }
 

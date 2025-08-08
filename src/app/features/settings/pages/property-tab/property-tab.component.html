@@ -1,55 +1,65 @@
 <div class="property-tab">
   <form [formGroup]="propertyForm" (ngSubmit)="submit()" cForm>
 
-    <!-- Logo Section -->
+    <!-- Submit Button Row - tout en haut à droite -->
     <c-row class="mb-4">
-      <c-col md="12">
-        <h6 class="section-title underline mb-3">
-          {{ 'settings.property.sections.logo.title' | translate }}
-        </h6>
-
-        <c-row>
-          <c-col md="6">
-            <label cLabel for="logo">
-              {{ 'settings.property.form.logo.label' | translate }}
-            </label>
-            <input
-              type="file"
-              id="logo"
-              cFormControl
-              accept=".png,.svg,image/png,image/svg+xml"
-              (change)="onLogoSelected($event)" />
-            <div class="form-text">
-              {{ 'settings.property.form.logo.hint' | translate }}
-            </div>
-          </c-col>
-
-          <!-- Logo Preview -->
-          @if (logoPreviewUrl) {
-            <c-col md="6">
-              <div class="logo-preview">
-                <img [src]="logoPreviewUrl" alt="Logo preview" class="preview-image" />
-                <button
-                  type="button"
-                  cButton
-                  size="sm"
-                  color="danger"
-                  variant="outline"
-                  class="mt-2"
-                  (click)="removeLogo()">
-                  {{ 'settings.property.form.logo.remove' | translate }}
-                </button>
-              </div>
-            </c-col>
+      <c-col class="d-flex justify-content-end">
+        <button
+          cButton
+          type="submit"
+          color="primary"
+          size="sm"
+          [disabled]="!propertyForm.valid || isSubmitting">
+          @if (isSubmitting) {
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
           }
-        </c-row>
+          {{ 'commons.form.buttons.submit' | translate }}
+        </button>
       </c-col>
     </c-row>
 
-    <!-- Basic Information -->
+    <!-- Logo Section - Input et Preview sur la même ligne -->
     <c-row class="mb-4">
-      <c-col md="4">
-        <label cLabel for="name" class="required">
+      <c-col md="6">
+        <label cLabel for="logo">
+          {{ 'settings.property.form.logo.label' | translate }}
+        </label>
+        <input
+          type="file"
+          id="logo"
+          cFormControl
+          accept=".png,.svg,image/png,image/svg+xml"
+          (change)="onLogoSelected($event)" />
+        <div class="form-text">
+          {{ 'settings.property.form.logo.hint' | translate }}
+        </div>
+      </c-col>
+
+      <!-- Logo Preview - sur la même ligne -->
+      <c-col md="6">
+        @if (logoPreviewUrl) {
+          <div class="logo-preview">
+            <img [src]="logoPreviewUrl" alt="Logo preview" class="preview-image" />
+            <button
+              type="button"
+              cButton
+              size="sm"
+              color="danger"
+              variant="outline"
+              class="mt-2"
+              (click)="removeLogo()">
+              {{ 'settings.property.form.logo.remove' | translate }}
+            </button>
+          </div>
+        }
+      </c-col>
+    </c-row>
+
+    <!-- Basic Information - Property Name, Type, Default Unit Type -->
+    <c-row class="mb-3">
+      <!--Property Name input-->
+      <c-col [md]="4" sm="12" class="mb-3">
+        <label cLabel class="required me-2" for="name">
           {{ 'settings.property.form.name.label' | translate }}
         </label>
         <input
@@ -65,7 +75,8 @@
         }
       </c-col>
 
-      <c-col md="4">
+      <!--Property Type input-->
+      <c-col [md]="4" sm="12" class="mb-3">
         <label cLabel for="type" class="required">
           {{ 'settings.property.form.type.label' | translate }}
         </label>
@@ -83,7 +94,8 @@
         }
       </c-col>
 
-      <c-col md="4">
+      <!--Default Unit Type input-->
+      <c-col [md]="4" sm="12" class="mb-3">
         <label cLabel for="defaultUnitType">
           {{ 'settings.property.form.defaultUnitType.label' | translate }}
         </label>
@@ -97,16 +109,16 @@
       </c-col>
     </c-row>
 
-    <!-- Address Section -->
-    <c-row class="mb-4">
-      <c-col md="12">
-        <h6 class="section-title underline mb-3">
-          {{ 'settings.property.sections.address.title' | translate }}
-        </h6>
+    <c-row>
+      <!--Address section and map - comme unit general-->
+      <c-col [md]="6" formGroupName="address">
+        <!--Title-->
+        <h6 class="section-title underline mb-3 mt-2">{{ 'settings.property.sections.address.title' | translate }}</h6>
 
+        <!--Street1 input-->
         <c-row>
           <c-col md="12" class="mb-3">
-            <label cLabel for="street1" class="required">
+            <label cLabel class="required me-2" for="street1">
               {{ 'settings.property.form.address.street1.label' | translate }}
             </label>
             <input
@@ -115,14 +127,13 @@
               id="street1"
               type="text"
               [placeholder]="'settings.property.form.address.street1.placeholder' | translate" />
-            @if (propertyForm.get('street1')?.touched && propertyForm.get('street1')?.hasError('required')) {
-              <c-form-feedback [valid]="false">
-                {{ 'commons.errors.required' | translate }}
-              </c-form-feedback>
+            @if (propertyForm.get('address.street1')?.touched && propertyForm.get('address.street1')?.hasError('required')) {
+              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
             }
           </c-col>
         </c-row>
 
+        <!--Street2 & postCode inputs-->
         <c-row>
           <c-col md="8" class="mb-3">
             <label cLabel for="street2">
@@ -149,9 +160,11 @@
           </c-col>
         </c-row>
 
+        <!--City and Country inputs-->
         <c-row>
+          <!--City input-->
           <c-col md="6" class="mb-3">
-            <label cLabel for="city" class="required">
+            <label cLabel class="required me-2" for="city">
               {{ 'settings.property.form.address.city.label' | translate }}
             </label>
             <input
@@ -160,37 +173,50 @@
               id="city"
               type="text"
               [placeholder]="'settings.property.form.address.city.placeholder' | translate" />
-            @if (propertyForm.get('city')?.touched && propertyForm.get('city')?.hasError('required')) {
-              <c-form-feedback [valid]="false">
-                {{ 'commons.errors.required' | translate }}
-              </c-form-feedback>
+            @if (propertyForm.get('address.city')?.touched && propertyForm.get('address.city')?.hasError('required')) {
+              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+            }
+            @if (propertyForm.get('address.city')?.touched && propertyForm.get('address.city')?.hasError('noNumbers')) {
+              <c-form-feedback [valid]="false">{{ 'commons.errors.no-numbers' | translate }}</c-form-feedback>
             }
           </c-col>
 
+          <!--Country input-->
           <c-col md="6" class="mb-3">
-            <label cLabel for="country" class="required">
+            <label cLabel class="required me-2" for="country">
               {{ 'settings.property.form.address.country.label' | translate }}
             </label>
             <app-country-select formControlName="country" id="country"></app-country-select>
-            @if (propertyForm.get('country')?.touched && propertyForm.get('country')?.hasError('required')) {
-              <c-form-feedback [valid]="false">
-                {{ 'commons.errors.required' | translate }}
-              </c-form-feedback>
+            @if (propertyForm.get('address.country')?.touched && propertyForm.get('address.country')?.hasError('required')) {
+              <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
             }
           </c-col>
         </c-row>
-      </c-col>
-    </c-row>
 
-    <!-- Contact Section -->
-    <c-row class="mb-4">
-      <c-col md="12">
-        <h6 class="section-title underline mb-3">
-          {{ 'settings.property.sections.contact.title' | translate }}
-        </h6>
-
+        <!--Leaflet Map-->
         <c-row>
-          <c-col md="6" class="mb-3">
+          <c-col [md]="12">
+            <div class="map-container">
+              <div style="height: 400px;"
+                   leaflet
+                   [leafletOptions]="options"
+                   [leafletLayers]="layers"
+                   (leafletClick)="setMarker($event)">
+              </div>
+            </div>
+          </c-col>
+        </c-row>
+      </c-col>
+
+      <!--Contact & Configuration sections-->
+      <c-col [md]="6">
+        <!--Contact section-->
+        <c-row formGroupName="contact" class="mb-3">
+          <!--Title-->
+          <h6 class="section-title underline mb-3 mt-2">{{ 'settings.property.sections.contact.title' | translate }}</h6>
+
+          <!--Mobile input-->
+          <c-col md="6">
             <label cLabel for="mobile">
               {{ 'settings.property.form.contact.mobile.label' | translate }}
             </label>
@@ -210,6 +236,7 @@
             </ngx-intl-tel-input>
           </c-col>
 
+          <!--Email input-->
           <c-col md="6" class="mb-3">
             <label cLabel for="email">
               {{ 'settings.property.form.contact.email.label' | translate }}
@@ -220,78 +247,50 @@
               id="email"
               type="email"
               [placeholder]="'settings.property.form.contact.email.placeholder' | translate" />
-            @if (propertyForm.get('email')?.touched && propertyForm.get('email')?.hasError('invalidEmail')) {
-              <c-form-feedback [valid]="false">
-                {{ 'commons.errors.email' | translate }}
-              </c-form-feedback>
+            @if (propertyForm.get('contact.email')?.touched && propertyForm.get('contact.email')?.hasError('invalidEmail')) {
+              <c-form-feedback [valid]="false">{{ 'commons.errors.email' | translate }}</c-form-feedback>
             }
+          </c-col>
+        </c-row>
+
+        <!--Configuration section - TimeZone et Currency à la place de Other et Images-->
+        <c-row class="mb-3">
+          <!--Title-->
+          <h6 class="section-title underline mb-3">{{ 'settings.property.sections.configuration.title' | translate }}</h6>
+
+          <!--Timezone input-->
+          <c-col md="6" class="mb-3">
+            <label cLabel for="timezone">
+              {{ 'settings.property.form.timezone.label' | translate }}
+            </label>
+            <ng-select
+              id="timezone"
+              formControlName="timezone"
+              [items]="timezones"
+              bindLabel="label"
+              bindValue="value"
+              [searchable]="true"
+              [clearable]="false"
+              [placeholder]="'settings.property.form.timezone.placeholder' | translate">
+            </ng-select>
+          </c-col>
+
+          <!--Currency input-->
+          <c-col md="6" class="mb-3">
+            <label cLabel for="currency">
+              {{ 'settings.property.form.currency.label' | translate }}
+            </label>
+            <select cSelect id="currency" formControlName="currency">
+              @for (currency of currencies; track currency) {
+                <option [value]="currency">
+                  {{ getCurrencyLabel(currency) }}
+                </option>
+              }
+            </select>
           </c-col>
         </c-row>
       </c-col>
     </c-row>
 
-    <!-- Configuration Section -->
-    <c-row class="mb-4">
-      <c-col md="6">
-        <label cLabel for="timezone">
-          {{ 'settings.property.form.timezone.label' | translate }}
-        </label>
-        <ng-select
-          id="timezone"
-          formControlName="timezone"
-          [items]="timezones"
-          bindLabel="label"
-          bindValue="value"
-          [searchable]="true"
-          [clearable]="false"
-          [placeholder]="'settings.property.form.timezone.placeholder' | translate">
-        </ng-select>
-      </c-col>
-
-      <c-col md="6">
-        <label cLabel for="currency">
-          {{ 'settings.property.form.currency.label' | translate }}
-        </label>
-        <select cSelect id="currency" formControlName="currency">
-          @for (currency of currencies; track currency) {
-            <option [value]="currency">
-              {{ getCurrencyLabel(currency) }}
-            </option>
-          }
-        </select>
-      </c-col>
-    </c-row>
-
-    <!-- Loading indicator -->
-    @if (isSubmitting) {
-      <c-row>
-        <c-col md="12" class="text-center mt-2">
-          <div class="d-flex align-items-center justify-content-center">
-            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-            <small class="text-muted">
-              @if (property) {
-                Updating property...
-              } @else {
-                Creating property...
-              }
-            </small>
-          </div>
-        </c-col>
-      </c-row>
-    }
-
-    <!-- Submit Button -->
-    <c-row class="mt-4">
-      <c-col class="d-flex justify-content-end">
-        <button
-          type="submit"
-          cButton
-          color="primary"
-          size="sm"
-          [disabled]="!propertyForm.valid || isSubmitting">
-          {{ 'commons.form.buttons.submit' | translate }}
-        </button>
-      </c-col>
-    </c-row>
   </form>
 </div>
