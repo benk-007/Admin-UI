@@ -18,12 +18,13 @@ import {
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
 import { cilPlus, cilCopy, cilPen, cilTrash } from '@coreui/icons';
-import {FeeApiService} from '../../../../properties/services/fee-api.service';
-import {FeeGetModel} from '../../../../properties/models/fee/get/fee-get.model';
-import {GenericFeeCreateModalComponent} from '../generic-fee-create-modal/generic-fee-create-modal.component';
-import {ConfirmModalComponent} from '../../../../../shared/components/confirm-modal/confirm-modal.component';
-import {FeeModalityEnum} from '../../../../properties/models/fee/enum/fee-modality.enum';
-import {EmptyDataComponent} from '../../../../../shared/components/empty-data/empty-data.component';
+import {GenericFeeApiService} from "../../../services /generic-fee-api.service";
+import {GenericFeeCreateModalComponent} from "../generic-fee-create-modal/generic-fee-create-modal.component";
+import {FeeGetModel} from "../../../../properties/models/fee/get/fee-get.model";
+import {ConfirmModalComponent} from "../../../../../shared/components/confirm-modal/confirm-modal.component";
+import {FeeModalityEnum} from "../../../../properties/models/fee/enum/fee-modality.enum";
+import {EmptyDataComponent} from "../../../../../shared/components/empty-data/empty-data.component";
+import {GenericFeeEditModalComponent} from "../generic-fee-edit-modal/generic-fee-edit-modal.component";
 
 
 
@@ -66,9 +67,9 @@ export class GenericFeeListComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(
-    private readonly feeApiService: FeeApiService,
-    private readonly toastrService: ToastrService,
-    private readonly modalService: BsModalService
+      private readonly genericFeeApiService: GenericFeeApiService,
+      private readonly toastrService: ToastrService,
+      private readonly modalService: BsModalService
   ) {}
 
   ngOnInit(): void {
@@ -86,23 +87,23 @@ export class GenericFeeListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
 
     this.subscriptions.push(
-      this.feeApiService.getGenericFees(this.currentPage, this.pageSize)
-        .subscribe({
-          next: (response) => {
-            this.fees = response.content;
-            this.totalElements = response.totalElements;
-            this.totalPages = response.totalPages;
-            this.isLoading = false;
-          },
-          error: (error) => {
-            console.error('Error loading generic fees:', error);
-            this.toastrService.error(
-              'An error occurred while loading generic fees',
-              'Loading Error'
-            );
-            this.isLoading = false;
-          }
-        })
+        this.genericFeeApiService.getGenericFees(this.currentPage, this.pageSize)
+            .subscribe({
+              next: (response) => {
+                this.fees = response.content;
+                this.totalElements = response.totalElements;
+                this.totalPages = response.totalPages;
+                this.isLoading = false;
+              },
+              error: (error) => {
+                console.error('Error loading generic fees:', error);
+                this.toastrService.error(
+                    'An error occurred while loading generic fees',
+                    'Loading Error'
+                );
+                this.isLoading = false;
+              }
+            })
     );
   }
 
@@ -115,9 +116,9 @@ export class GenericFeeListComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions.push(
-      (modalRef.content as GenericFeeCreateModalComponent).actionConfirmed.subscribe((createdFee) => {
-        this.loadGenericFees(); // Reload the list
-      })
+        (modalRef.content as GenericFeeCreateModalComponent).actionConfirmed.subscribe((createdFee) => {
+          this.loadGenericFees(); // Reload the list
+        })
     );
   }
 
@@ -135,9 +136,9 @@ export class GenericFeeListComponent implements OnInit, OnDestroy {
     });
 
     this.subscriptions.push(
-      (modalRef.content as GenericFeeEditModalComponent).actionConfirmed.subscribe((updatedFee) => {
-        this.loadGenericFees(); // Reload the list
-      })
+        (modalRef.content as GenericFeeEditModalComponent).actionConfirmed.subscribe((updatedFee) => {
+          this.loadGenericFees(); // Reload the list
+        })
     );
   }
 
@@ -153,9 +154,9 @@ export class GenericFeeListComponent implements OnInit, OnDestroy {
     const confirmModalRef = this.modalService.show(ConfirmModalComponent, { initialState });
 
     this.subscriptions.push(
-      (confirmModalRef.content as ConfirmModalComponent).actionConfirmed.subscribe(() => {
-        this.performDeleteGenericFee(fee);
-      })
+        (confirmModalRef.content as ConfirmModalComponent).actionConfirmed.subscribe(() => {
+          this.performDeleteGenericFee(fee);
+        })
     );
   }
 
@@ -164,23 +165,23 @@ export class GenericFeeListComponent implements OnInit, OnDestroy {
    */
   private performDeleteGenericFee(fee: FeeGetModel): void {
     this.subscriptions.push(
-      this.feeApiService.deleteFee(fee.id).subscribe({
-        next: () => {
-          this.loadGenericFees(); // Reload the list
-          this.toastrService.success(
-            `Generic fee "${fee.name}" has been successfully deleted`,
-            'Generic Fee Deleted'
-          );
-        },
-        error: (error) => {
-          console.error('Error deleting generic fee:', error);
+        this.genericFeeApiService.deleteGenericFee(fee.id).subscribe({
+          next: () => {
+            this.loadGenericFees(); // Reload the list
+            this.toastrService.success(
+                `Generic fee "${fee.name}" has been successfully deleted`,
+                'Generic Fee Deleted'
+            );
+          },
+          error: (error) => {
+            console.error('Error deleting generic fee:', error);
 
-          const errorMessage = error?.error?.detail ||
-            'An error occurred while deleting the generic fee. Please try again.';
+            const errorMessage = error?.error?.detail ||
+                'An error occurred while deleting the generic fee. Please try again.';
 
-          this.toastrService.error(errorMessage, 'Delete Failed');
-        }
-      })
+            this.toastrService.error(errorMessage, 'Delete Failed');
+          }
+        })
     );
   }
 

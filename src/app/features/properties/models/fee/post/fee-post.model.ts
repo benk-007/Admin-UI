@@ -9,5 +9,5 @@ export interface FeePostModel {
   description?: string;
   active?: boolean;
   required: boolean;
-  unit: UnitRefModel;
+  unit?: UnitRefModel;
   additionalGuestPrices?: any[];}

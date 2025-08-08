@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -20,11 +20,10 @@ import {
   DropdownComponent,
   DropdownToggleDirective,
   DropdownMenuDirective,
-  DropdownItemDirective,
-  InputGroupTextDirective
+  DropdownItemDirective, InputGroupTextDirective
 } from '@coreui/angular';
 
-import { FeePostModel } from '../../../../properties/models/fee/post/fee-post.model';
+import { FeePatchModel } from '../../../../properties/models/fee/patch/fee-patch.model';
 import { FeeGetModel } from '../../../../properties/models/fee/get/fee-get.model';
 import { FeeModalityEnum } from '../../../../properties/models/fee/enum/fee-modality.enum';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -32,10 +31,10 @@ import {cilPlus, cilTrash} from '@coreui/icons';
 import {noChildAgeOverlapValidator} from '../../../../properties/validators/no-age-overlap.validator';
 import {ageRangeValidator} from '../../../../properties/validators/ageBucket.validator';
 import {IconDirective} from '@coreui/icons-angular';
-import {GenericFeeApiService} from "../../../services /generic-fee-api.service";
+import {GenericFeeApiService} from '../../../services /generic-fee-api.service';
 
 @Component({
-  selector: 'app-generic-fee-create-modal',
+  selector: 'app-generic-fee-edit-modal',
   standalone: true,
   imports: [
     CommonModule,
@@ -60,12 +59,13 @@ import {GenericFeeApiService} from "../../../services /generic-fee-api.service";
     DropdownItemDirective,
     InputGroupTextDirective
   ],
-  templateUrl: './generic-fee-create-modal.component.html',
-  styleUrl: './generic-fee-create-modal.component.scss'
+  templateUrl: './generic-fee-edit-modal.component.html',
+  styleUrl: './generic-fee-edit-modal.component.scss'
 })
-export class GenericFeeCreateModalComponent implements OnDestroy {
+export class GenericFeeEditModalComponent implements OnInit, OnDestroy {
   icons = { cilTrash, cilPlus };
 
+  @Input() feeToEdit!: FeeGetModel;
   @Output() actionConfirmed = new EventEmitter<FeeGetModel>();
 
   feeForm: FormGroup;
@@ -85,6 +85,12 @@ export class GenericFeeCreateModalComponent implements OnDestroy {
     this.feeForm = this.createForm();
   }
 
+  ngOnInit(): void {
+    if (this.feeToEdit) {
+      this.populateForm();
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
@@ -99,16 +105,83 @@ export class GenericFeeCreateModalComponent implements OnDestroy {
       modality: [FeeModalityEnum.PER_STAY, [Validators.required]],
       description: [''],
       active: [true],
-      required: [false],
+      required:[false],
       additionalGuestPrices: this.fb.array([], [noChildAgeOverlapValidator])
     });
 
     // Watch modality changes to show/hide additional guest prices
     form.get('modality')?.valueChanges.subscribe(modality => {
-      this.onModalityChange(modality);
+      if (modality) {
+        this.onModalityChange(modality);
+      }
     });
 
     return form;
+  }
+
+  /**
+   * Populate form with existing fee data
+   */
+  private populateForm(): void {
+    this.feeForm.patchValue({
+      name: this.feeToEdit.name,
+      amount: this.feeToEdit.amount,
+      modality: this.feeToEdit.modality,
+      description: this.feeToEdit.description || '',
+      active: this.feeToEdit.active,
+      required: this.feeToEdit.required || false
+    });
+
+    // Populate additional guest prices if they exist
+    if (this.shouldShowAdditionalGuestPrices() &&
+      this.feeToEdit.additionalGuestPrices &&
+      this.feeToEdit.additionalGuestPrices.length > 0) {
+
+      const additionalGuestPrices = this.feeForm.get('additionalGuestPrices') as FormArray;
+
+      this.feeToEdit.additionalGuestPrices.forEach((price: any) => {
+        console.log('Adding price:', price);
+
+        const priceGroup = this.fb.group({
+          id: [price.id],
+          guestCount: [price.guestCount, [Validators.required, Validators.min(1)]],
+          guestType: [price.guestType, [Validators.required]],
+          amountType: [price.amountType, [Validators.required]],
+          value: [price.value, [Validators.required, Validators.min(0)]]
+        });
+
+        if (price.guestType === 'CHILD' && price.ageBucket) {
+          (priceGroup as FormGroup).addControl(
+            'ageBucket',
+            this.fb.group(
+              {
+                fromAge: [price.ageBucket.fromAge, [Validators.required, Validators.min(0)]],
+                toAge: [price.ageBucket.toAge, [Validators.required, Validators.min(0)]]
+              },
+              { validators: ageRangeValidator() }
+            )
+          );
+        }
+
+        // Add guest type change listener
+        const guestTypeControl = priceGroup.get('guestType');
+        guestTypeControl?.valueChanges.subscribe(type => {
+          if (type === 'CHILD' && !priceGroup.get('ageBucket')) {
+            (priceGroup as FormGroup).addControl(
+              'ageBucket',
+              this.fb.group({
+                fromAge: [0, [Validators.required, Validators.min(0)]],
+                toAge: [0, [Validators.required, Validators.min(0)]]
+              }, { validators: ageRangeValidator() })
+            );
+          } else if (type === 'ADULT' && priceGroup.get('ageBucket')) {
+            (priceGroup as FormGroup).removeControl('ageBucket');
+          }
+        });
+
+        additionalGuestPrices.push(priceGroup);
+      });
+    }
   }
 
   /**
@@ -230,37 +303,35 @@ export class GenericFeeCreateModalComponent implements OnDestroy {
     this.isSubmitting = true;
     const formValue = this.feeForm.value;
 
-    // Create payload for generic fee (no unit specified)
-    const payload: FeePostModel = {
+    const payload: FeePatchModel = {
       name: formValue.name.trim(),
       amount: parseFloat(formValue.amount),
       modality: formValue.modality,
       description: formValue.description?.trim() || undefined,
       active: formValue.active,
       required: formValue.required,
-      // unit is not specified for generic fees
-      additionalGuestPrices: formValue.additionalGuestPrices || []
+      additionalGuestPrices: formValue.additionalGuestPrices
     };
 
     this.subscriptions.push(
-      this.genericFeeApiService.createGenericFee(payload).subscribe({
-        next: (createdFee) => {
+      this.genericFeeApiService.updateGenericFee(this.feeToEdit.id, payload).subscribe({
+        next: (updatedFee) => {
           this.isSubmitting = false;
-          this.actionConfirmed.emit(createdFee);
+          this.actionConfirmed.emit(updatedFee);
           this.closeModal();
-          this.toastrService.success(
-            `Generic fee "${createdFee.name}" has been successfully created and is now available for all units`,
-            'Generic Fee Created'
+          this.toastrService.info(
+            `Generic fee "${updatedFee.name}" has been successfully updated`,
+            'Generic Fee Updated'
           );
         },
         error: (error) => {
-          console.error('Error creating generic fee:', error);
+          console.error('Error updating generic fee:', error);
           this.isSubmitting = false;
 
           const errorMessage = error?.error?.detail ||
-            'An error occurred while creating the generic fee. Please try again.';
+            'An error occurred while updating the generic fee. Please try again.';
 
-          this.toastrService.error(errorMessage, 'Creation Failed');
+          this.toastrService.error(errorMessage, 'Update Failed');
         }
       })
     );
@@ -273,11 +344,7 @@ export class GenericFeeCreateModalComponent implements OnDestroy {
     if (this.isSubmitting) return;
 
     this.modalRef.hide();
-    this.feeForm.reset({
-      modality: FeeModalityEnum.PER_STAY,
-      active: true,
-      required: false
-    });
+    this.feeForm.reset();
     this.isSubmitting = false;
   }
 

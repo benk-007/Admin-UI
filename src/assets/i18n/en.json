@@ -1672,6 +1672,77 @@
           }
         }
       }
+    },
+    "fees": {
+      "title": "Generic Fees",
+      "sections": {
+        "generic-fees": {
+          "title": "Generic Fees Management",
+          "description": "Manage fees that apply to all units in this property. Generic fees are automatically available for all rental units."
+        }
+      },
+      "add-generic-fee-btn": "Add Generic Fee",
+      "empty-data": "No generic fees found. Create your first generic fee to make it available for all units.",
+      "table": {
+        "header": {
+          "name": "Name",
+          "amount": "Amount",
+          "required": "Required",
+          "modality": "Modality",
+          "status": "Status",
+          "scope": "Scope"
+        },
+        "body": {
+          "active": "Active",
+          "inactive": "Inactive",
+          "property-wide": "Property-wide"
+        }
+      },
+      "create": {
+        "title": "Add Generic Fee",
+        "generic-info": "This fee will be available for all units in this property. It can be applied during booking without being tied to a specific unit."
+      },
+      "edit": {
+        "title": "Edit Generic Fee",
+        "generic-info": "Changes to this generic fee will affect all units in this property where this fee can be applied."
+      },
+      "form": {
+        "name": {
+          "label": "Fee Name",
+          "placeholder": "Fee name"
+        },
+        "amount": {
+          "label": "Amount",
+          "placeholder": "0.00"
+        },
+        "modality": {
+          "label": "Modality",
+          "values": {
+            "per-stay": "Per Stay",
+            "per-night": "Per Night",
+            "per-person": "Per Person",
+            "per-person-per-night": "Per Person Per Night"
+          }
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Optional description for this fee"
+        },
+        "active": {
+          "label": "Active"
+        },
+        "required": {
+          "label": "Required"
+        },
+        "additional-guest-prices": {
+          "title": "Additional Guest Prices",
+          "hint": "Define different prices based on guest type and count. This is useful for fees that vary by guest characteristics."
+        },
+        "errors": {
+          "invalid-age-range": "From age must be less than to age",
+          "child-age-overlap": "Child age ranges cannot overlap"
+        }
+      }
     }
   },
   "guests": {
