@@ -25,6 +25,16 @@ export class FeeApiService {
   }
 
   /**
+   * Create a new generic fee (property-wide)
+   */
+  createGenericFee(payload: Omit<FeePostModel, 'unit'>): Observable<FeeGetModel> {
+    return this.httpClient.post<FeeGetModel>(
+      environment.apiBaseUrl.concat(environment.fees),
+      payload
+    );
+  }
+
+  /**
    * Get fees by unit ID with pagination
    * Backend expects unitIds as Set<String> parameter
    */
@@ -52,6 +62,38 @@ export class FeeApiService {
       { params }
     );
   }
+
+  /**
+   * Get generic fees (property-wide fees without unitId)
+   */
+  getGenericFees(
+    page: number = 0,
+    size: number = 10,
+    sort: string = 'name',
+    sortDirection: string = 'asc',
+    search?: string
+  ): Observable<PageModel<FeeGetModel>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('generic', 'true'); // New parameter to indicate we want only generic fees
+
+    // Add sort parameter if provided
+    if (sort) {
+      params = params.set('sort', `${sort},${sortDirection}`);
+    }
+
+    // Add search parameter if provided
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    return this.httpClient.get<PageModel<FeeGetModel>>(
+      environment.apiBaseUrl.concat(environment.fees),
+      { params }
+    );
+  }
+
 
   /**
    * Update an existing fee
