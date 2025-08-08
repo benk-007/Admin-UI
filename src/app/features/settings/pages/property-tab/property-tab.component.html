@@ -1,5 +1,9 @@
 <div class="property-tab">
   <form [formGroup]="propertyForm" (ngSubmit)="submit()" cForm>
+      <div class="mt-3">
+          <p>Form Valid: {{ propertyForm.valid }}</p>
+          <p>Form Errors: {{ formErrors | json }}</p>
+      </div>
 
     <!-- Submit Button Row - tout en haut à droite -->
     <c-row class="mb-4">
@@ -110,7 +114,7 @@
     </c-row>
 
     <c-row>
-      <!--Address section and map - comme unit general-->
+      <!--Address & Contact section -->
       <c-col [md]="6" formGroupName="address">
         <!--Title-->
         <h6 class="section-title underline mb-3 mt-2">{{ 'settings.property.sections.address.title' | translate }}</h6>
@@ -193,23 +197,6 @@
           </c-col>
         </c-row>
 
-        <!--Leaflet Map-->
-        <c-row>
-          <c-col [md]="12">
-            <div class="map-container">
-              <div style="height: 400px;"
-                   leaflet
-                   [leafletOptions]="options"
-                   [leafletLayers]="layers"
-                   (leafletClick)="setMarker($event)">
-              </div>
-            </div>
-          </c-col>
-        </c-row>
-      </c-col>
-
-      <!--Contact & Configuration sections-->
-      <c-col [md]="6">
         <!--Contact section-->
         <c-row formGroupName="contact" class="mb-3">
           <!--Title-->
@@ -217,7 +204,7 @@
 
           <!--Mobile input-->
           <c-col md="6">
-            <label cLabel for="mobile">
+            <label cLabel for="mobile" class="required">
               {{ 'settings.property.form.contact.mobile.label' | translate }}
             </label>
             <ngx-intl-tel-input
@@ -234,6 +221,11 @@
               id="mobile"
               inputId="mobile">
             </ngx-intl-tel-input>
+              @if (((propertyForm.get('contact.mobile')?.touched))) {
+                  @if (propertyForm.get('contact.mobile')?.hasError('required')) {
+                      <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+              }
+              }
           </c-col>
 
           <!--Email input-->
@@ -252,44 +244,67 @@
             }
           </c-col>
         </c-row>
-
-        <!--Configuration section - TimeZone et Currency à la place de Other et Images-->
-        <c-row class="mb-3">
-          <!--Title-->
-          <h6 class="section-title underline mb-3">{{ 'settings.property.sections.configuration.title' | translate }}</h6>
-
-          <!--Timezone input-->
-          <c-col md="6" class="mb-3">
-            <label cLabel for="timezone">
-              {{ 'settings.property.form.timezone.label' | translate }}
-            </label>
-            <ng-select
-              id="timezone"
-              formControlName="timezone"
-              [items]="timezones"
-              bindLabel="label"
-              bindValue="value"
-              [searchable]="true"
-              [clearable]="false"
-              [placeholder]="'settings.property.form.timezone.placeholder' | translate">
-            </ng-select>
-          </c-col>
-
-          <!--Currency input-->
-          <c-col md="6" class="mb-3">
-            <label cLabel for="currency">
-              {{ 'settings.property.form.currency.label' | translate }}
-            </label>
-            <select cSelect id="currency" formControlName="currency">
-              @for (currency of currencies; track currency) {
-                <option [value]="currency">
-                  {{ getCurrencyLabel(currency) }}
-                </option>
-              }
-            </select>
-          </c-col>
-        </c-row>
       </c-col>
+
+      <!--Leaflet Map-->
+      <c-col [md]="6">
+        <div class="map-container">
+          <div style="height: 400px;"
+               leaflet
+               [leafletOptions]="options"
+               [leafletLayers]="layers"
+               (leafletClick)="setMarker($event)">
+          </div>
+        </div>
+      </c-col>
+
+      <!--Configuration section - TimeZone & Currency-->
+      <c-row>
+        <c-col [md]="12">
+          <c-row class="mb-3">
+            <!--Title-->
+            <h6 class="section-title underline mb-3">{{ 'settings.property.sections.configuration.title' | translate }}</h6>
+
+            <!--Timezone input-->
+            <c-col md="6" class="mb-3">
+              <label cLabel for="timezone" class="required">
+                {{ 'settings.property.form.timezone.label' | translate }}
+              </label>
+              <ng-select
+                id="timezone"
+                formControlName="timezone"
+                [items]="timezones"
+                bindLabel="label"
+                bindValue="value"
+                [searchable]="true"
+                [clearable]="false"
+                [placeholder]="'settings.property.form.timezone.placeholder' | translate">
+              </ng-select>
+                @if (propertyForm.get('timezone')?.touched && propertyForm.get('timezone')?.hasError('required')) {
+                    <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+            </c-col>
+
+            <!--Currency input-->
+            <c-col md="6" class="mb-3">
+              <label cLabel for="currency" class="required">
+                {{ 'settings.property.form.currency.label' | translate }}
+              </label>
+              <select cSelect id="currency" formControlName="currency">
+                @for (currency of currencies; track currency) {
+                  <option [value]="currency">
+                    {{ getCurrencyLabel(currency) }}
+                  </option>
+                }
+              </select>
+                @if (propertyForm.get('currency')?.touched && propertyForm.get('currency')?.hasError('required')) {
+                    <c-form-feedback [valid]="false">{{ 'commons.errors.required' | translate }}</c-form-feedback>
+                }
+            </c-col>
+          </c-row>
+        </c-col>
+      </c-row>
+
     </c-row>
 
   </form>

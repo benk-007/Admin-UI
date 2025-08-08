@@ -120,18 +120,18 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
         street2: [''],
         postCode: [''],
         city: ['', [Validators.required, noNumbersValidator()]],
-        country: ['', [Validators.required]],
+        country: ['MA', [Validators.required]],
         location: this.fb.group({
           lat: [null],
           lng: [null],
         })
       }),
       contact: this.fb.group({
-        mobile: [''],
+        mobile: ['', [Validators.required]],
         email: ['', [emailValidator()]]
       }),
-      timezone: ['Africa/Casablanca'],
-      currency: [CurrencyEnum.MAD]
+      timezone: ['Africa/Casablanca', [Validators.required]],
+      currency: [CurrencyEnum.MAD, [Validators.required]]
     });
   }
 
@@ -305,7 +305,6 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
 
     const payload = this.property ? this.createPatchPayload(formValue) : this.createPostPayload(formValue);
 
-    // Si c'est une mise à jour avec logo ET qu'on a un logo sélectionné OU qu'on veut le supprimer
     const logoFileToSend = this.selectedLogoFile || (this.removeLogoFlag ? undefined : undefined);
 
     const request$ = this.property
@@ -323,7 +322,9 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
             URL.revokeObjectURL(this.logoPreviewUrl);
             this.logoPreviewUrl = undefined;
           }
-          this.loadLogo(updatedProperty.logoId);
+          setTimeout(() => {
+            this.loadLogo(updatedProperty.logoId);
+          }, 500);
 
           const message = this.property
             ? 'Property updated successfully'
@@ -411,5 +412,29 @@ export class PropertyTabComponent implements OnInit, OnDestroy {
       [CurrencyEnum.USD]: 'USD - US Dollar'
     };
     return currencyLabels[currency] || currency;
+  }
+
+  // Méthode pour debug
+  get formErrors(): any {
+    return this.getFormValidationErrors(this.propertyForm);
+  }
+
+  private getFormValidationErrors(form: FormGroup): any {
+    const result: any = {};
+    Object.keys(form.controls).forEach(key => {
+      const controlErrors = form.get(key)?.errors;
+      if (controlErrors) {
+        result[key] = controlErrors;
+      }
+      // Check nested form groups
+      const control = form.get(key);
+      if (control instanceof FormGroup) {
+        const nestedErrors = this.getFormValidationErrors(control);
+        if (Object.keys(nestedErrors).length > 0) {
+          result[key] = { ...result[key], ...nestedErrors };
+        }
+      }
+    });
+    return result;
   }
 }
